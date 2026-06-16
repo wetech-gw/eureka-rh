@@ -28,11 +28,12 @@
         }
         .font-serif { font-family: 'DM Serif Display', serif; }
         .text-accent { color: var(--accent); }
-        .sidebar { width: 240px; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; background: var(--surface); }
-        .main-content { margin-left: 240px; background-color: #fafafa; min-height: 100vh; }
+        .sidebar { width: 220px; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; background: var(--surface); }
+        .main-content { margin-left: 220px; background-color: #fafafa; min-height: 100vh; }
         
         /* Links da Sidebar */
-        .nav-item-hr { color: var(--text-secondary); font-size: 14px; font-weight: 400; text-decoration: none; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.2s; }
+        .nav-item-hr { color: var(--text-secondary); font-size: 13px; font-weight: 400; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 7px 10px; margin-bottom: 2px; cursor: pointer; transition: all 0.2s; }
+        .nav-item-hr svg { flex-shrink: 0; }
         .nav-item-hr:hover { color: var(--text-primary); }
         .nav-item-hr.active { background: var(--accent-light); color: var(--accent); font-weight: 500; }
         

@@ -10,6 +10,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $hoje = Carbon::now()->toDateString();
+
         // 1. CARDS SUPERIORES (Cálculos Dinâmicos)
         $totalFuncionarios = DB::table('funcionarios')->where('estado', 'Activo')->count();
 
@@ -20,69 +22,120 @@ class DashboardController extends Controller
 
         $ausentesHoje = max(0, $totalFuncionarios - $presencasHoje);
 
-        // Conta quantos contratos expiram nos próximos 30 dias
         $contratosAExpirar = DB::table('funcionarios')
             ->whereNotNull('data_fim_contrato')
             ->whereBetween('data_fim_contrato', [
-                Carbon::now()->toDateString(), 
+                $hoje, 
                 Carbon::now()->addDays(30)->toDateString()
             ])
             ->count();
 
-        // NOVO AJUSTE: Procura o contrato que vai expirar mais cedo para calcular os dias restantes
+        // Procura o contrato mais urgente para o Alerta Vermelho
         $contratoMaisUrgente = DB::table('funcionarios')
             ->whereNotNull('data_fim_contrato')
-            ->where('data_fim_contrato', '>=', Carbon::now()->toDateString())
+            ->where('data_fim_contrato', '>=', $hoje)
             ->orderBy('data_fim_contrato', 'asc')
             ->first();
 
         $diasRestantes = null;
         if ($contratoMaisUrgente) {
-            // Calcula a diferença real de dias entre hoje e o fim do contrato
             $diasRestantes = Carbon::now()->startOfDay()->diffInDays(
                 Carbon::parse($contratoMaisUrgente->data_fim_contrato)->startOfDay(), 
                 false
             );
         }
 
-        // 2. AUXILIAR DE NOVAS CONTRATAÇÕES (Mês Atual)
+        // 2. AVALIAÇÕES EM ATRASO
+        $avaliacoesEmAtraso = DB::table('avaliacoes')
+            ->where('estado', 'Pendente')
+            ->whereDate('data_avaliacao', '<', $hoje)
+            ->count();
+
+        // 3. AUXILIAR DE NOVAS CONTRATAÇÕES (Mês Atual)
         $novosEsteMes = DB::table('funcionarios')
             ->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->count();
 
+        // 4. LÓGICA DE CANDIDATOS
+        $totalCandidatos = DB::table('candidatos')->count();
+        
+        $candidatosNovosHoje = DB::table('candidatos')
+            ->whereDate('created_at', Carbon::today()->toDateString())
+            ->count();
 
-        // 3. TABELA CENTRAL (Mapeamento de dados para o Blade não quebrar)
-        $colaboradores = DB::table('funcionarios')->get()->map(function($f) {
-            // Conta as faltas reais deste funcionário na tabela de ausências
+        // 5. TABELA CENTRAL (Com cálculo de dias de contrato individual)
+        $colaboradores = DB::table('funcionarios')->get()->map(function($f) use ($hoje) {
+            // Conta as faltas reais
             $faltasReais = DB::table('ausencias')->where('funcionario_id', $f->id)->count();
 
+            // CALCULA OS DIAS RESTANTES DO CONTRATO DESTE FUNCIONÁRIO
+            $diasRestantesContrato = null;
+            if ($f->data_fim_contrato) {
+                $diasRestantesContrato = Carbon::now()->startOfDay()->diffInDays(
+                    Carbon::parse($f->data_fim_contrato)->startOfDay(), 
+                    false // false permite números negativos se o contrato já expirou
+                );
+            }
+
             return [
-                'id' => $f->id,
-                'nome' => $f->nome,
-                'cargo' => $f->cargo,
-                'iniciais' => $f->iniciais,
-                'estado' => $f->estado,
-                'tipo_contrato' => $f->tipo_contrato,
-                'salario_base' => $f->salario_base,
-                'horas_esperadas' => $f->horas_esperadas_mes,
-                // Se for a Sidia colocamos as 168h do print, se for o Amadu as 152h (para bater certo com os seus testes)
-                'horas_trabalhadas' => $f->id == 1 ? 168 : 152, 
-                'faltas' => $faltasReais,
-                'valor_hora_extra' => $f->valor_hora_extra,
-                'valor_desconto_falta' => $f->valor_desconto_falta,
+                'id'               => $f->id,
+                'nome'             => $f->nome,
+                'cargo'            => $f->cargo,
+                'iniciais'         => $f->iniciais,
+                'estado'           => $f->estado,
+                'tipo_contrato'    => $f->tipo_contrato,
+                'tipo_trabalhador' => $f->tipo_trabalhador, 
+                'salario_bruto'    => $f->salario_bruto,       
+                'faltas'           => $faltasReais,
+                'dias_contrato'    => $diasRestantesContrato,
             ];
         });
 
-        // 4. RETORNO SEGURO PARA A VIEW (Com a nova variável diasRestantes incluída)
+        // ==========================================================
+        // 6. ADICIONADO: DADOS PARA O MINI-CALENDÁRIO E PRESENÇAS DETALHADAS
+        // ==========================================================
+        // Altera esta linha no teu controlador:
+        $mesAtualObjeto = Carbon::now();
+        $nomeMes = ucfirst($mesAtualObjeto->locale('pt')->translatedFormat('F')); // <-- Adicionado ->locale('pt')
+        $diasNoMes = $mesAtualObjeto->daysInMonth;
+        $diaSemanaInicio = $mesAtualObjeto->startOfMonth()->dayOfWeekIso; 
+
+        // Dias numéricos com ausências registadas neste mês (Corrigido para data_inicio)
+        $diasComAusencia = DB::table('ausencias')
+            ->whereMonth('data_inicio', $mesAtualObjeto->month)
+            ->whereYear('data_inicio', $mesAtualObjeto->year)
+            ->pluck('data_inicio') // <-- Agora aponta para a coluna real
+            ->map(function($data) {
+                return Carbon::parse($data)->day;
+            })
+            ->toArray();
+
+        // Lista de quem bateu o ponto no dia de hoje
+        $presencasDetalhadasHoje = DB::table('presencas')
+            ->join('funcionarios', 'presencas.funcionario_id', '=', 'funcionarios.id')
+            ->whereDate('presencas.data', Carbon::today()->toDateString())
+            ->select('funcionarios.nome', 'funcionarios.cargo', 'funcionarios.iniciais', 'presencas.status_hoje')
+            ->get();
+
+        // 7. RETORNO SEGURO PARA A VIEW (Com ABSOLUTAMENTE TODAS as variáveis)
         return view('dashboard', compact(
             'totalFuncionarios', 
             'presencasHoje', 
             'ausentesHoje', 
             'contratosAExpirar', 
-            'diasRestantes', // <-- Enviado com sucesso para o Blade
+            'contratoMaisUrgente', 
+            'diasRestantes', 
+            'avaliacoesEmAtraso',   
             'novosEsteMes',
-            'colaboradores'
+            'totalCandidatos',       
+            'candidatosNovosHoje',   
+            'colaboradores',
+            'nomeMes',
+            'diasNoMes',
+            'diaSemanaInicio',
+            'diasComAusencia',
+            'presencasDetalhadasHoje'
         ));
     }
 }

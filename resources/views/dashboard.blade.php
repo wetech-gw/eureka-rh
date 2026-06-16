@@ -3,39 +3,49 @@
 @section('content')
 <div class="d-flex">
     
-    <aside class="sidebar border-end p-4 d-flex flex-column">
-        <div class="mb-5">
+    <aside class="sidebar border-end p-3 d-flex flex-column">
+        <div class="mb-4">
             <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
             <span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>
         </div>
 
         <nav class="flex-grow-1">
-            <a class="nav-item-hr active p-2.5 rounded-3 mb-1">
+            <a href="{{ route('dashboard') }}" class="nav-item-hr active p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
                 Dashboard
             </a>
-            <a class="nav-item-hr p-2.5 rounded-3 mb-1">
+            
+            <a href="{{ route('funcionarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 Funcionarios
             </a>
-            <a class="nav-item-hr p-2.5 rounded-3 mb-1">
+            <a href="{{ route('ferias.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Férias & Ausências
+            </a>            
+            <a href="{{ route('avaliacoes.index') }}" class="nav-item-hr">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Avaliações
             </a>
-            <a class="nav-item-hr p-2.5 rounded-3 mb-1">
+            <a href="{{ route('formacoes.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('formacoes.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Formacoes
+                Formações
             </a>
-            <a class="nav-item-hr p-2.5 rounded-3 mb-1">
+            <a href="{{ route('presencas.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="7"></circle><polyline points="9 5 9 9 11.5 10.5"></polyline></svg>
                 Presenças
             </a>
-            <a class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 2h-7a1.5 1.5 0 0 0-1.5 1.5v11A1.5 1.5 0 0 0 5.5 16h7a1.5 1.5 0 0 0 1.5-1.5v-11A1.5 1.5 0 0 0 12.5 2z"></path><path d="M7 6h4"></path><path d="M7 9h4"></path><path d="M7 12h2"></path></svg>
+            <a href="{{ route('folhas.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('folhas.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12.5 2h-7a1.5 1.5 0 0 0-1.5 1.5v11A1.5 1.5 0 0 0 5.5 16h7a1.5 1.5 0 0 0 1.5-1.5v-11A1.5 1.5 0 0 0 12.5 2z"></path>
+                    <path d="M7 6h4"></path>
+                    <path d="M7 9h4"></path>
+                    <path d="M7 12h2"></path>
+                </svg>
                 Folha-Salarial
             </a>
-            <a class="nav-item-hr p-2.5 rounded-3 mb-2 d-flex align-items-center gap-2">
-                <!-- Ícone Recrutamento (Corrigido o alinhamento) -->
+            <a href="{{ route('recrutamento.index') }}" 
+            class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="14" height="11" rx="1.5"></rect>
                     <path d="M6 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"></path>
@@ -43,7 +53,7 @@
                 Recrutamentos
             </a>
 
-            <a class="nav-item-hr p-2.5 rounded-3 mb-2 d-flex align-items-center gap-2">
+            <a href="{{ route('candidatos.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2">
                 <!-- Ícone Candidatos (Corrigido viewBox e tamanho do desenho) -->
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -53,16 +63,11 @@
                 </svg>
                 Candidatos
             </a>
-
-            <a class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <a href="{{ route('financeiro.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                 Financeiro
             </a>
-            <a class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                Relatórios
-            </a>
-            <a class="nav-item-hr p-2.5 rounded-3 mb-1">
+            <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
                 Operacional/Estratégia
             </a>
@@ -86,7 +91,7 @@
             </div>
             <div class="d-flex gap-2">
                 <button class="btn btn-light bg-white border px-3 py-2 text-secondary fw-medium rounded-3" style="font-size: 13px;">Exportar</button>
-                <button class="btn text-white px-3 py-2 fw-medium rounded-3" style="background-color: var(--accent); font-size: 13px;">+ Novo Funcionario</button>
+                <a href="{{ route('funcionarios.index') }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none;">+ Novo Funcionario</a>
             </div>
         </div>
 
@@ -136,36 +141,60 @@
             </div>
             <div class="col-md-3">
                 <div class="card-custom p-4 shadow-sm">
-                    <span class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.02em;">Total Candidatos</span>
-                    <div class="stat-number">88</div>
-                    <span class="text-success small fw-medium d-block mt-2">↑ 4 dia anterior</span>
+                    <span class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.02em;">
+                        Total Candidatos
+                    </span>
+                    
+                    <div class="stat-number fw-bold fs-3 text-dark">
+                        {{ $totalCandidatos ?? 0 }}
+                    </div>
+                    
+                    @if(($novosHoje ?? 0) > 0)
+                        <span class="text-success small fw-medium d-block mt-2">
+                            ↑ +{{ $novosHoje }} adicionados hoje
+                        </span>
+                    @else
+                        <span class="text-muted small d-block mt-2">
+                            Sem novos registos hoje
+                        </span>
+                    @endif
                 </div>
             </div>
         </div>
 
-        <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
-            <span class="text-uppercase text-muted fw-bold me-2" style="font-size: 11px; letter-spacing: 0.05em;">Atenção</span>
-            
-            <!-- Alerta de Contrato (Vermelho) -->
-            <div class="d-flex align-items-center gap-2 bg-light border border-danger-subtle rounded px-2 py-1" style="font-size: 13px;">
-                <span class="rounded-circle bg-danger" style="width: 8px; height: 8px;"></span>
-                <span class="fw-medium">Contrato Elson Djaló expira em 8 dias · <span class="text-muted fw-normal">Renovação pendente</span></span>
+        @if(($contratoMaisUrgente && $diasRestantes <= 15) || $avaliacoesEmAtraso > 0)
+            <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
+                <span class="text-uppercase text-muted fw-bold me-2" style="font-size: 11px; letter-spacing: 0.05em;">Atenção</span>
+                
+                @if($contratoMaisUrgente && $diasRestantes <= 15)
+                    <div class="d-flex align-items-center gap-2 bg-light border border-danger-subtle rounded px-2 py-1" style="font-size: 13px;">
+                        <span class="rounded-circle bg-danger" style="width: 8px; height: 8px;"></span>
+                        <span class="fw-medium">
+                            Contrato de <strong class="text-dark">{{ $contratoMaisUrgente->nome }}</strong> expira em {{ $diasRestantes }} dias · 
+                            <span class="text-muted fw-normal">Renovação pendente</span>
+                        </span>
+                    </div>
+                @endif
+                
+                @if($avaliacoesEmAtraso > 0)
+                    <div class="d-flex align-items-center gap-2 bg-light border border-warning-subtle rounded px-2 py-1" style="font-size: 13px;">
+                        <span class="rounded-circle" style="width: 8px; height: 8px; background-color: #fd7e14;"></span>
+                        <span class="fw-medium">
+                            {{ $avaliacoesEmAtraso }} {{ $avaliacoesEmAtraso == 1 ? 'avaliação' : 'avaliações' }} de desempenho em atraso · 
+                            <span class="text-muted fw-normal">Revisão necessária</span>
+                        </span>
+                    </div>
+                @endif
             </div>
-            
-            <!-- Alerta de Avaliação (Laranja) -->
-            <div class="d-flex align-items-center gap-2 bg-light border border-warning-subtle rounded px-2 py-1" style="font-size: 13px;">
-                <span class="rounded-circle" style="width: 8px; height: 8px; background-color: #fd7e14;"></span>
-                <span class="fw-medium">3 avaliações de desempenho em atraso · <span class="text-muted fw-normal">Jun 2025</span></span>
-            </div>
-        </div>
+        @endif
 
 
         <div class="row g-4 mb-4">
             <div class="col-lg-8">
                 <div class="card-custom shadow-sm p-4 h-100 bg-white">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="fs-5 fw-bold text-dark m-0">Funcionarios</h3>
-                        <a href="#" class="text-accent text-decoration-none small fw-medium">Ver todos →</a>
+                        <h3 class="fs-5 fw-bold text-dark m-0">Funcionários</h3>
+                        <a href="{{ route('funcionarios.index') }}" class="text-accent text-decoration-none small fw-medium">Ver todos →</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-borderless align-middle mb-0">
@@ -178,38 +207,50 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="border-bottom">
-                                    <td class="py-3">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-medium" style="width:36px; height:36px; background-color: #0d9488;">SD</div>
-                                            <div>
-                                                <div class="fw-bold text-dark">Sidia Malam Inquade</div>
-                                                <div class="text-muted small">Dev Frontend</div>
+                                @forelse($colaboradores as $colab)
+                                    <tr class="border-bottom">
+                                        <td class="py-3">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-medium" style="width:36px; height:36px; background-color: #0d9488;">
+                                                    {{ $colab['iniciais'] ?? strtoupper(substr($colab['nome'], 0, 2)) }}
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold text-dark">{{ $colab['nome'] }}</div>
+                                                    <div class="text-muted small">{{ $colab['cargo'] }}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge px-3 py-1.5 rounded-5 fw-medium text-success" style="background-color: #e6fdfa;">Activo</span>
-                                    </td>
-                                    <td><span class="text-secondary">Permanente</span></td>
-                                    <td class="text-muted text-end">···</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-3">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-medium" style="width:36px; height:36px; background-color: #2563eb;">AB</div>
-                                            <div>
-                                                <div class="fw-bold text-dark">Elson Sakhir  Ba</div>
-                                                <div class="text-muted small">Dev Backend</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge px-3 py-1.5 rounded-5 fw-medium text-warning" style="background-color: #fff8e1; color: #b78103 !important;">Contrato · 8d</span>
-                                    </td>
-                                    <td><span class="text-secondary">Prazo fixo</span></td>
-                                    <td class="text-muted text-end">···</td>
-                                </tr>
+                                        </td>
+                                        <td class="text-center">
+                                            @if(!is_null($colab['dias_contrato']) && $colab['dias_contrato'] >= 0 && $colab['dias_contrato'] <= 30)
+                                                <span class="badge px-3 py-1.5 rounded-5 fw-medium text-warning" style="background-color: #fff8e1; color: #b78103 !important;">
+                                                    Contrato · {{ $colab['dias_contrato'] }}d
+                                                </span>
+                                            
+                                            @elseif(!is_null($colab['dias_contrato']) && $colab['dias_contrato'] < 0)
+                                                <span class="badge px-3 py-1.5 rounded-5 fw-medium text-danger" style="background-color: #fde8e8; color: #9b1c1c !important;">
+                                                    Expirado
+                                                </span>
+
+                                            @elseif($colab['estado'] === 'Activo')
+                                                <span class="badge px-3 py-1.5 rounded-5 fw-medium text-success" style="background-color: #e6fdfa;">
+                                                    Activo
+                                                </span>
+                                            @else
+                                                <span class="badge px-3 py-1.5 rounded-5 fw-medium text-secondary" style="background-color: #f1f3f5; color: #495057;">
+                                                    {{ $colab['estado'] }}
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td><span class="text-secondary">{{ $colab['tipo_contrato'] ?? 'Não Especificado' }}</span></td>
+                                        <td class="text-muted text-end" style="cursor: pointer;">···</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-4">
+                                            Nenhum funcionário ativo ou registado de momento.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -217,44 +258,68 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card-custom shadow-sm p-4 bg-white mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3 class="fs-5 fw-bold text-dark m-0">Ausências — Maio</h3>
-                        <a href="#" class="text-accent text-decoration-none small fw-medium">Gerir →</a>
-                    </div>
-                    <div class="d-grid text-center text-muted fw-medium mb-2" style="grid-template-columns: repeat(7, 1fr); font-size: 11px;">
-                        <span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span><span>D</span>
-                    </div>
-                    <div class="d-grid text-center align-items-center text-secondary row-gap-2" style="grid-template-columns: repeat(7, 1fr); font-size: 13px;">
-                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
-                        <span class="rounded-2 p-1 fw-bold text-dark" style="background-color: var(--orange-badge);">7</span>
-                        <span class="rounded-2 p-1 fw-bold text-dark" style="background-color: var(--orange-badge);">8</span>
-                        <span>9</span><span>10</span><span>11</span><span>12</span>
-                        <span class="rounded-2 p-1 text-white fw-medium" style="background-color: var(--accent);">13</span>
-                        <span>14</span>
-                    </div>
+            <div class="card-custom shadow-sm p-4 bg-white mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="fs-5 fw-bold text-dark m-0">Ausências — {{ $nomeMes }}</h3>
+                    <a href="{{ route('ferias.index') }}" class="text-accent text-decoration-none small fw-medium">Gerir →</a>
                 </div>
+                
+                <div class="d-grid text-center text-muted fw-medium mb-2" style="grid-template-columns: repeat(7, 1fr); font-size: 11px;">
+                    <span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span><span>D</span>
+                </div>
+                
+                <div class="d-grid text-center align-items-center text-secondary row-gap-2" style="grid-template-columns: repeat(7, 1fr); font-size: 13px;">
+                    
+                    @for($i = 1; $i < $diaSemanaInicio; $i++)
+                        <span></span>
+                    @endfor
 
-                <div class="card-custom shadow-sm p-4 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3 class="fs-6 fw-bold text-dark m-0">Presença — Hoje</h3>
-                        <a href="#" class="text-accent text-decoration-none small fw-medium">Ver todos →</a>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center py-2">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width:28px; height:28px; background-color: #0d9488; font-size: 10px;">SD</div>
-                            <div>
-                                <div class="fw-bold text-dark" style="font-size: 13px;">Sidia Malam Inquade</div>
-                                <div class="text-muted" style="font-size: 11px;">Dev Frontend</div>
-                            </div>
-                        </div>
-                        <span class="small text-success fw-medium d-flex align-items-center gap-1">
-                            <span class="rounded-circle d-inline-block" style="width: 6px; height: 6px; background-color: var(--green-badge);"></span>
-                            ● Presente
-                        </span>
-                    </div>
+                    @for($dia = 1; $dia <= $diasNoMes; $dia++)
+                        @if($dia == Carbon\Carbon::now()->day)
+                            <span class="rounded-2 p-1 text-white fw-medium" style="background-color: var(--accent);">{{ $dia }}</span>
+                        
+                        @elseif(in_array($dia, $diasComAusencia))
+                            <span class="rounded-2 p-1 fw-bold text-dark" style="background-color: var(--orange-badge);">{{ $dia }}</span>
+                        
+                        @else
+                            <span>{{ $dia }}</span>
+                        @endif
+                    @endfor
                 </div>
             </div>
+
+            <div class="card-custom shadow-sm p-4 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="fs-6 fw-bold text-dark m-0">Presença — Hoje</h3>
+                    <a class="text-accent text-decoration-none small fw-medium" style="cursor: pointer;">Ver todos →</a>
+                </div>
+
+                <div class="d-flex flex-column gap-3" style="max-height: 280px; overflow-y: auto;">
+                    @forelse($presencasDetalhadasHoje as $presenca)
+                        <div class="d-flex justify-content-between align-items-center py-1">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width:28px; height:28px; background-color: #0d9488; font-size: 10px;">
+                                    {{ $presenca->iniciais ?? strtoupper(substr($presenca->nome, 0, 2)) }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark" style="font-size: 13px;">{{ $presenca->nome }}</div>
+                                    <div class="text-muted" style="font-size: 11px;">{{ $presenca->cargo }}</div>
+                                </div>
+                            </div>
+                            
+                            <span class="small fw-medium d-flex align-items-center gap-1 {{ $presenca->status_hoje === 'Presente' ? 'text-success' : 'text-warning' }}">
+                                <span class="rounded-circle d-inline-block" style="width: 6px; height: 6px; background-color: {{ $presenca->status_hoje === 'Presente' ? 'var(--green-badge)' : '#fd7e14' }};"></span>
+                                {{ $presenca->status_hoje }}
+                            </span>
+                        </div>
+                    @empty
+                        <div class="text-center text-muted small py-3">
+                            Nenhum registo de ponto de entrada para o dia de hoje.
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
         </div>
 
         <div class="row g-3">
