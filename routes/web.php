@@ -12,6 +12,9 @@ use App\Http\Controllers\CandidatoController;
 use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\FormacaoController;
 use App\Http\Controllers\EstrategiaController;
+use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\AuthController;
+use App\Http\Middleware\CheckResponsavel;
 
 
 // 🆕 ROTA DO DASHBOARD (Adicionada aqui)
@@ -86,4 +89,47 @@ Route::patch('/operacional-estrategia/{id}/progresso', [EstrategiaController::cl
 Route::post('/operacional-estrategia', [EstrategiaController::class, 'store'])->name('estrategia.store');
 Route::put('/estrategia/{id}', [EstrategiaController::class, 'update'])->name('estrategia.update');
 
+// Rotas de indicadores operacionais
 Route::post('/operacional-estrategia/indicadores', [EstrategiaController::class, 'updateIndicadores'])->name('estrategia.indicadores.update');
+
+// Rotas de Usuários
+Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
+Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
+Route::put('/usuarios/{id}', [UsuarioController::class, 'update'])->name('usuarios.update');
+
+// Rotas de Visitante (Login e Esqueci Senha)
+// --- Áreas Restritas (Apenas para Responsável usando o apelido configurado) ---
+
+
+
+// Rotas Protegidas: Só entra quem estiver logado
+Route::middleware('auth')->group(function () {
+    
+    // Mude a rota do DashboardController para aqui dentro:
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/funcionarios', [FuncionarioController::class, 'index'])->name('funcionarios.index');
+
+    // --- Áreas Restritas (Apenas para Responsável) ---
+    Route::middleware('responsavel')->group(function () {
+        Route::get('/financeiro', [FinanceiroController::class, 'index'])->name('financeiro.index');
+        Route::get('/operacional-estrategia', [EstrategiaController::class, 'index'])->name('estrategia.index');
+        Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
+    });
+});
+
+
+
+// 🟢 GARANTE QUE ESTA LINHA TEM EXATAMENTE ->name('login')
+Route::get('/', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
+
+// Processamento do formulário de login
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+// Rotas Públicas
+Route::get('/', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+// 🟢 ADICIONA ESTA LINHA PARA ACABAR COM O ERRO:
+Route::get('/forgot-password', function () { return "Ecrã de recuperação em desenvolvimento..."; })->name('password.request');

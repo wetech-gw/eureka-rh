@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Garante a ligação à Base de Dados
-use Carbon\Carbon;                 // Garante a gestão de datas do Laravel
+use Illuminate\Support\Facades\DB;   // Garante a ligação à Base de Dados
+use Illuminate\Support\Facades\Auth; // 🟢 ADICIONADO: Garante o acesso ao utilizador logado
+use Carbon\Carbon;                   // Garante a gestão de datas do Laravel
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        // ==========================================================
+        // 🟢 ADICIONADO: SEGURANÇA E PERSONALIZAÇÃO DE ACESSO
+        // ==========================================================
+        $user = Auth::user(); // Pega no utilizador autenticado (Nhana ou Assistente)
+
         $hoje = Carbon::now()->toDateString();
 
         // 1. CARDS SUPERIORES (Cálculos Dinâmicos)
@@ -92,20 +98,17 @@ class DashboardController extends Controller
             ];
         });
 
-        // ==========================================================
-        // 6. ADICIONADO: DADOS PARA O MINI-CALENDÁRIO E PRESENÇAS DETALHADAS
-        // ==========================================================
-        // Altera esta linha no teu controlador:
+        // 6. DADOS PARA O MINI-CALENDÁRIO E PRESENÇAS DETALHADAS
         $mesAtualObjeto = Carbon::now();
-        $nomeMes = ucfirst($mesAtualObjeto->locale('pt')->translatedFormat('F')); // <-- Adicionado ->locale('pt')
+        $nomeMes = ucfirst($mesAtualObjeto->locale('pt')->translatedFormat('F'));
         $diasNoMes = $mesAtualObjeto->daysInMonth;
         $diaSemanaInicio = $mesAtualObjeto->startOfMonth()->dayOfWeekIso; 
 
-        // Dias numéricos com ausências registadas neste mês (Corrigido para data_inicio)
+        // Dias numéricos com ausências registadas neste mês
         $diasComAusencia = DB::table('ausencias')
             ->whereMonth('data_inicio', $mesAtualObjeto->month)
             ->whereYear('data_inicio', $mesAtualObjeto->year)
-            ->pluck('data_inicio') // <-- Agora aponta para a coluna real
+            ->pluck('data_inicio')
             ->map(function($data) {
                 return Carbon::parse($data)->day;
             })
@@ -118,8 +121,10 @@ class DashboardController extends Controller
             ->select('funcionarios.nome', 'funcionarios.cargo', 'funcionarios.iniciais', 'presencas.status_hoje')
             ->get();
 
-        // 7. RETORNO SEGURO PARA A VIEW (Com ABSOLUTAMENTE TODAS as variáveis)
+        // 7. RETORNO SEGURO PARA A VIEW (Com a variável '$user' incluída)
+       // 7. RETORNO SEGURO PARA A VIEW (Corrigido para 'dashboard')
         return view('dashboard', compact(
+            'user', 
             'totalFuncionarios', 
             'presencasHoje', 
             'ausentesHoje', 
