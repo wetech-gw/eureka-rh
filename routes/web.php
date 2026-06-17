@@ -82,3 +82,8 @@ Route::patch('/formacoes/{id}/estado', [FormacaoController::class, 'alterarEstad
 // Rotas da Página Operacional e Estratégia
 Route::get('/operacional-estrategia', [EstrategiaController::class, 'index'])->name('estrategia.index');
 Route::patch('/operacional-estrategia/{id}/progresso', [EstrategiaController::class, 'progresso'])->name('estrategia.progresso');
+// <<< ADICIONE ESTAS DUAS LINHAS ABAIXO >>>
+Route::post('/operacional-estrategia', [EstrategiaController::class, 'store'])->name('estrategia.store');
+Route::put('/estrategia/{id}', [EstrategiaController::class, 'update'])->name('estrategia.update');
+
+Route::post('/operacional-estrategia/indicadores', [EstrategiaController::class, 'updateIndicadores'])->name('estrategia.indicadores.update');

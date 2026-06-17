@@ -21,6 +21,11 @@
         .badge-critica { background-color: #f8d7da; color: #842029; }
         .badge-alta { background-color: #fff3cd; color: #664d03; }
         .badge-media { background-color: #e2e3e5; color: #41464b; }
+        
+        /* Novos estilos para botões e modais */
+        .btn-accent { background-color: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 500; transition: background 0.2s; }
+        .btn-accent:hover { background-color: #0b7a70; color: white; }
+        .form-control:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 0.25rem rgba(13, 148, 136, 0.15); }
     </style>
 </head>
 <body>
@@ -107,37 +112,89 @@
             </div>
         @endif
 
-        <div class="mb-4">
-            <h2 class="fw-bold m-0 text-dark">Operacional & Estratégia</h2>
-            <p class="text-muted small mb-0">Planeamento de OKRs, saúde do clima organizacional e execução de metas corporativas da Eureka</p>
+        <!-- Cabeçalho Melhorado com Botão de Ação -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold m-0 text-dark">Operacional & Estratégia</h2>
+                <p class="text-muted small mb-0">Planeamento de OKRs, saúde do clima organizacional e execução de metas corporativas da Eureka</p>
+            </div>
+            <button class="btn btn-accent px-3 py-2 small d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCriarMeta">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Novo Objetivo
+            </button>
         </div>
-
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+            <span class="text-uppercase text-muted fw-bold small" style="letter-spacing: 0.05em;">Métricas Globais do Mês</span>
+            <button class="btn btn-sm btn-outline-secondary px-2.5 py-1 rounded-3" data-bs-toggle="modal" data-bs-target="#modalIndicadores" style="font-size: 12px;">
+                ⚙️ Atualizar Métricas
+            </button>
+        </div>
         <!-- Indicadores de Saúde Organizacional -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="card-custom p-3 shadow-sm">
+        <div class="row g-3 mb-4 align-items-stretch">
+    
+        <div class="col-md-4">
+            <div class="card-custom p-3 shadow-sm h-100 d-flex flex-column justify-content-between">
+                <div>
                     <span class="text-muted small fw-bold d-block text-uppercase">Retenção (Turnover Mensal)</span>
                     <h3 class="fw-bold my-1 text-dark">{{ $indicadores->taxa_turnover ?? '0.0' }}%</h3>
-                    <span class="text-success small fw-medium">✓ Excelente estabilidade de equipa</span>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-custom p-3 shadow-sm">
-                    <span class="text-muted small fw-bold d-block text-uppercase">Clima Interno (eNPS)</span>
-                    <h3 class="fw-bold my-1 text-accent">+{{ $indicadores->indice_clima_enps ?? '0' }}</h3>
-                    <span class="text-muted small">Zona de Qualidade e Satisfação</span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-custom p-3 shadow-sm">
-                    <span class="text-muted small fw-bold d-block text-uppercase">Orçamento de Atividades Executado</span>
-                    <h4 class="fw-bold my-1 text-dark">
-                        {{ number_format($indicadores->orcamento_gasto ?? 0, 2, ',', '.') }}
-                    </h4>
-                    <div class="text-muted small">Limite Alocado: {{ number_format($indicadores->orcamento_limite ?? 0, 2, ',', '.') }}</div>
+                <div class="mt-2">
+                    @if(($indicadores->taxa_turnover ?? 0) <= 5)
+                        <span class="text-success small fw-medium">✓ Excelente estabilidade de equipa</span>
+                    @elseif(($indicadores->taxa_turnover ?? 0) <= 15)
+                        <span class="text-warning small fw-medium" style="color: #d97706 !important;">⚠ Rotatividade moderada; acompanhar</span>
+                    @else
+                        <span class="text-danger small fw-medium">🚨 Alerta: Rotatividade crítica na equipa!</span>
+                    @endif
                 </div>
             </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="card-custom p-3 shadow-sm h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <span class="text-muted small fw-bold d-block text-uppercase">Clima Interno (eNPS)</span>
+                    <h3 class="fw-bold my-1 text-accent">
+                        @if(($indicadores->indice_clima_enps ?? 0) > 0)+@endif{{ $indicadores->indice_clima_enps ?? '0' }}
+                    </h3>
+                </div>
+                <div class="mt-2">
+                    @if(($indicadores->indice_clima_enps ?? 0) >= 75)
+                        <span class="text-success small fw-medium">💎 Zona de Excelência (Colaboradores muito felizes)</span>
+                    @elseif(($indicadores->indice_clima_enps ?? 0) >= 50)
+                        <span class="text-accent small fw-medium">✓ Zona de Qualidade e Satisfação</span>
+                    @elseif(($indicadores->indice_clima_enps ?? 0) >= 0)
+                        <span class="text-warning small fw-medium" style="color: #d97706 !important;">⚠ Zona de Aperfeiçoamento (Neutro)</span>
+                    @else
+                        <span class="text-danger small fw-medium">🚨 Zona de Perigo (Clima organizacional crítico!)</span>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-custom p-3 shadow-sm h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <span class="text-muted small fw-bold d-block text-uppercase">Orçamento de Atividades Executado</span>
+                    <h3 class="fw-bold my-1 text-dark">
+                        {{ number_format($indicadores->orcamento_gasto ?? 0, 2, ',', '.') }}
+                    </h3>
+                </div>
+                <div class="mt-2">
+                    <div class="text-muted small mb-1">Limite Alocado: {{ number_format($indicadores->orcamento_limite ?? 0, 2, ',', '.') }}</div>
+                    
+                    @if(($indicadores->orcamento_gasto ?? 0) > ($indicadores->orcamento_limite ?? 0))
+                        <span class="text-danger small fw-bold">❌ Orçamento Estourado! Limite ultrapassado.</span>
+                    @elseif(($indicadores->orcamento_gasto ?? 0) >= (($indicadores->orcamento_limite ?? 0) * 0.9))
+                        <span class="text-warning small fw-medium" style="color: #d97706 !important;">⚠ Atenção: Próximo ao limite máximo (90%+)</span>
+                    @else
+                        <span class="text-success small fw-medium">✓ Despesas controladas e dentro do teto</span>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+    </div>
 
         <!-- Bloco de Metas / OKRs -->
         <div class="card-custom p-4">
@@ -149,8 +206,8 @@
                             <th>Objetivo / Iniciativa</th>
                             <th>Departamento</th>
                             <th>Prioridade</th>
-                            <th style="width: 30%;">Progresso</th>
-                            <th class="text-end">Ação</th>
+                            <th style="width: 30%;">Progresso Atual</th>
+                            <th class="text-end">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -175,16 +232,31 @@
                                     </div>
                                 </td>
                                 <td class="text-end">
-                                    @if($meta->progresso_atual < 100)
-                                        <form action="{{ route('estrategia.progresso', $meta->id) }}" method="POST" class="m-0">
-                                            @csrf @method('PATCH')
-                                            <button type="submit" class="btn btn-sm btn-light border py-1 px-2.5 rounded-3 fw-medium" style="font-size: 11px;">
-                                                📈 +10%
-                                            </button>
-                                        </form>
-                                    @else
-                                        <span class="text-success small fw-bold">✓ Concluído</span>
-                                    @endif
+                                    <div class="d-flex justify-content-end align-items-center gap-2">
+                                        @if($meta->progresso_atual < 100)
+                                            <form action="{{ route('estrategia.progresso', $meta->id) }}" method="POST" class="m-0">
+                                                @csrf @method('PATCH')
+                                                <button type="submit" class="btn btn-sm btn-light border py-1 px-2.5 rounded-3 fw-medium" style="font-size: 11px;" title="Incrementar 10%">
+                                                    📈 +10%
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="text-success small fw-bold me-1">✓ Concluído</span>
+                                        @endif
+                                        
+                                        <!-- Botão para Editar e ver Detalhes -->
+                                        <button class="btn btn-sm btn-light border p-1 rounded-3" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#modalEditarMeta"
+                                                data-id="{{ $meta->id }}"
+                                                data-titulo="{{ $meta->titulo }}"
+                                                data-departamento="{{ $meta->departamento }}"
+                                                data-prioridade="{{ $meta->prioridade }}"
+                                                data-prazo="{{ $meta->prazo_limite }}"
+                                                data-progresso="{{ $meta->progresso_atual }}">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -195,6 +267,175 @@
     </main>
 </div>
 
+<!-- ================= MODAL: ADICIONAR NOVO PLANEAMENTO ================= -->
+<div class="modal fade" id="modalCriarMeta" tabindex="-1" aria-labelledby="modalCriarMetaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
+            <div class="modal-header border-0 pt-4 px-4">
+                <h5 class="modal-title fw-bold text-dark" id="modalCriarMetaLabel">Novo Objetivo Estratégico</h5>
+                <button type="button" class="btn-close" data-bs-replace data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('estrategia.store') }}" method="POST">
+                @csrf
+                <div class="modal-body px-4 pb-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Título do Objetivo / OKR</label>
+                        <input type="text" name="titulo" class="form-control rounded-3" placeholder="Ex: Otimizar UX do portal Bissau-Digital" required>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Departamento</label>
+                            <input type="text" name="departamento" class="form-control rounded-3" placeholder="Ex: Tecnologia" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Prioridade</label>
+                            <select name="prioridade" class="form-select rounded-3" required>
+                                <option value="Média">Média</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Crítica">Crítica</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Prazo Limite</label>
+                            <input type="date" name="prazo_limite" class="form-control rounded-3" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Progresso Inicial (%)</label>
+                            <input type="number" name="progresso_atual" min="0" max="100" class="form-control rounded-3" value="0" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light p-3" style="border-bottom-right-radius: 14px; border-bottom-left-radius: 14px;">
+                    <button type="button" class="btn btn-sm btn-white border px-3 py-2 rounded-3 text-secondary fw-medium" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-sm btn-accent px-4 py-2 rounded-3">Salvar Planeamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL: EDITAR / DETALHES DO PLANEAMENTO ================= -->
+<div class="modal fade" id="modalEditarMeta" tabindex="-1" aria-labelledby="modalEditarMetaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
+            <div class="modal-header border-0 pt-4 px-4">
+                <h5 class="modal-title fw-bold text-dark" id="modalEditarMetaLabel">Modificar Objetivo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formEditarMeta" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body px-4 pb-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Título do Objetivo</label>
+                        <input type="text" name="titulo" id="edit_titulo" class="form-control rounded-3" required>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Departamento</label>
+                            <input type="text" name="departamento" id="edit_departamento" class="form-control rounded-3" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Prioridade</label>
+                            <select name="prioridade" id="edit_prioridade" class="form-select rounded-3" required>
+                                <option value="Média">Média</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Crítica">Crítica</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Prazo Limite</label>
+                            <input type="date" name="prazo_limite" id="edit_prazo" class="form-control rounded-3" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Progresso Atual (%)</label>
+                            <input type="number" name="progresso_atual" id="edit_progresso" min="0" max="100" class="form-control rounded-3" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light p-3" style="border-bottom-right-radius: 14px; border-bottom-left-radius: 14px;">
+                    <button type="button" class="btn btn-sm btn-white border px-3 py-2 rounded-3 text-secondary fw-medium" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-sm btn-accent px-4 py-2 rounded-3">Atualizar Dados</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- ================= MODAL: ATUALIZAR INDICADORES DE SAÚDE ================= -->
+<div class="modal fade" id="modalIndicadores" tabindex="-1" aria-labelledby="modalIndicadoresLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
+            <div class="modal-header border-0 pt-4 px-4">
+                <h5 class="modal-title fw-bold text-dark" id="modalIndicadoresLabel">Atualizar Saúde Organizacional</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('estrategia.indicadores.update') }}" method="POST">
+                @csrf
+                <div class="modal-body px-4 pb-4">
+                    <p class="text-muted small mb-3">Introduza as métricas consolidadas recolhidas pelas auditorias de clima e relatórios financeiros.</p>
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Turnover Mensal (%)</label>
+                            <input type="number" step="0.1" name="taxa_turnover" class="form-control rounded-3" value="{{ $indicadores->taxa_turnover ?? '0.0' }}" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Clima Interno (eNPS)</label>
+                            <input type="number" name="indice_clima_enps" class="form-control rounded-3" min="-100" max="100" value="{{ $indicadores->indice_clima_enps ?? '0' }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Orçamento Gasto (€)</label>
+                            <input type="number" step="0.01" name="orcamento_gasto" class="form-control rounded-3" value="{{ $indicadores->orcamento_gasto ?? '0.00' }}" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Limite Alocado (€)</label>
+                            <input type="number" step="0.01" name="orcamento_limite" class="form-control rounded-3" value="{{ $indicadores->orcamento_limite ?? '0.00' }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light p-3" style="border-bottom-right-radius: 14px; border-bottom-left-radius: 14px;">
+                    <button type="button" class="btn btn-sm btn-white border px-3 py-2 rounded-3 text-secondary fw-medium" data-bs-dismiss="modal">Voltar</button>
+                    <button type="submit" class="btn btn-sm btn-accent px-4 py-2 rounded-3">Gravar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Script JS corrigido para apontar para a rota operacional-estratégia
+    const modalEditar = document.getElementById('modalEditarMeta');
+    if (modalEditar) {
+        modalEditar.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            
+            // Extrair dados dos atributos data-* do botão clicado
+            const id = button.getAttribute('data-id');
+            const titulo = button.getAttribute('data-titulo');
+            const departamento = button.getAttribute('data-departamento');
+            const prioridade = button.getAttribute('data-prioridade');
+            const prazo = button.getAttribute('data-prazo');
+            const progresso = button.getAttribute('data-progresso');
+
+            // Atualizar os inputs do Modal
+            document.getElementById('edit_titulo').value = titulo;
+            document.getElementById('edit_departamento').value = departamento;
+            document.getElementById('edit_prioridade').value = prioridade;
+            document.getElementById('edit_prazo').value = prazo;
+            document.getElementById('edit_progresso').value = progresso;
+
+            // 🟢 CORREÇÃO AQUI: Garante o caminho exato que declarou no web.php
+            document.getElementById('formEditarMeta').action = `/operacional-estrategia/${id}`;
+        });
+    }
+</script>
 </body>
 </html>
