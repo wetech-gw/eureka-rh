@@ -10,19 +10,19 @@
         :root { --accent: #0d9488; }
         body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; }
         .wrapper { display: flex; width: 100%; min-height: 100vh; }
-        
-        .sidebar { 
-            width: 220px; 
-            height: 100vh; 
-            position: sticky; 
-            top: 0; 
-            background: white; 
-            flex-shrink: 0; 
-            overflow-y: auto; 
+
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            background: white;
+            flex-shrink: 0;
+            overflow-y: auto;
         }
-        
+
         .main-content { flex-grow: 1; padding: 1.5rem; background-color: #f8f9fa; overflow-y: auto; }
-        
+
         .nav-item-hr { display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: #495057; text-decoration: none; border-radius: 8px; margin-bottom: 2px; font-size: 13px; transition: all 0.2s; cursor: pointer; }
         .nav-item-hr:hover { background-color: #f1f3f5; color: #212529; text-decoration: none; }
         .nav-item-hr.active { background-color: #e6fdfa; color: var(--accent); font-weight: 600; text-decoration: none; }
@@ -34,7 +34,7 @@
 <body>
 
 <div class="wrapper">
-    
+
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
             <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
@@ -46,15 +46,15 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
                 Dashboard
             </a>
-            
+
             <a href="{{ route('funcionarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 Funcionarios
             </a>
             <a href="{{ route('ferias.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Férias & Ausências
-            </a>            
+                Férias & Licenças
+            </a>
             <a href="{{ route('avaliacoes.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                 Avaliações
@@ -76,7 +76,7 @@
                 </svg>
                 Folha-Salarial
             </a>
-            <a href="{{ route('recrutamento.index') }}" 
+            <a href="{{ route('recrutamento.index') }}"
             class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="14" height="11" rx="1.5"></rect>
@@ -121,7 +121,7 @@
             </form>
         </div>
         <div class="pt-3 border-top d-flex align-items-center gap-2 mt-auto">
-            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase" 
+            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase"
                 style="width:36px; height:36px; background-color: #00796b; font-size:11px; letter-spacing: 0.05em;">
                 @php
                     $words = explode(' ', Auth::user()->name);
@@ -129,7 +129,7 @@
                 @endphp
                 {{ $initials }}
             </div>
-            
+
             <div class="overflow-hidden">
                 <div class="fw-bold text-dark text-truncate" style="font-size: 13px; line-height: 1.2;" title="{{ Auth::user()->name }}">
                     {{ Auth::user()->name }}
@@ -142,7 +142,7 @@
     </aside>
 
     <main class="main-content">
-        
+
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show p-2 small mb-3" role="alert">
                 <i class="fa-solid fa-circle-check me-1"></i> {{ session('success') }}
@@ -222,7 +222,7 @@
                         <h6 class="fw-bold text-dark m-0">Últimos Lançamentos Financeiros</h6>
                         <span class="text-muted small">Histórico Geral</span>
                     </div>
-                    
+
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead>
@@ -270,48 +270,24 @@
                     <div class="pb-2 mb-3 border-bottom">
                         <h6 class="fw-bold text-dark m-0">Alocação de Despesas</h6>
                     </div>
-                    
+
                     <p class="text-muted small mb-3">Distribuição real de despesas acumuladas por categoria:</p>
-                    
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-medium text-dark mb-1">
-                            <span>Recursos Humanos / Salários</span>
-                            <span>{{ $categoriasDistribucao['Recursos Humanos / Salários'] ?? 0 }}%</span>
-                        </div>
-                        <div class="progress" style="height: 6px;">
-                            <div class="progress-bar" role="progressbar" style="width: {{ $categoriasDistribucao['Recursos Humanos / Salários'] ?? 0 }}%; background-color: #6b21a8;"></div>
-                        </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-medium text-dark mb-1">
-                            <span>Infraestrutura e TI</span>
-                            <span>{{ $categoriasDistribucao['Infraestrutura e TI'] ?? 0 }}%</span>
+                    {{-- Loop dinâmico pelas categorias vindas do banco --}}
+                    @forelse($categoriasDistribucao as $categoria => $porcentagem)
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between small fw-medium text-dark mb-1">
+                                <span>{{ $categoria }}</span>
+                                <span>{{ $porcentagem }}%</span>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                {{-- Usando bg-secondary como padrão para as barras --}}
+                                <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ $porcentagem }}%;"></div>
+                            </div>
                         </div>
-                        <div class="progress" style="height: 6px;">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ $categoriasDistribucao['Infraestrutura e TI'] ?? 0 }}%;"></div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-medium text-dark mb-1">
-                            <span>Prestação de Serviços</span>
-                            <span>{{ $categoriasDistribucao['Prestação de Serviços'] ?? 0 }}%</span>
-                        </div>
-                        <div class="progress" style="height: 6px;">
-                            <div class="progress-bar" role="progressbar" style="width: {{ $categoriasDistribucao['Prestação de Serviços'] ?? 0 }}%; background-color: #0d9488;"></div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-medium text-dark mb-1">
-                            <span>Administrativo & Logística</span>
-                            <span>{{ $categoriasDistribucao['Administrativo & Logística'] ?? 0 }}%</span>
-                        </div>
-                        <div class="progress" style="height: 6px;">
-                            <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ $categoriasDistribucao['Administrativo & Logística'] ?? 0 }}%;"></div>
-                        </div>
-                    </div>
+                    @empty
+                        <p class="text-muted small text-center my-4">Nenhuma despesa registrada ainda.</p>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -328,7 +304,7 @@
             <form action="{{ route('financeiro.store') }}" method="POST">
                 @csrf
                 <div class="modal-body text-start p-4">
-                    
+
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Tipo de Movimentação</label>
                         <div class="d-flex gap-3">
@@ -360,14 +336,15 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Categoria</label>
-                        <select name="categoria" class="form-select border-secondary-subtle" required>
-                            <option value="">Selecione a categoria...</option>
-                            <option value="Recursos Humanos / Salários">Recursos Humanos / Salários</option>
-                            <option value="Infraestrutura e TI">Infraestrutura e TI</option>
-                            <option value="Prestação de Serviços">Prestação de Serviços</option>
-                            <option value="Administrativo & Logística">Administrativo & Logística</option>
-                        </select>
+                        <label for="categoria" class="form-label small fw-bold text-secondary">Categoria</label>
+                        <input
+                            type="text"
+                            name="categoria"
+                            id="categoria"
+                            class="form-control border-secondary-subtle"
+                            placeholder="Digite o nome da categoria..."
+                            required
+                        >
                     </div>
 
                     <div class="mb-3">

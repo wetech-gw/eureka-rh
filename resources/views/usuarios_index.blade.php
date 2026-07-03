@@ -19,10 +19,14 @@
         .btn-accent { background-color: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 500; transition: background 0.2s; }
         .btn-accent:hover { background-color: #0b7a70; color: white; }
         .form-control:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 0.25rem rgba(13, 148, 136, 0.15); }
-        
+
         .badge-responsavel { background-color: #e0f2fe; color: #0369a1; }
         .badge-assistente { background-color: #f3e8ff; color: #6b21a8; }
+
+        /* Estilos dos Novos Estados */
         .badge-ativo { background-color: #dcfce7; color: #15803d; }
+        .badge-inativo { background-color: #f3f4f6; color: #4b5563; }
+        .badge-suspenso { background-color: #fee2e2; color: #b91c1c; }
     </style>
 </head>
 <body>
@@ -38,15 +42,15 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
                 Dashboard
             </a>
-            
+
             <a href="{{ route('funcionarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 Funcionarios
             </a>
             <a href="{{ route('ferias.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Férias & Ausências
-            </a>            
+                Férias & Licenças
+            </a>
             <a href="{{ route('avaliacoes.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                 Avaliações
@@ -68,7 +72,7 @@
                 </svg>
                 Folha-Salarial
             </a>
-            <a href="{{ route('recrutamento.index') }}" 
+            <a href="{{ route('recrutamento.index') }}"
             class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="14" height="11" rx="1.5"></rect>
@@ -78,7 +82,6 @@
             </a>
 
             <a href="{{ route('candidatos.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2">
-                <!-- Ícone Candidatos (Corrigido viewBox e tamanho do desenho) -->
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
@@ -114,7 +117,7 @@
             </form>
         </div>
         <div class="pt-3 border-top d-flex align-items-center gap-2 mt-auto">
-            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase" 
+            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase"
                 style="width:36px; height:36px; background-color: #00796b; font-size:11px; letter-spacing: 0.05em;">
                 @php
                     $words = explode(' ', Auth::user()->name);
@@ -122,7 +125,7 @@
                 @endphp
                 {{ $initials }}
             </div>
-            
+
             <div class="overflow-hidden">
                 <div class="fw-bold text-dark text-truncate" style="font-size: 13px; line-height: 1.2;" title="{{ Auth::user()->name }}">
                     {{ Auth::user()->name }}
@@ -138,6 +141,11 @@
         @if(session('success'))
             <div class="alert alert-success border-0 shadow-sm rounded-3 mb-3" role="alert">
                 {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger border-0 shadow-sm rounded-3 mb-3" role="alert">
+                {{ session('error') }}
             </div>
         @endif
 
@@ -186,16 +194,24 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="badge badge-ativo px-2.5 py-1 rounded-3">Ativo</span>
+                                    <!-- Badge Dinâmico de Estado -->
+                                    @if(($user->status ?? 'Ativo') == 'Ativo')
+                                        <span class="badge badge-ativo px-2.5 py-1 rounded-3">Ativo</span>
+                                    @elseif($user->status == 'Inativo')
+                                        <span class="badge badge-inativo px-2.5 py-1 rounded-3">Inativo</span>
+                                    @else
+                                        <span class="badge badge-suspenso px-2.5 py-1 rounded-3">Suspenso</span>
+                                    @endif
                                 </td>
                                 <td class="text-end">
-                                    <button class="btn btn-sm btn-light border p-1 rounded-3" 
-                                            data-bs-toggle="modal" 
+                                    <button class="btn btn-sm btn-light border p-1 rounded-3"
+                                            data-bs-toggle="modal"
                                             data-bs-target="#modalEditarUsuario"
                                             data-id="{{ $user->id }}"
                                             data-name="{{ $user->name }}"
                                             data-email="{{ $user->email }}"
-                                            data-role="{{ $user->role }}">
+                                            data-role="{{ $user->role }}"
+                                            data-status="{{ $user->status ?? 'Ativo' }}">
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
                                     </button>
                                 </td>
@@ -208,6 +224,7 @@
     </main>
 </div>
 
+<!-- Modal Criar Usuário -->
 <div class="modal fade" id="modalCriarUsuario" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
@@ -226,7 +243,7 @@
                         <label class="form-label small fw-bold text-muted text-uppercase">Endereço de E-mail</label>
                         <input type="email" name="email" class="form-control rounded-3" placeholder="nome@eurekaconsulting.com" required>
                     </div>
-                    <div class="row g-3">
+                    <div class="row g-3 mb-3">
                         <div class="col-6">
                             <label class="form-label small fw-bold text-muted text-uppercase">Nivel de Acesso</label>
                             <select name="role" class="form-select rounded-3" required>
@@ -235,9 +252,17 @@
                             </select>
                         </div>
                         <div class="col-6">
-                            <label class="form-label small fw-bold text-muted text-uppercase">Palavra-passe Inicial</label>
-                            <input type="password" name="password" class="form-control rounded-3" placeholder="Mínimo 6 caracteres" required>
+                            <label class="form-label small fw-bold text-muted text-uppercase">Estado Inicial</label>
+                            <select name="status" class="form-select rounded-3" required>
+                                <option value="Ativo" selected>Ativo</option>
+                                <option value="Inativo">Inativo</option>
+                                <option value="Suspenso">Suspenso</option>
+                            </select>
                         </div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Palavra-passe Inicial</label>
+                        <input type="password" name="password" class="form-control rounded-3" placeholder="Mínimo 6 caracteres" required>
                     </div>
                 </div>
                 <div class="modal-footer border-0 bg-light p-3" style="border-bottom-right-radius: 14px; border-bottom-left-radius: 14px;">
@@ -249,6 +274,7 @@
     </div>
 </div>
 
+<!-- Modal Editar Usuário -->
 <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
@@ -268,12 +294,22 @@
                         <label class="form-label small fw-bold text-muted text-uppercase">Endereço de E-mail</label>
                         <input type="email" name="email" id="edit_email" class="form-control rounded-3" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Função / Nivel</label>
-                        <select name="role" id="edit_role" class="form-select rounded-3" required>
-                            <option value="Responsável">Responsável (Acesso Total)</option>
-                            <option value="Assistente">Assistente (Operacional)</option>
-                        </select>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Função / Nivel</label>
+                            <select name="role" id="edit_role" class="form-select rounded-3" required>
+                                <option value="Responsável">Responsável (Acesso Total)</option>
+                                <option value="Assistente">Assistente (Operacional)</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Estado da Conta</label>
+                            <select name="status" id="edit_status" class="form-select rounded-3" required>
+                                <option value="Ativo">Ativo</option>
+                                <option value="Inativo">Inativo</option>
+                                <option value="Suspenso">Suspenso</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="mb-0">
                         <label class="form-label small fw-bold text-muted text-uppercase">Nova Palavra-passe (Deixe em branco para não alterar)</label>
@@ -299,10 +335,12 @@
             const name = button.getAttribute('data-name');
             const email = button.getAttribute('data-email');
             const role = button.getAttribute('data-role');
+            const status = button.getAttribute('data-status'); // Captura o status enviado pelo botão
 
             document.getElementById('edit_name').value = name;
             document.getElementById('edit_email').value = email;
             document.getElementById('edit_role').value = role;
+            document.getElementById('edit_status').value = status; // Define o status no select do Modal
 
             document.getElementById('formEditarUsuario').action = `/usuarios/${id}`;
         });

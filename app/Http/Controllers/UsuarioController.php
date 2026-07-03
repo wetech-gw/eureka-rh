@@ -11,53 +11,61 @@ class UsuarioController extends Controller
     public function index()
     {
         // Vai buscar todos os utilizadores da tabela 'users'
-        $usuarios = DB::table('users')->get();
-        return view('usuarios_index', compact('usuarios'));
+        $usuarios = DB::table("users")->get();
+        return view("usuarios_index", compact("usuarios"));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'role' => 'required|string',
-            'password' => 'required|string|min:6',
+            "name" => "required|string|max:255",
+            "email" => "required|email|unique:users,email",
+            "role" => "required|string",
+            "password" => "required|string|min:6",
+            "status" => "required|string", // Validação do estado adicionada
         ]);
 
-        DB::table('users')->insert([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role, // Coluna para diferenciar 'Responsável' de 'Assistente'
-            'password' => Hash::make($request->password),
-            'created_at' => now(),
-            'updated_at' => now(),
+        DB::table("users")->insert([
+            "name" => $request->name,
+            "email" => $request->email,
+            "role" => $request->role, // Coluna para diferenciar 'Responsável' de 'Assistente'
+            "status" => $request->status, // <- ADICIONADO AQUI PARA GUARDAR AO CRIAR
+            "password" => Hash::make($request->password),
+            "created_at" => now(),
+            "updated_at" => now(),
         ]);
 
-        return redirect()->back()->with('success', 'Utilizador criado com sucesso!');
+        return redirect()
+            ->back()
+            ->with("success", "Utilizador criado com sucesso!");
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'role' => 'required|string',
+            "name" => "required|string|max:255",
+            "email" => "required|email|unique:users,email," . $id,
+            "role" => "required|string",
+            "status" => "required|string",
         ]);
 
         $dados = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role,
-            'updated_at' => now(),
+            "name" => $request->name,
+            "email" => $request->email,
+            "role" => $request->role,
+            "status" => $request->status, // <- ADICIONADO AQUI PARA ATUALIZAR NA BASE DE DADOS
+            "updated_at" => now(),
         ];
 
         // Se introduzir nova palavra-passe, atualiza-a de forma segura
-        if ($request->filled('password')) {
-            $dados['password'] = Hash::make($request->password);
+        if ($request->filled("password")) {
+            $dados["password"] = Hash::make($request->password);
         }
 
-        DB::table('users')->where('id', $id)->update($dados);
+        DB::table("users")->where("id", $id)->update($dados);
 
-        return redirect()->back()->with('success', 'Conta de utilizador atualizada!');
+        return redirect()
+            ->back()
+            ->with("success", "Conta de utilizador atualizada!");
     }
 }

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="d-flex">
-    
+
         <aside class="sidebar border-end p-3 d-flex flex-column" style="min-height: 100vh;">
         <div class="mb-4">
             <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
@@ -14,7 +14,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
                 Dashboard
             </a>
-            
+
             <a href="{{ route('funcionarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 Funcionarios
@@ -22,8 +22,8 @@
 
             <a href="{{ route('ferias.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Férias & Ausências
-            </a>            
+                Férias & Licenças
+            </a>
 
             <a href="{{ route('avaliacoes.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -97,7 +97,7 @@
             </form>
         </div>
         <div class="pt-3 border-top d-flex align-items-center gap-2 mt-auto">
-            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase" 
+            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase"
                 style="width:36px; height:36px; background-color: #00796b; font-size:11px; letter-spacing: 0.05em;">
                 @php
                     $words = explode(' ', Auth::user()->name);
@@ -105,7 +105,7 @@
                 @endphp
                 {{ $initials }}
             </div>
-            
+
             <div class="overflow-hidden">
                 <div class="fw-bold text-dark text-truncate" style="font-size: 13px; line-height: 1.2;" title="{{ Auth::user()->name }}">
                     {{ Auth::user()->name }}
@@ -118,14 +118,16 @@
     </aside>
 
     <main class="main-content flex-grow-1 p-5">
-        
+
         <div class="d-flex justify-content-between align-items-start mb-4">
             <div>
                 <h1 class="font-serif display-5 fw-normal mb-1">Recursos Humanos</h1>
                 <p class="text-accent fw-normal mb-0" style="font-size: 15px;">Eureka Consulting — visão geral da equipa</p>
             </div>
             <div class="d-flex gap-2">
-                <button class="btn btn-light bg-white border px-3 py-2 text-secondary fw-medium rounded-3" style="font-size: 13px;">Exportar</button>
+                <a href="{{ route('documentos.index') }}" class="btn btn-light bg-white border px-3 py-2 text-secondary fw-medium rounded-3" style="font-size: 13px; text-decoration: none;">
+                    Registo de Documentos
+                </a>
                 <a href="{{ route('funcionarios.index') }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none;">+ Novo Funcionario</a>
             </div>
         </div>
@@ -134,9 +136,9 @@
             <div class="col-md-3">
                 <div class="card-custom p-4 shadow-sm">
                     <span class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.02em;">Total Funcionario</span>
-                    
+
                     <div class="stat-number">{{ $totalFuncionarios }}</div>
-                    
+
                     @if($novosEsteMes > 0)
                         <span class="text-success small fw-medium d-block mt-2">↑ {{ $novosEsteMes }} este mês</span>
                     @else
@@ -156,9 +158,9 @@
             <div class="col-md-3">
                 <div class="card-custom p-4 shadow-sm">
                     <span class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.02em;">Contratos a Expirar</span>
-                    
+
                     <div class="stat-number" style="color: #c94a4a;">{{ $contratosAExpirar }}</div>
-                    
+
                     @if($contratosAExpirar > 0 && !is_null($diasRestantes))
                         @if($diasRestantes == 0)
                             <span class="text-danger small fw-bold d-block mt-2">⚠️ Atenção: Termina HOJE!</span>
@@ -179,11 +181,11 @@
                     <span class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.02em;">
                         Total Candidatos
                     </span>
-                    
+
                     <div class="stat-number fw-bold fs-3 text-dark">
                         {{ $totalCandidatos ?? 0 }}
                     </div>
-                    
+
                     @if(($novosHoje ?? 0) > 0)
                         <span class="text-success small fw-medium d-block mt-2">
                             ↑ +{{ $novosHoje }} adicionados hoje
@@ -200,22 +202,22 @@
         @if(($contratoMaisUrgente && $diasRestantes <= 15) || $avaliacoesEmAtraso > 0)
             <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
                 <span class="text-uppercase text-muted fw-bold me-2" style="font-size: 11px; letter-spacing: 0.05em;">Atenção</span>
-                
+
                 @if($contratoMaisUrgente && $diasRestantes <= 15)
                     <div class="d-flex align-items-center gap-2 bg-light border border-danger-subtle rounded px-2 py-1" style="font-size: 13px;">
                         <span class="rounded-circle bg-danger" style="width: 8px; height: 8px;"></span>
                         <span class="fw-medium">
-                            Contrato de <strong class="text-dark">{{ $contratoMaisUrgente->nome }}</strong> expira em {{ $diasRestantes }} dias · 
+                            Contrato de <strong class="text-dark">{{ $contratoMaisUrgente->nome }}</strong> expira em {{ $diasRestantes }} dias ·
                             <span class="text-muted fw-normal">Renovação pendente</span>
                         </span>
                     </div>
                 @endif
-                
+
                 @if($avaliacoesEmAtraso > 0)
                     <div class="d-flex align-items-center gap-2 bg-light border border-warning-subtle rounded px-2 py-1" style="font-size: 13px;">
                         <span class="rounded-circle" style="width: 8px; height: 8px; background-color: #fd7e14;"></span>
                         <span class="fw-medium">
-                            {{ $avaliacoesEmAtraso }} {{ $avaliacoesEmAtraso == 1 ? 'avaliação' : 'avaliações' }} de desempenho em atraso · 
+                            {{ $avaliacoesEmAtraso }} {{ $avaliacoesEmAtraso == 1 ? 'avaliação' : 'avaliações' }} de desempenho em atraso ·
                             <span class="text-muted fw-normal">Revisão necessária</span>
                         </span>
                     </div>
@@ -223,22 +225,23 @@
             </div>
         @endif
 
-
         <div class="row g-4 mb-4">
             <div class="col-lg-8">
-                <div class="card-custom shadow-sm p-4 h-100 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="card-custom shadow-sm p-4 bg-white" style="height: 630px; display: flex; flex-direction: column;">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4" style="flex: 0 0 auto;">
                         <h3 class="fs-5 fw-bold text-dark m-0">Funcionários</h3>
                         <a href="{{ route('funcionarios.index') }}" class="text-accent text-decoration-none small fw-medium">Ver todos →</a>
                     </div>
-                    <div class="table-responsive">
+
+                    <div class="table-responsive" style="flex: 1 1 auto; overflow-y: auto; max-height: 100%;">
                         <table class="table table-borderless align-middle mb-0">
-                            <thead>
+                            <thead class="sticky-top bg-white" style="z-index: 1; top: 0;">
                                 <tr class="border-bottom text-muted small text-uppercase" style="font-size: 11px;">
-                                    <th class="pb-3">Nome</th>
-                                    <th class="pb-3 text-center">Estado</th>
-                                    <th class="pb-3">Contrato</th>
-                                    <th class="pb-3"></th>
+                                    <th class="pb-3 bg-white">Nome</th>
+                                    <th class="pb-3 text-center bg-white">Estado</th>
+                                    <th class="pb-3 bg-white">Contrato</th>
+                                    <th class="pb-3 bg-white"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -260,12 +263,10 @@
                                                 <span class="badge px-3 py-1.5 rounded-5 fw-medium text-warning" style="background-color: #fff8e1; color: #b78103 !important;">
                                                     Contrato · {{ $colab['dias_contrato'] }}d
                                                 </span>
-                                            
                                             @elseif(!is_null($colab['dias_contrato']) && $colab['dias_contrato'] < 0)
                                                 <span class="badge px-3 py-1.5 rounded-5 fw-medium text-danger" style="background-color: #fde8e8; color: #9b1c1c !important;">
                                                     Expirado
                                                 </span>
-
                                             @elseif($colab['estado'] === 'Activo')
                                                 <span class="badge px-3 py-1.5 rounded-5 fw-medium text-success" style="background-color: #e6fdfa;">
                                                     Activo
@@ -289,22 +290,23 @@
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
 
             <div class="col-lg-4">
             <div class="card-custom shadow-sm p-4 bg-white mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 class="fs-5 fw-bold text-dark m-0">Ausências — {{ $nomeMes }}</h3>
+                    <h3 class="fs-5 fw-bold text-dark m-0">Ferias — {{ $nomeMes }}</h3>
                     <a href="{{ route('ferias.index') }}" class="text-accent text-decoration-none small fw-medium">Gerir →</a>
                 </div>
-                
+
                 <div class="d-grid text-center text-muted fw-medium mb-2" style="grid-template-columns: repeat(7, 1fr); font-size: 11px;">
                     <span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span><span>D</span>
                 </div>
-                
+
                 <div class="d-grid text-center align-items-center text-secondary row-gap-2" style="grid-template-columns: repeat(7, 1fr); font-size: 13px;">
-                    
+
                     @for($i = 1; $i < $diaSemanaInicio; $i++)
                         <span></span>
                     @endfor
@@ -312,10 +314,10 @@
                     @for($dia = 1; $dia <= $diasNoMes; $dia++)
                         @if($dia == Carbon\Carbon::now()->day)
                             <span class="rounded-2 p-1 text-white fw-medium" style="background-color: var(--accent);">{{ $dia }}</span>
-                        
+
                         @elseif(in_array($dia, $diasComAusencia))
                             <span class="rounded-2 p-1 fw-bold text-dark" style="background-color: var(--orange-badge);">{{ $dia }}</span>
-                        
+
                         @else
                             <span>{{ $dia }}</span>
                         @endif
@@ -341,7 +343,7 @@
                                     <div class="text-muted" style="font-size: 11px;">{{ $presenca->cargo }}</div>
                                 </div>
                             </div>
-                            
+
                             <span class="small fw-medium d-flex align-items-center gap-1 {{ $presenca->status_hoje === 'Presente' ? 'text-success' : 'text-warning' }}">
                                 <span class="rounded-circle d-inline-block" style="width: 6px; height: 6px; background-color: {{ $presenca->status_hoje === 'Presente' ? 'var(--green-badge)' : '#fd7e14' }};"></span>
                                 {{ $presenca->status_hoje }}

@@ -6,37 +6,49 @@
     <title>Eureka RH - Funcionários</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --accent: #0d9488; }
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; }
-        
-        /* Layout Sidebar Integrado */
-        .wrapper { display: flex; width: 100%; min-height: 100vh; }
-        .sidebar { width: 220px; min-height: 100vh; background: white; flex-shrink: 0; }
-        .main-content { flex-grow: 1; padding: 1.5rem; background-color: #f8f9fa; overflow-y: auto; }
-        
-        .nav-item-hr { display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: #495057; text-decoration: none; border-radius: 8px; margin-bottom: 2px; font-size: 13px; transition: all 0.2s; cursor: pointer; }
-        .nav-item-hr svg { flex-shrink: 0; }
-        .nav-item-hr:hover { background-color: #f1f3f5; color: #212529; text-decoration: none; }
-        .nav-item-hr.active { background-color: #e6fdfa; color: var(--accent); font-weight: 600; text-decoration: none; }
-        .text-accent { color: var(--accent); }
+          :root { --accent: #0d9488; }
+          body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; overflow: hidden; }
 
-        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; }
-        .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
-        
-        .badge-activo { background-color: #e6fdfa; color: #0f5132; }
-        .badge-inactivo { background-color: #f8d7da; color: #842029; }
-        .badge-suspenso { background-color: #fff3cd; color: #664d03; }
+          .wrapper { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
 
-        /* Ajustes de Densidade para Formulários Compactos */
-        .form-label-compact { font-size: 11px; font-weight: 600; color: #495057; margin-bottom: 2px; }
-        .form-control-compact { padding: 4px 8px; font-size: 13px; border-radius: 6px; }
-        .modal-section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent); margin-bottom: 8px; font-weight: 700; }
-    </style>
+          /* Menu Lateral 100% Fixo */
+          .sidebar { width: 240px; height: 100vh; background: white; flex-shrink: 0; position: sticky; top: 0; z-index: 100; }
+
+          /* Conteúdo Principal Ajustado */
+          .main-content { flex-grow: 1; height: 100vh; padding: 1.5rem; background-color: #f8f9fa; display: flex; flex-direction: column; overflow: hidden; }
+
+          .nav-item-hr { display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: #495057; text-decoration: none; border-radius: 8px; margin-bottom: 2px; font-size: 13px; transition: all 0.2s; cursor: pointer; }
+          .nav-item-hr svg { flex-shrink: 0; }
+          .nav-item-hr:hover { background-color: #f1f3f5; color: #212529; text-decoration: none; }
+          .nav-item-hr.active { background-color: #e6fdfa; color: var(--accent); font-weight: 600; text-decoration: none; }
+          .text-accent { color: var(--accent); }
+
+          /* Card Customizado agindo como Container Flexível */
+          .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; }
+
+          /* Tabela Fixa com Scroll Interno Preciso */
+          .table-responsive-container { flex-grow: 1; overflow-y: auto; border-radius: 8px; }
+          .table th { position: sticky; top: 0; background-color: #f1f3f5 !important; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; z-index: 2; border-bottom: 2px solid #dee2e6; }
+
+          /* ESTADOS CORRIGIDOS (Estilização explícita sobre a classe .badge) */
+          .badge-activo { background-color: #e6fdfa; color: #0f5132; }
+          .badge-inactivo { background-color: #f8d7da; color: #842029; }
+          .badge-suspenso { background-color: #fff3cd; color: #664d03; }
+
+          .form-label-compact { font-size: 11px; font-weight: 600; color: #495057; margin-bottom: 2px; }
+          .form-control-compact { padding: 4px 8px; font-size: 13px; border-radius: 6px; }
+
+        /* Estilo Moderno para a Barra de Pesquisa Única */
+        .modern-search-group { position: relative; max-width: 380px; width: 100%; }
+        .modern-search-input { padding: 9px 16px 9px 40px; font-size: 13px; border-radius: 10px; border: 1px solid #e2e8f0; background-color: #f8fafc; transition: all 0.2s ease-in-out; }
+        .modern-search-input:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); outline: none; }
+        .modern-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; }
+      </style>
 </head>
 <body>
 
 <div class="wrapper">
-    
+
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
             <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
@@ -77,7 +89,7 @@
                 </svg>
                 Folha-Salarial
             </a>
-            <a href="{{ route('recrutamento.index') }}" 
+            <a href="{{ route('recrutamento.index') }}"
             class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="14" height="11" rx="1.5"></rect>
@@ -120,7 +132,7 @@
             </form>
         </div>
         <div class="pt-3 border-top d-flex align-items-center gap-2 mt-auto">
-            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase" 
+            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase"
                 style="width:36px; height:36px; background-color: #00796b; font-size:11px; letter-spacing: 0.05em;">
                 @php
                     $words = explode(' ', Auth::user()->name);
@@ -128,7 +140,7 @@
                 @endphp
                 {{ $initials }}
             </div>
-            
+
             <div class="overflow-hidden">
                 <div class="fw-bold text-dark text-truncate" style="font-size: 13px; line-height: 1.2;" title="{{ Auth::user()->name }}">
                     {{ Auth::user()->name }}
@@ -141,16 +153,28 @@
     </aside>
 
     <main class="main-content">
-        
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="fw-bold m-0 text-dark">Gestão de Funcionários</h2>
-                <p class="text-muted small mb-0">Eureka Consulting - Painel de Recursos Humanos</p>
-            </div>
-            <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent);" data-bs-toggle="modal" data-bs-target="#modalCadastro">
-                + Cadastrar Funcionário
-            </button>
-        </div>
+
+        <!-- CABEÇALHO COMPACTO: TÍTULO, PESQUISA E BOTÃO ALINHADOS -->
+               <header class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                   <div>
+                       <h2 class="fw-bold m-0 text-dark">Gestão de Funcionários</h2>
+                       <p class="text-muted small mb-0">Eureka Consulting - Painel de Recursos Humanos</p>
+                   </div>
+
+                   <!-- Zona de Ações Lado a Lado -->
+                   <div class="d-flex align-items-center gap-2 flex-grow-1 flex-sm-grow-0 justify-content-end">
+                       <!-- Barra de Pesquisa Única e Moderna -->
+                       <div class="modern-search-group">
+                           <i class="bi bi-search modern-search-icon"></i>
+                           <input type="text" class="form-control modern-search-input" id="searchEmployee" placeholder="Pesquisar funcionário...">
+                       </div>
+
+                       <!-- Botão de Cadastro original enviado -->
+                       <button class="btn text-white px-4 fw-medium rounded-3 text-nowrap" style="background-color: var(--accent);" data-bs-toggle="modal" data-bs-target="#modalCadastro">
+                           + Cadastrar Funcionário
+                       </button>
+                   </div>
+               </header>
 
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -172,7 +196,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Iniciais</th>
+                            <th>ID</th>
                             <th>Nome</th>
                             <th>Função / Cargo</th>
                             <th>Tipo</th>
@@ -185,7 +209,7 @@
                     <tbody>
                         @forelse($funcionarios as $f)
                             <tr>
-                                <td><span class="badge p-2 fw-bold" style="background-color: #0d9488;">{{ $f->iniciais }}</span></td>
+                                <td><span class="badge p-2 fw-bold" style="background-color: #0d9488;">#00 {{ $f->id }}</span></td>
                                 <td>
                                     <div class="fw-bold text-dark">{{ $f->nome }}</div>
                                     <span class="text-muted small">{{ $f->email }}</span>
@@ -232,7 +256,7 @@
             <form action="{{ route('funcionarios.store') }}" method="POST">
                 @csrf
                 <div class="modal-body p-3">
-                    
+
                     <div class="modal-section-title">1. Informações Pessoais & Contactos</div>
                     <div class="row g-2 mb-3">
                         <div class="col-md-5">
@@ -283,20 +307,23 @@
                             <label class="form-label-compact">Função / Cargo *</label>
                             <input type="text" name="cargo" class="form-control form-control-compact" placeholder="Ex: Contabilista" required>
                         </div>
-                        <div class="col-md-2">
+                        <!--<div class="col-md-2">
                             <label class="form-label-compact">Iniciais *</label>
                             <input type="text" name="iniciais" class="form-control form-control-compact" placeholder="ABC" maxlength="3" required>
-                        </div>
-                        <div class="col-md-3">
+                        </div>-->
+                        <div class="col-md-4">
                             <label class="form-label-compact">Tipo Trabalhador</label>
                             <select name="tipo_trabalhador" class="form-select form-control-compact">
                                 <option value="Subordinado">Subordinado (Outrem)</option>
                                 <option value="Liberal">Liberal (Própria)</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label class="form-label-compact">Tipo Contrato</label>
-                            <input type="text" name="tipo_contrato" value="Permanente" class="form-control form-control-compact">
+                            <select name="tipo_contrato" class="form-select form-control-compact">
+                                <option value="Permanente">Permanente</option>
+                                <option value="Temporário">Temporário</option>
+                            </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-compact">Início do Contrato *</label>
@@ -348,7 +375,7 @@
 
 
 @foreach($funcionarios as $f)
-    
+
     <div class="modal fade" id="modalVisualizar{{ $f->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content" style="border-radius: 12px;">
@@ -358,7 +385,7 @@
                 </div>
                 <div class="modal-body p-3" style="font-size: 13px;">
                     <div class="row g-3">
-                        <div class="col-6"><strong>Iniciais:</strong> <span class="badge bg-secondary">{{ $f->iniciais }}</span></div>
+                        <div class="col-6"><strong>ID:</strong> <span class="badge bg-secondary">#00 {{ $f->id }}</span></div>
                         <div class="col-6"><strong>Estado:</strong> {{ $f->estado }}</div>
                         <hr class="my-1 text-muted">
                         <div class="col-12"><strong>Email:</strong> {{ $f->email }}</div>
@@ -451,20 +478,20 @@
                                 <label class="form-label-compact">Função / Cargo *</label>
                                 <input type="text" name="cargo" value="{{ $f->cargo }}" class="form-control form-control-compact" required>
                             </div>
-                            <div class="col-md-2">
-                                <label class="form-label-compact">Iniciais *</label>
-                                <input type="text" name="iniciais" value="{{ $f->iniciais }}" class="form-control form-control-compact" maxlength="3" required>
-                            </div>
-                            <div class="col-md-3">
+
+                            <div class="col-md-4">
                                 <label class="form-label-compact">Tipo Trabalhador</label>
                                 <select name="tipo_trabalhador" class="form-select form-control-compact">
                                     <option value="Subordinado" {{ $f->tipo_trabalhador == 'Subordinado' ? 'selected' : '' }}>Subordinado (Outrem)</option>
                                     <option value="Liberal" {{ $f->tipo_trabalhador == 'Liberal' ? 'selected' : '' }}>Liberal (Própria)</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label class="form-label-compact">Tipo Contrato</label>
-                                <input type="text" name="tipo_contrato" value="{{ $f->tipo_contrato }}" class="form-control form-control-compact">
+                                <select name="tipo_contrato" class="form-select form-control-compact">
+                                    <option value="Permanente" {{ $f->tipo_contrato == 'Permanente' ? 'selected' : '' }}>Permanente</option>
+                                    <option value="Temporário" {{ $f->tipo_contrato == 'Temporário' ? 'selected' : '' }}>Temporário</option>
+                                </select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label-compact">Início do Contrato *</label>
@@ -516,5 +543,38 @@
 @endforeach
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchEmployee');
+
+    // Captura o evento de digitação
+    searchInput.addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase().trim();
+        // Seleciona todas as linhas (tr) do corpo da tabela de funcionários
+        const tableRows = document.querySelectorAll('.table-responsive tbody tr');
+
+        tableRows.forEach(row => {
+            // Ignora a linha caso seja a de "Nenhum funcionário encontrado"
+            if (row.cells.length === 1) return;
+
+            // Alvo 1: Nome do funcionário (ajuste o seletor conforme sua estrutura)
+            const nameElement = row.querySelector('.fw-bold.text-dark');
+            // Alvo 2: O contacto do funcionário (se estiver em alguma célula ou atributo)
+            // Se o contacto não estiver visível na tabela, você pode colocá-lo como data-attribute na <tr>: data-contacto="..."
+            const contactData = row.getAttribute('data-contacto') || '';
+
+            const nameText = nameElement ? nameElement.textContent.toLowerCase() : '';
+            const contactText = contactData.toLowerCase();
+
+            // Verifica se o termo pesquisado está no nome ou no contacto
+            if (nameText.includes(searchTerm) || contactText.includes(searchTerm)) {
+                row.style.display = ''; // Mostra a linha
+            } else {
+                row.style.display = 'none'; // Oculta a linha
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>

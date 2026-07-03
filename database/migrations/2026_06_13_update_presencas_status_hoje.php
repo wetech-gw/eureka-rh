@@ -5,15 +5,16 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         // Alter the enum to include all status types (matching view values)
-        DB::statement("ALTER TABLE presencas MODIFY COLUMN status_hoje ENUM('Presente', 'Atraso', 'Ausente', 'Falta Justificada', 'Falta Injustificada') DEFAULT 'Presente'");
+        DB::statement(
+            "ALTER TABLE presencas MODIFY COLUMN status_hoje ENUM('Presente', 'Falta') DEFAULT 'Presente'",
+        );
     }
 
     /**
@@ -22,6 +23,9 @@ return new class extends Migration
     public function down(): void
     {
         // Revert to original enum
-        DB::statement("ALTER TABLE presencas MODIFY COLUMN status_hoje ENUM('Presente', 'Atraso', 'Ausente') DEFAULT 'Presente'");
+        //
+        DB::statement(
+            "ALTER TABLE presencas MODIFY COLUMN status_hoje ENUM('Presente', 'Falta') DEFAULT 'Presente'",
+        );
     }
 };

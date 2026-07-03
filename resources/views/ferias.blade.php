@@ -8,11 +8,11 @@
     <style>
         :root { --accent: #0d9488; }
         body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; }
-        
+
         .wrapper { display: flex; width: 100%; min-height: 100vh; }
         .sidebar { width: 220px; min-height: 100vh; background: white; flex-shrink: 0; }
         .main-content { flex-grow: 1; padding: 1.5rem; background-color: #f8f9fa; overflow-y: auto; }
-        
+
         .nav-item-hr { display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: #495057; text-decoration: none; border-radius: 8px; margin-bottom: 2px; font-size: 13px; transition: all 0.2s; cursor: pointer; }
         .nav-item-hr svg { flex-shrink: 0; }
         .nav-item-hr:hover { background-color: #f1f3f5; color: #212529; text-decoration: none; }
@@ -21,7 +21,7 @@
 
         .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; }
         .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
-        
+
         .badge-aprovado { background-color: #d1e7dd; color: #0f5132; }
         .badge-pendente { background-color: #fff3cd; color: #664d03; }
         .badge-rejeitado { background-color: #f8d7da; color: #842029; }
@@ -34,7 +34,7 @@
 <body>
 
 <div class="wrapper">
-    
+
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
             <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
@@ -52,7 +52,7 @@
             </a>
             <a href="{{ route('ferias.index') }}" class="nav-item-hr active">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Férias & Ausências
+                Férias & Licenças
             </a>
             <a href="{{ route('avaliacoes.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -75,7 +75,7 @@
                 </svg>
                 Folha-Salarial
             </a>
-            <a href="{{ route('recrutamento.index') }}" 
+            <a href="{{ route('recrutamento.index') }}"
             class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="14" height="11" rx="1.5"></rect>
@@ -124,7 +124,7 @@
             </form>
         </div>
         <div class="pt-3 border-top d-flex align-items-center gap-2 mt-auto">
-            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase" 
+            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase"
                 style="width:36px; height:36px; background-color: #00796b; font-size:11px; letter-spacing: 0.05em;">
                 @php
                     $words = explode(' ', Auth::user()->name);
@@ -132,7 +132,7 @@
                 @endphp
                 {{ $initials }}
             </div>
-            
+
             <div class="overflow-hidden">
                 <div class="fw-bold text-dark text-truncate" style="font-size: 13px; line-height: 1.2;" title="{{ Auth::user()->name }}">
                     {{ Auth::user()->name }}
@@ -145,23 +145,37 @@
     </aside>
 
     <main class="main-content">
-        
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="fw-bold m-0 text-dark">Férias & Ausências</h2>
+
+        <div class="d-flex justify-content-between align-items-end align-items-md-center flex-column flex-md-row gap-3 mb-4">
+            <div class="text-nowrap flex-shrink-0">
+                <h2 class="fw-bold m-0 text-dark" style="white-space: nowrap; font-size: calc(1.3rem + 0.6vw);">Férias & Licenças</h2>
                 <p class="text-muted small mb-0">Eureka Consulting - Controlo de Disponibilidade e Faltas</p>
             </div>
-            <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent);" data-bs-toggle="modal" data-bs-target="#modalLancar">
-                + Registar Ausência / Férias
-            </button>
+
+            <div class="d-flex align-items-center gap-2 gap-sm-3 w-100 w-md-auto justify-content-md-end flex-wrap flex-sm-nowrap">
+                <div class="position-relative flex-grow-1 flex-sm-grow-0" style="min-width: 260px;">
+                    <input type="text"
+                           id="searchFuncionario"
+                           class="form-control bg-white border-secondary-subtle pe-5 py-2 rounded-3 small text-muted"
+                           placeholder="Pesquisar por nome ou telefone..."
+                           style="font-size: 14px; box-shadow: none;">
+                    <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted">
+                        <i class="bi bi-search" style="font-size: 14px;"></i>
+                    </span>
+                </div>
+
+                <button class="btn text-white px-4 py-2 fw-medium rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0" style="background-color: var(--accent); font-size: 14px;" data-bs-toggle="modal" data-bs-target="#modalLancar">
+                    + Registar Férias / Licença
+                </button>
+            </div>
         </div>
 
         <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="card-custom p-3 shadow-sm">
-                    <span class="text-muted small fw-bold d-block text-uppercase">Em Férias Hoje</span>
-                    <h3 class="fw-bold my-1 text-dark">{{ $emFeriasHoje }}</h3>
-                    <span class="text-muted small">Colaboradores ausentes hoje</span>
+                    <span class="text-muted small fw-bold d-block text-uppercase">Pedidos Aprovados</span>
+                    <h3 class="fw-bold my-1 text-dark">{{ $pedidosAprovados }}</h3>
+                    <span class="text-muted small">Total de pedidos aprovados</span>
                 </div>
             </div>
             <div class="col-md-4">
@@ -173,9 +187,9 @@
             </div>
             <div class="col-md-4">
                 <div class="card-custom p-3 shadow-sm">
-                    <span class="text-muted small fw-bold d-block text-uppercase">Faltas Registo (Mês)</span>
-                    <h3 class="fw-bold my-1 text-danger">{{ $faltasMes }}</h3>
-                    <span class="text-muted small font-medium">Total registado este mês</span>
+                    <span class="text-muted small fw-bold d-block text-uppercase">Pedidos Rejeitados</span>
+                    <h3 class="fw-bold my-1 text-danger">{{ $pedidosRejeitados }}</h3>
+                    <span class="text-muted small font-medium">Total de pedidos rejeitados</span>
                 </div>
             </div>
         </div>
@@ -191,20 +205,24 @@
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead>
-                        <tr>
+                        <tr class="border-bottom funcionario-row"
+                            data-nome="{{ strtolower($pedido->funcionario->nome ?? '') }}"
+                            data-telefone="{{ $pedido->funcionario->telefone ?? '' }}">
                             <th>Funcionário</th>
                             <th>Tipo</th>
                             <th>Início</th>
                             <th>Fim</th>
                             <th>Dias</th>
-                            <th>Justificado</th>
+                            <!--<th>Justificado</th>-->
                             <th>Estado</th>
                             <th class="text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($registos as $r)
-                            <tr>
+                        <tr class="border-bottom funcionario-row"
+                            data-nome="{{ strtolower($pedido->funcionario->nome ?? '') }}"
+                            data-telefone="{{ $pedido->funcionario->telefone ?? '' }}">
                                 <td>
                                     <div class="fw-bold text-dark">{{ $r->nome }}</div>
                                     <span class="text-muted small">{{ $r->cargo }}</span>
@@ -217,11 +235,7 @@
                                 <td>{{ date('d/m/Y', strtotime($r->data_inicio)) }}</td>
                                 <td>{{ date('d/m/Y', strtotime($r->data_fim)) }}</td>
                                 <td class="fw-bold">{{ $r->dias }}</td>
-                                <td>
-                                    <span class="badge {{ $r->justificado == 'Sim' ? 'bg-success' : 'bg-danger' }}">
-                                        {{ $r->justificado }}
-                                    </span>
-                                </td>
+
                                 <td>
                                     <span class="badge badge-{{ strtolower($r->estado_pedido) }} px-3 py-1.5 rounded-5 fw-medium">
                                         {{ $r->estado_pedido }}
@@ -239,7 +253,9 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
+                        <tr class="border-bottom funcionario-row"
+                            data-nome="{{ strtolower($pedido->funcionario->nome ?? '') }}"
+                            data-telefone="{{ $pedido->funcionario->telefone ?? '' }}">
                                 <td colspan="8" class="text-center text-muted py-4">Nenhum registo de ausência ou férias encontrado.</td>
                             </tr>
                         @endforelse
@@ -254,7 +270,7 @@
     <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header bg-light py-2 px-3">
-                <h6 class="modal-title fw-bold m-0">Registar Férias ou Ausência</h6>
+                <h6 class="modal-title fw-bold m-0">Registar Férias ou Licença</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form action="{{ route('ferias.store') }}" method="POST">
@@ -274,15 +290,14 @@
                             <label class="form-label-compact">Tipo de Registo *</label>
                             <select name="tipo" class="form-select form-control-compact" required>
                                 <option value="Férias">Férias</option>
-                                <option value="Falta">Falta / Ausência</option>
-                                <option value="Licença">Licença Médica</option>
+                                <option value="Licença">Licença</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label-compact">Estado Inicial</label>
                             <select name="estado_pedido" class="form-select form-control-compact">
-                                <option value="Aprovado">Aprovado</option>
                                 <option value="Pendente">Pendente</option>
+                                <option value="Aprovado">Aprovado</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -293,13 +308,13 @@
                             <label class="form-label-compact">Data de Fim *</label>
                             <input type="date" name="data_fim" class="form-control form-control-compact" required>
                         </div>
-                        <div class="col-md-12">
+                        <!--<div class="col-md-12">
                             <label class="form-label-compact">Justificado? (Se for Falta)</label>
                             <select name="justificado" class="form-select form-control-compact">
                                 <option value="Não">Não</option>
                                 <option value="Sim">Sim</option>
                             </select>
-                        </div>
+                        </div>-->
                         <div class="col-md-12">
                             <label class="form-label-compact">Observações / Motivo</label>
                             <textarea name="observacoes" rows="2" class="form-control form-control-compact" placeholder="Ex: Gozo de férias regulamentares ou Motivo de doença..."></textarea>
@@ -328,7 +343,6 @@
                     <p><strong>Tipo:</strong> {{ $r->tipo }}</p>
                     <p><strong>Período:</strong> {{ date('d/m/Y', strtotime($r->data_inicio)) }} até {{ date('d/m/Y', strtotime($r->data_fim)) }}</p>
                     <p><strong>Total de Dias:</strong> {{ $r->dias }} dia(s)</p>
-                    <p><strong>Justificado:</strong> {{ $r->justificado }}</p>
                     <p><strong>Estado do Pedido:</strong> {{ $r->estado_pedido }}</p>
                     <p><strong>Observações:</strong> {{ $r->observacoes ?? 'Sem observações gravadas.' }}</p>
                 </div>
@@ -352,8 +366,7 @@
                                 <label class="form-label-compact">Tipo</label>
                                 <select name="tipo" class="form-select form-control-compact">
                                     <option value="Férias" {{ $r->tipo == 'Férias' ? 'selected' : '' }}>Férias</option>
-                                    <option value="Falta" {{ $r->tipo == 'Falta' ? 'selected' : '' }}>Falta / Ausência</option>
-                                    <option value="Licença" {{ $r->tipo == 'Licença' ? 'selected' : '' }}>Licença Médica</option>
+                                    <option value="Licença" {{ $r->tipo == 'Licença' ? 'selected' : '' }}>Licença</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -372,13 +385,7 @@
                                 <label class="form-label-compact">Data Fim</label>
                                 <input type="date" name="data_fim" value="{{ $r->data_fim }}" class="form-control form-control-compact" required>
                             </div>
-                            <div class="col-md-12">
-                                <label class="form-label-compact">Justificado</label>
-                                <select name="justificado" class="form-select form-control-compact">
-                                    <option value="Sim" {{ $r->justificado == 'Sim' ? 'selected' : '' }}>Sim</option>
-                                    <option value="Não" {{ $r->justificado == 'Não' ? 'selected' : '' }}>Não</option>
-                                </select>
-                            </div>
+
                             <div class="col-md-12">
                                 <label class="form-label-compact">Observações</label>
                                 <textarea name="observacoes" rows="2" class="form-control form-control-compact">{{ $r->observacoes }}</textarea>
@@ -396,5 +403,49 @@
 @endforeach
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const inputPesquisa = document.getElementById('searchFuncionario');
+    const linhasFuncionarios = document.querySelectorAll('.funcionario-row');
+    const linhaSemResultados = document.getElementById('searchEmptyRow');
+
+    if (inputPesquisa) {
+        // Bloqueia a submissão e executa o filtro apenas ao carregar no ENTER
+        inputPesquisa.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Impede o recarregamento automático da página
+
+                const termoPesquisa = this.value.toLowerCase().trim();
+                let encontrouAlgum = false;
+
+                linhasFuncionarios.forEach(row => {
+                    const nome = row.getAttribute('data-nome') || '';
+                    const telefone = row.getAttribute('data-telefone') || '';
+
+                    // Se a barra estiver vazia, volta a mostrar todas as linhas
+                    if (termoPesquisa === '') {
+                        row.style.setProperty('display', '', 'important');
+                        encontrouAlgum = true;
+                    }
+                    // Caso contrário, filtra comparando com o Nome ou Telefone
+                    else if (nome.includes(termoPesquisa) || telefone.includes(termoPesquisa)) {
+                        row.style.setProperty('display', '', 'important');
+                        encontrouAlgum = true;
+                    } else {
+                        row.style.setProperty('display', 'none', 'important');
+                    }
+                });
+
+                // Controla a exibição da linha de aviso "Nenhum resultado encontrado"
+                if (!encontrouAlgum && termoPesquisa !== '') {
+                    if (linhaSemResultados) linhaSemResultados.style.display = '';
+                } else {
+                    if (linhaSemResultados) linhaSemResultados.style.display = 'none';
+                }
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>

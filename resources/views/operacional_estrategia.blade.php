@@ -21,7 +21,7 @@
         .badge-critica { background-color: #f8d7da; color: #842029; }
         .badge-alta { background-color: #fff3cd; color: #664d03; }
         .badge-media { background-color: #e2e3e5; color: #41464b; }
-        
+
         /* Novos estilos para botões e modais */
         .btn-accent { background-color: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 500; transition: background 0.2s; }
         .btn-accent:hover { background-color: #0b7a70; color: white; }
@@ -48,7 +48,7 @@
             </a>
             <a href="{{ route('ferias.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Férias & Ausências
+                Férias & Licenças
             </a>
             <a href="{{ route('avaliacoes.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -114,7 +114,7 @@
             </form>
         </div>
         <div class="pt-3 border-top d-flex align-items-center gap-2 mt-auto">
-            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase" 
+            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase"
                 style="width:36px; height:36px; background-color: #00796b; font-size:11px; letter-spacing: 0.05em;">
                 @php
                     $words = explode(' ', Auth::user()->name);
@@ -122,7 +122,7 @@
                 @endphp
                 {{ $initials }}
             </div>
-            
+
             <div class="overflow-hidden">
                 <div class="fw-bold text-dark text-truncate" style="font-size: 13px; line-height: 1.2;" title="{{ Auth::user()->name }}">
                     {{ Auth::user()->name }}
@@ -160,7 +160,7 @@
         </div>
         <!-- Indicadores de Saúde Organizacional -->
         <div class="row g-3 mb-4 align-items-stretch">
-    
+
         <div class="col-md-4">
             <div class="card-custom p-3 shadow-sm h-100 d-flex flex-column justify-content-between">
                 <div>
@@ -211,7 +211,7 @@
                 </div>
                 <div class="mt-2">
                     <div class="text-muted small mb-1">Limite Alocado: {{ number_format($indicadores->orcamento_limite ?? 0, 2, ',', '.') }}</div>
-                    
+
                     @if(($indicadores->orcamento_gasto ?? 0) > ($indicadores->orcamento_limite ?? 0))
                         <span class="text-danger small fw-bold">❌ Orçamento Estourado! Limite ultrapassado.</span>
                     @elseif(($indicadores->orcamento_gasto ?? 0) >= (($indicadores->orcamento_limite ?? 0) * 0.9))
@@ -272,10 +272,10 @@
                                         @else
                                             <span class="text-success small fw-bold me-1">✓ Concluído</span>
                                         @endif
-                                        
+
                                         <!-- Botão para Editar e ver Detalhes -->
-                                        <button class="btn btn-sm btn-light border p-1 rounded-3" 
-                                                data-bs-toggle="modal" 
+                                        <button class="btn btn-sm btn-light border p-1 rounded-3"
+                                                data-bs-toggle="modal"
                                                 data-bs-target="#modalEditarMeta"
                                                 data-id="{{ $meta->id }}"
                                                 data-titulo="{{ $meta->titulo }}"
@@ -353,7 +353,7 @@
                 <h5 class="modal-title fw-bold text-dark" id="modalEditarMetaLabel">Modificar Objetivo</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="formEditarMeta" method="POST">
+            <form id="formEditarMeta" method="POST" action="">
                 @csrf
                 @method('PUT')
                 <div class="modal-body px-4 pb-4">
@@ -406,7 +406,7 @@
                 @csrf
                 <div class="modal-body px-4 pb-4">
                     <p class="text-muted small mb-3">Introduza as métricas consolidadas recolhidas pelas auditorias de clima e relatórios financeiros.</p>
-                    
+
                     <div class="row g-3 mb-3">
                         <div class="col-6">
                             <label class="form-label small fw-bold text-muted text-uppercase">Turnover Mensal (%)</label>
@@ -421,11 +421,13 @@
                     <div class="row g-3">
                         <div class="col-6">
                             <label class="form-label small fw-bold text-muted text-uppercase">Orçamento Gasto (€)</label>
-                            <input type="number" step="0.01" name="orcamento_gasto" class="form-control rounded-3" value="{{ $indicadores->orcamento_gasto ?? '0.00' }}" required>
+                            {{-- Removido o 'required' --}}
+                            <input type="number" step="0.01" name="orcamento_gasto" class="form-control rounded-3" value="{{ $indicadores->orcamento_gasto ?? '0.00' }}">
                         </div>
                         <div class="col-6">
                             <label class="form-label small fw-bold text-muted text-uppercase">Limite Alocado (€)</label>
-                            <input type="number" step="0.01" name="orcamento_limite" class="form-control rounded-3" value="{{ $indicadores->orcamento_limite ?? '0.00' }}" required>
+                            {{-- Removido o 'required' --}}
+                            <input type="number" step="0.01" name="orcamento_limite" class="form-control rounded-3" value="{{ $indicadores->orcamento_limite ?? '0.00' }}">
                         </div>
                     </div>
                 </div>
@@ -445,7 +447,7 @@
     if (modalEditar) {
         modalEditar.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
-            
+
             // Extrair dados dos atributos data-* do botão clicado
             const id = button.getAttribute('data-id');
             const titulo = button.getAttribute('data-titulo');

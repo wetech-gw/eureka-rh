@@ -8,11 +8,11 @@
     <style>
         :root { --accent: #0d9488; }
         body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; }
-        
+
         .wrapper { display: flex; width: 100%; min-height: 100vh; }
         .sidebar { width: 220px; min-height: 100vh; background: white; flex-shrink: 0; }
         .main-content { flex-grow: 1; padding: 1.5rem; background-color: #f8f9fa; overflow-y: auto; }
-        
+
         .nav-item-hr { display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: #495057; text-decoration: none; border-radius: 8px; margin-bottom: 2px; font-size: 13px; transition: all 0.2s; cursor: pointer; }
         .nav-item-hr svg { flex-shrink: 0; }
         .nav-item-hr:hover { background-color: #f1f3f5; color: #212529; text-decoration: none; }
@@ -21,10 +21,10 @@
 
         .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; }
         .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
-        
+
         .badge-concluida { background-color: #d1e7dd; color: #0f5132; }
         .badge-pendente { background-color: #fff3cd; color: #664d03; }
-        
+
         .form-label-compact { font-size: 11px; font-weight: 600; color: #495057; margin-bottom: 2px; }
         .form-control-compact { padding: 4px 8px; font-size: 13px; border-radius: 6px; }
     </style>
@@ -32,7 +32,7 @@
 <body>
 
 <div class="wrapper">
-    
+
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
             <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
@@ -50,7 +50,7 @@
             </a>
             <a href="{{ route('ferias.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Férias & Ausências
+                Férias & Licenças
             </a>
             <a href="{{ route('avaliacoes.index') }}" class="nav-item-hr active">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -73,7 +73,7 @@
                 </svg>
                 Folha-Salarial
             </a>
-           <a href="{{ route('recrutamento.index') }}" 
+           <a href="{{ route('recrutamento.index') }}"
             class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="14" height="11" rx="1.5"></rect>
@@ -123,7 +123,7 @@
             </form>
         </div>
         <div class="pt-3 border-top d-flex align-items-center gap-2 mt-auto">
-            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase" 
+            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase"
                 style="width:36px; height:36px; background-color: #00796b; font-size:11px; letter-spacing: 0.05em;">
                 @php
                     $words = explode(' ', Auth::user()->name);
@@ -131,7 +131,7 @@
                 @endphp
                 {{ $initials }}
             </div>
-            
+
             <div class="overflow-hidden">
                 <div class="fw-bold text-dark text-truncate" style="font-size: 13px; line-height: 1.2;" title="{{ Auth::user()->name }}">
                     {{ Auth::user()->name }}
@@ -144,7 +144,7 @@
     </aside>
 
     <main class="main-content">
-        
+
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold m-0 text-dark">Avaliações de Desempenho</h2>
