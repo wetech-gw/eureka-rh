@@ -5,12 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eureka RH - Avaliações de Desempenho</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root { --accent: #0d9488; }
         body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; }
 
         .wrapper { display: flex; width: 100%; min-height: 100vh; }
-        .sidebar { width: 220px; min-height: 100vh; background: white; flex-shrink: 0; }
+
+        /* Menu Lateral Fixo */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            background: white;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
         .main-content { flex-grow: 1; padding: 1.5rem; background-color: #f8f9fa; overflow-y: auto; }
 
         .nav-item-hr { display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: #495057; text-decoration: none; border-radius: 8px; margin-bottom: 2px; font-size: 13px; transition: all 0.2s; cursor: pointer; }
@@ -20,19 +32,53 @@
         .text-accent { color: var(--accent); }
 
         .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; }
-        .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
+
+        /* NOVO: Estilos para fixar a tabela e ativar o Scroll */
+        .table-scrollable-container {
+            max-height: 400px; /* Altere este valor para controlar a altura visível da tabela */
+            overflow-y: auto;  /* Ativa o scroll vertical */
+            overflow-x: auto;  /* Ativa o scroll horizontal se a tela for pequena */
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .table-scrollable-container table {
+            border-collapse: separate; /* Necessário para o efeito sticky funcionar corretamente */
+            margin-bottom: 0;
+        }
+
+        .table-scrollable-container thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background-color: #f1f3f5 !important; /* Cor de fundo para não sobrepor o texto rolando por baixo */
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12); /* Garante a linha divisória inferior */
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+        }
 
         .badge-concluida { background-color: #d1e7dd; color: #0f5132; }
         .badge-pendente { background-color: #fff3cd; color: #664d03; }
 
         .form-label-compact { font-size: 11px; font-weight: 600; color: #495057; margin-bottom: 2px; }
         .form-control-compact { padding: 4px 8px; font-size: 13px; border-radius: 6px; }
+
+        /* Estilo da Barra de Pesquisa */
+        .modern-search-group { position: relative; width: 300px; }
+        .modern-search-input { padding: 9px 16px 9px 40px; font-size: 13px; border-radius: 10px; border: 1px solid #e2e8f0; background-color: #f8fafc; transition: all 0.2s ease-in-out; height: 38px; }
+        .modern-search-input:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); outline: none; }
+        .modern-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 4; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
 
+    <!-- SIDEBAR FIXA -->
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
             <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
@@ -73,17 +119,14 @@
                 </svg>
                 Folha-Salarial
             </a>
-           <a href="{{ route('recrutamento.index') }}"
-            class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
+            <a href="{{ route('recrutamento.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="14" height="11" rx="1.5"></rect>
                     <path d="M6 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"></path>
                 </svg>
                 Recrutamentos
             </a>
-
             <a href="{{ route('candidatos.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2">
-                <!-- Ícone Candidatos (Corrigido viewBox e tamanho do desenho) -->
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
@@ -96,10 +139,6 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                 Financeiro
             </a>
-            {{-- <a class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                Relatórios
-            </a> --}}
             <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
                 Operacional/Estratégia
@@ -143,18 +182,28 @@
         </div>
     </aside>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="main-content">
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
+        <!-- Cabeçalho Alinhado -->
+        <div class="row align-items-center mb-4 g-3">
+            <div class="col-12 col-md-5">
                 <h2 class="fw-bold m-0 text-dark">Avaliações de Desempenho</h2>
-                <p class="text-muted small mb-0">Gestão de competências e revisões periódicas dos colaboradores</p>
+                <p class="text-accent mb-0">Gestão de competências e revisões periódicas dos colaboradores</p>
             </div>
-            <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent);" data-bs-toggle="modal" data-bs-target="#modalAgendar">
-                + Agendar Avaliação
-            </button>
+
+            <div class="col-12 col-md-7 d-flex justify-content-md-end align-items-center gap-2">
+                <div class="modern-search-group">
+                    <i class="bi bi-search modern-search-icon"></i>
+                    <input type="text" class="form-control modern-search-input" id="searchAvaliacao" placeholder="Pesquisar por colaborador ou cargo...">
+                </div>
+
+                <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent); height: 38px;" data-bs-toggle="modal" data-bs-target="#modalAgendar">
+                    + Agendar Avaliação
+                </button>
+            </div>
         </div>
 
+        <!-- Indicadores -->
         <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="card-custom p-3 shadow-sm">
@@ -186,9 +235,10 @@
             </div>
         @endif
 
+        <!-- Tabela Dentro de Card Custom com Rolagem Interna -->
         <div class="card-custom p-4">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+            <div class="table-scrollable-container">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
                             <th>Funcionário</th>
@@ -201,9 +251,9 @@
                     </thead>
                     <tbody>
                         @forelse($avaliacoes as $av)
-                            <tr>
+                            <tr class="avaliacao-row" data-nome="{{ strtolower($av->nome) }}" data-cargo="{{ strtolower($av->cargo) }}">
                                 <td>
-                                    <div class="fw-bold text-dark">{{ $av->nome }}</div>
+                                    <div class="fw-bold text-dark name-target">{{ $av->nome }}</div>
                                     <span class="text-muted small">{{ $av->cargo }}</span>
                                 </td>
                                 <td>{{ date('d/m/Y', strtotime($av->data_avaliacao)) }}</td>
@@ -245,10 +295,11 @@
     </main>
 </div>
 
+<!-- MODAL AGENDAR -->
 <div class="modal fade" id="modalAgendar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
-            <div class="modal-header bg-light py-2 px-3">
+            <div class="modal-header text-white" style="background-color: #0d9488;">
                 <h6 class="modal-title fw-bold m-0">Agendar Nova Avaliação</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -280,11 +331,12 @@
     </div>
 </div>
 
+<!-- MODAIS DINÂMICOS -->
 @foreach($avaliacoes as $av)
     <div class="modal fade" id="modalVer{{ $av->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 12px;">
-                <div class="modal-header bg-dark text-white py-2 px-3">
+                <div class="modal-header text-white" style="background-color: #0d9488;">
                     <h6 class="modal-title fw-bold m-0">Avaliação: {{ $av->nome }}</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -295,7 +347,7 @@
                     <p><strong>Pontuação:</strong> {{ $av->nota ? $av->nota . '.0 / 5.0' : 'Ainda não avaliado' }}</p>
                     <hr>
                     <p><strong>Feedback / Comentários dos RH:</strong></p>
-                    <p class="bg-light p-2 rounded text-muted italic">{{ $av->comentarios ?? 'Nenhum comentário inserido.' }}</p>
+                    <p class="bg-light p-2 rounded text-muted fst-italic">{{ $av->comentarios ?? 'Nenhum comentário inserido.' }}</p>
                 </div>
             </div>
         </div>
@@ -304,7 +356,7 @@
     <div class="modal fade" id="modalLancarNota{{ $av->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 12px;">
-                <div class="modal-header bg-primary text-white py-2 px-3">
+                <div class="modal-header text-white" style="background-color: #0d9488;">
                     <h6 class="modal-title fw-bold m-0">Processar Avaliação - {{ $av->nome }}</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -343,7 +395,7 @@
                     </div>
                     <div class="modal-footer bg-light py-1">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-primary btn-sm">Gravar Avaliação</button>
+                        <button type="submit" class="btn btn-success btn-sm">Gravar Avaliação</button>
                     </div>
                 </form>
             </div>
@@ -352,5 +404,35 @@
 @endforeach
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const inputPesquisa = document.getElementById('searchAvaliacao');
+    const linhasAvaliacoes = document.querySelectorAll('.table-scrollable-container tbody tr.avaliacao-row');
+
+    if (inputPesquisa) {
+        inputPesquisa.addEventListener('input', function() {
+            const termoPesquisa = this.value.toLowerCase().trim();
+
+            linhasAvaliacoes.forEach(row => {
+                const nomeAttr = row.getAttribute('data-nome') || '';
+                const cargoAttr = row.getAttribute('data-cargo') || '';
+
+                if (termoPesquisa === '' || nomeAttr.includes(termoPesquisa) || cargoAttr.includes(termoPesquisa)) {
+                    row.style.setProperty('display', '', 'important');
+                } else {
+                    row.style.setProperty('display', 'none', 'important');
+                }
+            });
+        });
+
+        // Impede submissão de formulário por acidente ao pressionar Enter na pesquisa
+        inputPesquisa.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>

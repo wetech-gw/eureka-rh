@@ -5,45 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eureka RH - Funcionários</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-          :root { --accent: #0d9488; }
-          body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; overflow: hidden; }
+        :root { --accent: #0d9488; }
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; overflow: hidden; }
 
-          .wrapper { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
+        .wrapper { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
 
-          /* Menu Lateral 100% Fixo */
-          .sidebar { width: 240px; height: 100vh; background: white; flex-shrink: 0; position: sticky; top: 0; z-index: 100; }
+        /* Menu Lateral 100% Fixo */
+        .sidebar { width: 240px; height: 100vh; background: white; flex-shrink: 0; position: sticky; top: 0; z-index: 100; overflow-y: auto; }
 
-          /* Conteúdo Principal Ajustado */
-          .main-content { flex-grow: 1; height: 100vh; padding: 1.5rem; background-color: #f8f9fa; display: flex; flex-direction: column; overflow: hidden; }
+        /* Conteúdo Principal Ajustado */
+        .main-content { flex-grow: 1; height: 100vh; padding: 1.5rem; background-color: #f8f9fa; display: flex; flex-direction: column; overflow: hidden; }
 
-          .nav-item-hr { display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: #495057; text-decoration: none; border-radius: 8px; margin-bottom: 2px; font-size: 13px; transition: all 0.2s; cursor: pointer; }
-          .nav-item-hr svg { flex-shrink: 0; }
-          .nav-item-hr:hover { background-color: #f1f3f5; color: #212529; text-decoration: none; }
-          .nav-item-hr.active { background-color: #e6fdfa; color: var(--accent); font-weight: 600; text-decoration: none; }
-          .text-accent { color: var(--accent); }
+        .nav-item-hr { display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: #495057; text-decoration: none; border-radius: 8px; margin-bottom: 2px; font-size: 13px; transition: all 0.2s; cursor: pointer; }
+        .nav-item-hr svg { flex-shrink: 0; }
+        .nav-item-hr:hover { background-color: #f1f3f5; color: #212529; text-decoration: none; }
+        .nav-item-hr.active { background-color: #e6fdfa; color: var(--accent); font-weight: 600; text-decoration: none; }
+        .text-accent { color: var(--accent); }
 
-          /* Card Customizado agindo como Container Flexível */
-          .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; }
+        /* Card Customizado agindo como Container Flexível */
+        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; }
 
-          /* Tabela Fixa com Scroll Interno Preciso */
-          .table-responsive-container { flex-grow: 1; overflow-y: auto; border-radius: 8px; }
-          .table th { position: sticky; top: 0; background-color: #f1f3f5 !important; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; z-index: 2; border-bottom: 2px solid #dee2e6; }
+        /* Estilos para fixar a tabela e ativar o Scroll */
+        .table-scrollable-container {
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            position: relative;
+        }
 
-          /* ESTADOS CORRIGIDOS (Estilização explícita sobre a classe .badge) */
-          .badge-activo { background-color: #e6fdfa; color: #0f5132; }
-          .badge-inactivo { background-color: #f8d7da; color: #842029; }
-          .badge-suspenso { background-color: #fff3cd; color: #664d03; }
+        .table-scrollable-container table {
+            border-collapse: separate;
+            margin-bottom: 0;
+        }
 
-          .form-label-compact { font-size: 11px; font-weight: 600; color: #495057; margin-bottom: 2px; }
-          .form-control-compact { padding: 4px 8px; font-size: 13px; border-radius: 6px; }
+        .table-scrollable-container thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background-color: #f1f3f5 !important;
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+        }
 
-        /* Estilo Moderno para a Barra de Pesquisa Única */
-        .modern-search-group { position: relative; max-width: 380px; width: 100%; }
-        .modern-search-input { padding: 9px 16px 9px 40px; font-size: 13px; border-radius: 10px; border: 1px solid #e2e8f0; background-color: #f8fafc; transition: all 0.2s ease-in-out; }
+        /* ESTADOS CORRIGIDOS */
+        .badge-activo { background-color: #e6fdfa; color: #0f5132; }
+        .badge-inactivo { background-color: #f8d7da; color: #842029; }
+        .badge-suspenso { background-color: #fff3cd; color: #664d03; }
+
+        .form-label-compact { font-size: 11px; font-weight: 600; color: #495057; margin-bottom: 2px; }
+        .form-control-compact { padding: 4px 8px; font-size: 13px; border-radius: 6px; }
+        .modal-section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent); margin-bottom: 8px; font-weight: 700; }
+
+        /* Estilo Moderno e Corrigido para a Barra de Pesquisa */
+        .modern-search-group { position: relative; width: 300px; }
+        .modern-search-input { padding: 9px 16px 9px 40px; font-size: 13px; border-radius: 10px; border: 1px solid #e2e8f0; background-color: #f8fafc; transition: all 0.2s ease-in-out; height: 38px; width: 100%; }
         .modern-search-input:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); outline: none; }
-        .modern-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; }
-      </style>
+        .modern-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 4; }
+    </style>
 </head>
 <body>
 
@@ -66,7 +92,7 @@
             </a>
             <a href="{{ route('ferias.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Férias & Ausências
+                Férias & Licenças
             </a>
             <a href="{{ route('avaliacoes.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -89,26 +115,26 @@
                 </svg>
                 Folha-Salarial
             </a>
-            <a href="{{ route('recrutamento.index') }}"
-            class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
+            <a href="{{ route('recrutamento.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="14" height="11" rx="1.5"></rect>
                     <path d="M6 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"></path>
                 </svg>
                 Recrutamentos
             </a>
-            <a class="nav-item-hr">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <a href="{{ route('candidatos.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
                 Candidatos
             </a>
             <a href="{{ route('financeiro.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                 Financeiro
             </a>
-            {{-- <a class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                Relatórios
-            </a> --}}
             <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
                 Operacional/Estratégia
@@ -154,27 +180,23 @@
 
     <main class="main-content">
 
-        <!-- CABEÇALHO COMPACTO: TÍTULO, PESQUISA E BOTÃO ALINHADOS -->
-               <header class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                   <div>
-                       <h2 class="fw-bold m-0 text-dark">Gestão de Funcionários</h2>
-                       <p class="text-muted small mb-0">Eureka Consulting - Painel de Recursos Humanos</p>
-                   </div>
+        <header class="row align-items-center mb-4 g-3">
+            <div class="col-12 col-md-5">
+                <h2 class="fw-bold m-0 text-dark">Gestão de Funcionários</h2>
+                <p class="text-accent mb-0">Eureka Consulting - Painel de Recursos Humanos</p>
+            </div>
 
-                   <!-- Zona de Ações Lado a Lado -->
-                   <div class="d-flex align-items-center gap-2 flex-grow-1 flex-sm-grow-0 justify-content-end">
-                       <!-- Barra de Pesquisa Única e Moderna -->
-                       <div class="modern-search-group">
-                           <i class="bi bi-search modern-search-icon"></i>
-                           <input type="text" class="form-control modern-search-input" id="searchEmployee" placeholder="Pesquisar funcionário...">
-                       </div>
+            <div class="col-12 col-md-7 d-flex justify-content-md-end align-items-center gap-2">
+                <div class="modern-search-group">
+                    <i class="bi bi-search modern-search-icon"></i>
+                    <input type="text" class="form-control modern-search-input" id="searchEmployee" placeholder="Pesquisar funcionário...">
+                </div>
 
-                       <!-- Botão de Cadastro original enviado -->
-                       <button class="btn text-white px-4 fw-medium rounded-3 text-nowrap" style="background-color: var(--accent);" data-bs-toggle="modal" data-bs-target="#modalCadastro">
-                           + Cadastrar Funcionário
-                       </button>
-                   </div>
-               </header>
+                <button class="btn text-white px-4 fw-medium rounded-3 text-nowrap" style="background-color: var(--accent); height: 38px;" data-bs-toggle="modal" data-bs-target="#modalCadastro">
+                    + Cadastrar Funcionário
+                </button>
+            </div>
+        </header>
 
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -192,11 +214,10 @@
         @endif
 
         <div class="card-custom p-4">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+            <div class="table-scrollable-container">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Nome</th>
                             <th>Função / Cargo</th>
                             <th>Tipo</th>
@@ -208,10 +229,9 @@
                     </thead>
                     <tbody>
                         @forelse($funcionarios as $f)
-                            <tr>
-                                <td><span class="badge p-2 fw-bold" style="background-color: #0d9488;">#00 {{ $f->id }}</span></td>
+                            <tr class="funcionario-row" data-nome="{{ strtolower($f->nome) }}" data-cargo="{{ strtolower($f->cargo) }}">
                                 <td>
-                                    <div class="fw-bold text-dark">{{ $f->nome }}</div>
+                                    <div class="fw-bold text-dark target-name">{{ $f->nome }}</div>
                                     <span class="text-muted small">{{ $f->email }}</span>
                                 </td>
                                 <td>{{ $f->cargo }}</td>
@@ -236,7 +256,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center text-muted py-4">Nenhum funcionário cadastrado até ao momento.</td>
+                                <td colspan="7" class="text-center text-muted py-4">Nenhum funcionário cadastrado até ao momento.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -249,7 +269,7 @@
 <div class="modal fade" id="modalCadastro" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
-            <div class="modal-header bg-light py-2 px-3">
+            <div class="modal-header text-white" style="background-color: #0d9488;">
                 <h6 class="modal-title fw-bold m-0">Novo Cadastro de Funcionário</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -307,10 +327,6 @@
                             <label class="form-label-compact">Função / Cargo *</label>
                             <input type="text" name="cargo" class="form-control form-control-compact" placeholder="Ex: Contabilista" required>
                         </div>
-                        <!--<div class="col-md-2">
-                            <label class="form-label-compact">Iniciais *</label>
-                            <input type="text" name="iniciais" class="form-control form-control-compact" placeholder="ABC" maxlength="3" required>
-                        </div>-->
                         <div class="col-md-4">
                             <label class="form-label-compact">Tipo Trabalhador</label>
                             <select name="tipo_trabalhador" class="form-select form-control-compact">
@@ -330,7 +346,7 @@
                             <input type="date" name="data_inicio_contrato" class="form-control form-control-compact" required>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label-compact">Fim periodo de experiencia</label>
+                            <label class="form-label-compact">Fim período de experiencia</label>
                             <input type="date" name="data_fim_periodo_experiencia" class="form-control form-control-compact">
                         </div>
                         <div class="col-md-4">
@@ -373,13 +389,11 @@
     </div>
 </div>
 
-
 @foreach($funcionarios as $f)
-
     <div class="modal fade" id="modalVisualizar{{ $f->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content" style="border-radius: 12px;">
-                <div class="modal-header bg-dark text-white py-2 px-3">
+                <div class="modal-header text-white" style="background-color: #0d9488;">
                     <h6 class="modal-title fw-bold m-0">Ficha Completa: {{ $f->nome }}</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -402,8 +416,8 @@
                         <div class="col-6"><strong>Tipo Trabalho:</strong> {{ $f->tipo_trabalhador }}</div>
                         <div class="col-6"><strong>Contrato:</strong> {{ $f->tipo_contrato }}</div>
                         <div class="col-6"><strong>Início Contrato:</strong> {{ date('d/m/Y', strtotime($f->data_inicio_contrato)) }}</div>
-                        <div class="col-6"><strong>Fin periodo Exp</strong> {{ $f->data_fim_periodo_experiencia}}</div>
-                        <div class="col-6"><strong>Fin de Contrato</strong> {{ $f->data_fim_contrato}}</div>
+                        <div class="col-6"><strong>Fin periodo Exp:</strong> {{ $f->data_fim_periodo_experiencia }}</div>
+                        <div class="col-6"><strong>Fin de Contrato:</strong> {{ $f->data_fim_contrato }}</div>
                         <hr class="my-1 text-muted">
                         <div class="col-12"><strong>Salário Bruto:</strong> <span class="text-primary fw-bold">{{ number_format($f->salario_bruto, 0, ',', '.') }} XOF</span></div>
                         <div class="col-6"><strong>Banco:</strong> {{ $f->banco ?? 'N/A' }}</div>
@@ -420,7 +434,7 @@
     <div class="modal fade" id="modalEditar{{ $f->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content" style="border-radius: 12px;">
-                <div class="modal-header bg-primary text-white py-2 px-3">
+                <div class="modal-header text-white" style="background-color: #0d9488;">
                     <h6 class="modal-title fw-bold m-0">Editar Funcionário — {{ $f->nome }}</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -478,7 +492,6 @@
                                 <label class="form-label-compact">Função / Cargo *</label>
                                 <input type="text" name="cargo" value="{{ $f->cargo }}" class="form-control form-control-compact" required>
                             </div>
-
                             <div class="col-md-4">
                                 <label class="form-label-compact">Tipo Trabalhador</label>
                                 <select name="tipo_trabalhador" class="form-select form-control-compact">
@@ -498,7 +511,7 @@
                                 <input type="date" name="data_inicio_contrato" value="{{ $f->data_inicio_contrato }}" class="form-control form-control-compact" required>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label-compact">Fim Exp.</label>
+                                <label class="form-label-compact">Fim periodo de experiencia</label>
                                 <input type="date" name="data_fim_periodo_experiencia" value="{{ $f->data_fim_periodo_experiencia }}" class="form-control form-control-compact">
                             </div>
                             <div class="col-md-4">
@@ -511,7 +524,7 @@
                         <div class="row g-2">
                             <div class="col-md-4">
                                 <label class="form-label-compact">Salário Bruto (XOF) *</label>
-                                <input type="number" name="salario_bruto" value="{{ $f->salario_bruto }}" class="form-control form-control-compact text-primary fw-bold" min="0" required>
+                                <input type="number" name="salario_bruto" value="{{ $f->salario_bruto }}" class="form-control form-control-compact text-primary fw-bold" required>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label-compact">Banco</label>
@@ -532,48 +545,49 @@
                         </div>
                     </div>
                     <div class="modal-footer bg-light py-1 px-3">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary btn-sm shadow-sm">Salvar Alterações</button>
+                        <button type="button" class="btn btn-xs btn-secondary py-1 px-3 small shadow-sm" data-bs-dismiss="modal" style="font-size: 12px;">Cancelar</button>
+                        <button type="submit" class="btn btn-xs btn-success py-1 px-3 small shadow-sm" style="font-size: 12px;">Atualizar Ficha</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
 @endforeach
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('searchEmployee');
+document.addEventListener("DOMContentLoaded", function() {
+    const inputPesquisa = document.getElementById('searchEmployee');
+    // Seleciona as linhas da tabela dentro do container com rolagem
+    const linhasFuncionarios = document.querySelectorAll('.table-scrollable-container tbody tr.funcionario-row');
 
-    // Captura o evento de digitação
-    searchInput.addEventListener('input', function () {
-        const searchTerm = this.value.toLowerCase().trim();
-        // Seleciona todas as linhas (tr) do corpo da tabela de funcionários
-        const tableRows = document.querySelectorAll('.table-responsive tbody tr');
+    if (inputPesquisa) {
+        inputPesquisa.addEventListener('input', function() {
+            const termoPesquisa = this.value.toLowerCase().trim();
 
-        tableRows.forEach(row => {
-            // Ignora a linha caso seja a de "Nenhum funcionário encontrado"
-            if (row.cells.length === 1) return;
+            linhasFuncionarios.forEach(row => {
+                const nomeAttr = row.getAttribute('data-nome') || '';
+                const cargoAttr = row.getAttribute('data-cargo') || '';
 
-            // Alvo 1: Nome do funcionário (ajuste o seletor conforme sua estrutura)
-            const nameElement = row.querySelector('.fw-bold.text-dark');
-            // Alvo 2: O contacto do funcionário (se estiver em alguma célula ou atributo)
-            // Se o contacto não estiver visível na tabela, você pode colocá-lo como data-attribute na <tr>: data-contacto="..."
-            const contactData = row.getAttribute('data-contacto') || '';
+                // Pesquisa alternativa no texto interno da tag de nome
+                const nameElement = row.querySelector('.target-name');
+                const nomeText = nameElement ? nameElement.textContent.toLowerCase() : '';
 
-            const nameText = nameElement ? nameElement.textContent.toLowerCase() : '';
-            const contactText = contactData.toLowerCase();
+                if (termoPesquisa === '' || nomeText.includes(termoPesquisa) || nomeAttr.includes(termoPesquisa) || cargoAttr.includes(termoPesquisa)) {
+                    row.style.setProperty('display', '', 'important');
+                } else {
+                    row.style.setProperty('display', 'none', 'important');
+                }
+            });
+        });
 
-            // Verifica se o termo pesquisado está no nome ou no contacto
-            if (nameText.includes(searchTerm) || contactText.includes(searchTerm)) {
-                row.style.display = ''; // Mostra a linha
-            } else {
-                row.style.display = 'none'; // Oculta a linha
+        // Impede que o "Enter" na pesquisa tente submeter formulários na página
+        inputPesquisa.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
             }
         });
-    });
+    }
 });
 </script>
 </body>

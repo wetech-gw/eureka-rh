@@ -119,18 +119,33 @@
 
     <main class="main-content flex-grow-1 p-5">
 
-        <div class="d-flex justify-content-between align-items-start mb-4">
-            <div>
-                <h1 class="font-serif display-5 fw-normal mb-1">Recursos Humanos</h1>
-                <p class="text-accent fw-normal mb-0" style="font-size: 15px;">Eureka Consulting — visão geral da equipa</p>
+    <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h1 class="font-serif display-5 fw-normal mb-1">Recursos Humanos</h1>
+                    <p class="text-accent fw-normal mb-0" style="font-size: 15px;">Eureka Consulting — visão geral da equipa</p>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+
+                    <a href="{{ route('contatos.index') }}" class="btn btn-light bg-white border p-2 text-secondary rounded-3 d-flex align-items-center justify-content-center position-relative" style="width: 38px; height: 38px; text-decoration: none;" title="Mensagens de Contacto">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+
+                        <span id="badge-sms" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light d-none" style="font-size: 9px; padding: 3px 6px; margin-top: 6px; margin-left: -6px;">
+                            0
+                        </span>
+                    </a>
+
+                    <a href="{{ route('documentos.index') }}" class="btn btn-light bg-white border px-3 py-2 text-secondary fw-medium rounded-3" style="font-size: 13px; text-decoration: none; height: 38px; display: flex; align-items: center;">
+                        Registo de Documentos
+                    </a>
+
+                    <a href="{{ route('funcionarios.index') }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none; height: 38px;">
+                        + Novo Funcionario
+                    </a>
+                </div>
             </div>
-            <div class="d-flex gap-2">
-                <a href="{{ route('documentos.index') }}" class="btn btn-light bg-white border px-3 py-2 text-secondary fw-medium rounded-3" style="font-size: 13px; text-decoration: none;">
-                    Registo de Documentos
-                </a>
-                <a href="{{ route('funcionarios.index') }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none;">+ Novo Funcionario</a>
-            </div>
-        </div>
 
         <div class="row g-3 mb-4">
             <div class="col-md-3">
@@ -186,9 +201,9 @@
                         {{ $totalCandidatos ?? 0 }}
                     </div>
 
-                    @if(($novosHoje ?? 0) > 0)
+                    @if(($candidatosNovosHoje ?? 0) > 0)
                         <span class="text-success small fw-medium d-block mt-2">
-                            ↑ +{{ $novosHoje }} adicionados hoje
+                            ↑ +{{ $candidatosNovosHoje }} adicionados hoje
                         </span>
                     @else
                         <span class="text-muted small d-block mt-2">
@@ -199,7 +214,7 @@
             </div>
         </div>
 
-        @if(($contratoMaisUrgente && $diasRestantes <= 15) || $avaliacoesEmAtraso > 0)
+        @if(($contratoMaisUrgente && $diasRestantes <= 15) || $avaliacoesEmAtraso > 0 || ($candidatosNovosHoje ?? 0) > 0)
             <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
                 <span class="text-uppercase text-muted fw-bold me-2" style="font-size: 11px; letter-spacing: 0.05em;">Atenção</span>
 
@@ -209,6 +224,16 @@
                         <span class="fw-medium">
                             Contrato de <strong class="text-dark">{{ $contratoMaisUrgente->nome }}</strong> expira em {{ $diasRestantes }} dias ·
                             <span class="text-muted fw-normal">Renovação pendente</span>
+                        </span>
+                    </div>
+                @endif
+
+                @if(($candidatosNovosHoje ?? 0) > 0)
+                    <div class="d-flex align-items-center gap-2 bg-light border border-info-subtle rounded px-2 py-1 mb-2" style="font-size: 13px;">
+                        <span class="rounded-circle" style="width: 8px; height: 8px; background-color: #0dcaf0;"></span>
+                        <span class="fw-medium">
+                            {{ $candidatosNovosHoje }} {{ $candidatosNovosHoje == 1 ? 'nova candidatura recebida' : 'novas candidaturas recebidas' }} ·
+                            <a href="{{ route('candidatos.index') }}" class="text-muted fw-normal text-decoration-none">Verificar Candidatos</a>
                         </span>
                     </div>
                 @endif
@@ -323,6 +348,19 @@
                         @endif
                     @endfor
                 </div>
+                <div style="display:flex; gap:14px; margin-top:14px; padding: 0 4px; flex-wrap: wrap;">
+                    <!-- Legenda: Férias -->
+                    <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-secondary);">
+                        <div style="width:10px; height:10px; border-radius:3px; background:#fef3c7; border:1px solid #fde68a;"></div>
+                        Férias
+                    </div>
+
+                    <!-- Legenda: Hoje -->
+                    <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-secondary);">
+                        <div style="width:10px; height:10px; border-radius:3px; background:var(--accent);"></div>
+                        Hoje
+                    </div>
+                </div>
             </div>
 
             <div class="card-custom shadow-sm p-4 bg-white">
@@ -359,46 +397,82 @@
         </div>
         </div>
 
-        <div class="row g-3">
-            <div class="col-md-4">
-                <div class="card-custom p-4 shadow-sm bg-white">
-                    <span class="text-secondary fw-normal d-block mb-1" style="font-size: 14px;">Produtividade</span>
-                    <div class="display-6 text-dark mb-3">92<span class="fs-4 text-muted">%</span></div>
-                    <div class="progress rounded-pill" style="height: 4px;">
-                        <div class="progress-bar" style="width: 92%; background-color: var(--accent);"></div>
+        <div class="row g-2 mb-4 row-cols-2 row-cols-md-4 row-cols-lg-4">
+            <div class="col">
+                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #0d9488;">
+                    <div class="lh-sm">
+                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Saldo em Caixa</span>
+                        <h4 class="fw-bold m-0 text-dark">{{ number_format($saldoCaixa, 0, ',', '.') }} FCFA</h4>
                     </div>
-                    <span class="text-muted small d-block mt-2">Média da equipa</span>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card-custom p-4 shadow-sm bg-white">
-                    <span class="text-secondary fw-normal d-block mb-1" style="font-size: 14px;">Novas Contratações</span>
-                    <div class="display-6 text-dark mb-3">3 <span class="fs-6 text-muted">maio</span></div>
-                    <div class="d-flex align-items-end gap-1.5" style="height: 24px;">
-                        <div class="mini-bar" style="height: 30%"></div>
-                        <div class="mini-bar" style="height: 50%"></div>
-                        <div class="mini-bar" style="height: 40%"></div>
-                        <div class="mini-bar" style="height: 70%"></div>
-                        <div class="mini-bar" style="height: 60%"></div>
-                        <div class="mini-bar active" style="height: 90%"></div>
-                        <div class="mini-bar" style="height: 20%"></div>
+                    <div class="bg-teal-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: #e6fdfa; color: #0d9488;">
+                        <i class="fa-solid fa-wallet" style="font-size: 13px;"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card-custom p-4 shadow-sm bg-white">
-                    <span class="text-secondary fw-normal d-block mb-1" style="font-size: 14px;">Taxa de Retenção de Recursos Humanos</span>
-                    <div class="display-6 text-dark mb-3">94<span class="fs-4 text-muted">%</span></div>
-                    <div class="progress rounded-pill" style="height: 4px;">
-                        <div class="progress-bar" style="width: 94%; background-color: var(--accent);"></div>
+            <div class="col">
+                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #10b981;">
+                    <div class="lh-sm">
+                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Receitas (Mês)</span>
+                        <h4 class="fw-bold m-0 text-success">+{{ number_format($receitasMes, 0, ',', '.') }} FCFA</h4>
                     </div>
-                    <span class="text-success small fw-medium d-block mt-2">↑ 2% vs ano anterior</span>
+                    <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <i class="fa-solid fa-arrow-up-long" style="font-size: 13px;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #ef4444;">
+                    <div class="lh-sm">
+                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Despesas (Mês)</span>
+                        <h4 class="fw-bold m-0 text-danger">-{{ number_format($despesasMes, 0, ',', '.') }} FCFA</h4>
+                    </div>
+                    <div class="bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <i class="fa-solid fa-arrow-down-long" style="font-size: 13px;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #6b21a8;">
+                    <div class="lh-sm">
+                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Budget Executado</span>
+                        <h4 class="fw-bold m-0" style="color: #6b21a8;">{{ $budgetExecutado }}%</h4>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: #f3e8ff; color: #6b21a8;">
+                        <i class="fa-solid fa-chart-pie" style="font-size: 13px;"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
     </main>
 </div>
+<script>
+    function verificarNovasMensagens() {
+        // Faz a requisição para a rota que criámos no Passo 2
+        fetch("{{ route('api.contatos.contagem') }}")
+            .then(response => response.json())
+            .then(data => {
+                const badge = document.getElementById('badge-sms');
+
+                if (data.total > 0) {
+                    badge.innerText = data.total; // Atualiza o número
+                    badge.classList.remove('d-none'); // Mostra a bolinha se houver mensagens
+                } else {
+                    badge.classList.add('d-none'); // Esconde se for zero
+                }
+            })
+            .catch(error => console.error('Erro ao buscar contagem de SMS:', error));
+    }
+
+    // Executa assim que a página carregar
+    document.addEventListener("DOMContentLoaded", function() {
+        verificarNovasMensagens();
+
+        // Verifica automaticamente a cada 10 segundos (10000 milissegundos)
+        setInterval(verificarNovasMensagens, 10000);
+    });
+</script>
 @endsection

@@ -21,7 +21,33 @@
         .badge-critica { background-color: #f8d7da; color: #842029; }
         .badge-alta { background-color: #fff3cd; color: #664d03; }
         .badge-media { background-color: #e2e3e5; color: #41464b; }
+        /* NOVO: Estilos para fixar a tabela e ativar o Scroll */
+        .table-scrollable-container {
+            max-height: 400px; /* Altere este valor para controlar a altura visível da tabela */
+            overflow-y: auto;  /* Ativa o scroll vertical */
+            overflow-x: auto;  /* Ativa o scroll horizontal se a tela for pequena */
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            position: relative;
+        }
 
+        .table-scrollable-container table {
+            border-collapse: separate; /* Necessário para o efeito sticky funcionar corretamente */
+            margin-bottom: 0;
+        }
+
+        .table-scrollable-container thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background-color: #f1f3f5 !important; /* Cor de fundo para não sobrepor o texto rolando por baixo */
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12); /* Garante a linha divisória inferior */
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+        }
         /* Novos estilos para botões e modais */
         .btn-accent { background-color: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 500; transition: background 0.2s; }
         .btn-accent:hover { background-color: #0b7a70; color: white; }
@@ -145,7 +171,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold m-0 text-dark">Operacional & Estratégia</h2>
-                <p class="text-muted small mb-0">Planeamento de OKRs, saúde do clima organizacional e execução de metas corporativas da Eureka</p>
+                <p class="text-accent">Planeamento de OKRs, saúde do clima organizacional e execução de metas corporativas da Eureka</p>
             </div>
             <button class="btn btn-accent px-3 py-2 small d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCriarMeta">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -158,9 +184,9 @@
                 ⚙️ Atualizar Métricas
             </button>
         </div>
+
         <!-- Indicadores de Saúde Organizacional -->
         <div class="row g-3 mb-4 align-items-stretch">
-
         <div class="col-md-4">
             <div class="card-custom p-3 shadow-sm h-100 d-flex flex-column justify-content-between">
                 <div>
@@ -222,14 +248,13 @@
                 </div>
             </div>
         </div>
-
-    </div>
+        </div>
 
         <!-- Bloco de Metas / OKRs -->
         <div class="card-custom p-4">
             <h5 class="fw-bold text-dark mb-3">Objetivos Estratégicos & OKRs</h5>
-            <div class="table-responsive">
-                <table class="table align-middle">
+            <div class="table-scrollable-container">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
                             <th>Objetivo / Iniciativa</th>
@@ -300,8 +325,8 @@
 <div class="modal fade" id="modalCriarMeta" tabindex="-1" aria-labelledby="modalCriarMetaLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
-            <div class="modal-header border-0 pt-4 px-4">
-                <h5 class="modal-title fw-bold text-dark" id="modalCriarMetaLabel">Novo Objetivo Estratégico</h5>
+            <div class="modal-header text-white" style="background-color: #0d9488;">
+                <h5 class="modal-title fw-bold fw-bold m-0" id="modalCriarMetaLabel">Novo Objetivo Estratégico</h5>
                 <button type="button" class="btn-close" data-bs-replace data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('estrategia.store') }}" method="POST">
@@ -349,8 +374,8 @@
 <div class="modal fade" id="modalEditarMeta" tabindex="-1" aria-labelledby="modalEditarMetaLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
-            <div class="modal-header border-0 pt-4 px-4">
-                <h5 class="modal-title fw-bold text-dark" id="modalEditarMetaLabel">Modificar Objetivo</h5>
+            <div class="modal-header text-white" style="background-color: #0d9488;">
+                <h5 class="modal-title fw-bold m-0" id="modalEditarMetaLabel">Modificar Objetivo</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="formEditarMeta" method="POST" action="">
@@ -398,8 +423,8 @@
 <div class="modal fade" id="modalIndicadores" tabindex="-1" aria-labelledby="modalIndicadoresLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
-            <div class="modal-header border-0 pt-4 px-4">
-                <h5 class="modal-title fw-bold text-dark" id="modalIndicadoresLabel">Atualizar Saúde Organizacional</h5>
+            <div class="modal-header text-white" style="background-color: #0d9488;">
+                <h5 class="modal-title fw-bold m-0" id="modalIndicadoresLabel">Atualizar Saúde Organizacional</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('estrategia.indicadores.update') }}" method="POST">

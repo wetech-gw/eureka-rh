@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -44,5 +45,14 @@ class User extends Authenticatable
             "email_verified_at" => "datetime",
             "password" => "hashed",
         ];
+    }
+
+    /**
+     * Send the password reset notification.
+     */
+    public function sendPasswordResetNotification(
+        #[\SensitiveParameter] $token,
+    ): void {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

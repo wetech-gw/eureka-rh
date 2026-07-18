@@ -15,6 +15,24 @@ use App\Http\Controllers\EstrategiaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\ContatoController; // <--- Linha obrigatória no topo do routes/web.php
+
+// 🟢 ADICIONA AS ROTAS DE RECUPERAÇÃO DE SENHA AQUI
+Route::get("/forgot-password", [AuthController::class, "showForgotForm"])
+    ->name("password.request")
+    ->middleware("guest");
+
+Route::post("/forgot-password", [AuthController::class, "sendResetLinkEmail"])
+    ->name("password.email")
+    ->middleware("guest");
+
+Route::get("/reset-password/{token}", [AuthController::class, "showResetForm"])
+    ->name("password.reset")
+    ->middleware("guest");
+
+Route::post("/reset-password", [AuthController::class, "reset"])
+    ->name("password.update")
+    ->middleware("guest");
 
 use App\Http\Controllers\FolhaSalarialController as ControllersFolhaSalarialController;
 use App\Http\Controllers\FolhaSalarialController as HttpControllersFolhaSalarialController;
@@ -234,11 +252,6 @@ Route::get("/", [AuthController::class, "showLogin"])
     ->middleware("guest");
 Route::post("/login", [AuthController::class, "login"])->name("login.post");
 
-// 🟢 ADICIONA ESTA LINHA PARA ACABAR COM O ERRO:
-Route::get("/forgot-password", function () {
-    return "Ecrã de recuperação em desenvolvimento...";
-})->name("password.request");
-
 Route::middleware(["auth"])->group(function () {
     Route::get("/documentos", [DocumentController::class, "index"])->name(
         "documentos.index",
@@ -247,3 +260,28 @@ Route::middleware(["auth"])->group(function () {
         "documentos.store",
     );
 });
+
+// Rota para servir arquivos do storage (using Storage facade for cross-platform reliability)
+Route::get('/storage-file/{path}', function ($path) {
+    $path = str_replace('|', '/', $path);
+
+    if (!\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+
+    return \Illuminate\Support\Facades\Storage::disk('public')->response($path);
+})->where('path', '.*')->name('storage.file');
+
+Route::get("/contatos", [ContatoController::class, "index"])->name(
+    "contatos.index",
+);
+Route::post("/contatos", [ContatoController::class, "store"])->name(
+    "contatos.store",
+);
+// Rota que o JavaScript vai chamar em segundo plano
+Route::get("/api/contatos/contagem-pendente", function () {
+    // Conta apenas o que ainda não foi verificado/lido
+    $contagem = \DB::table("contatos")->where("lido", false)->count();
+
+    return response()->json(["total" => $contagem]);
+})->name("api.contatos.contagem");

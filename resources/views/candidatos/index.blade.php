@@ -29,6 +29,37 @@
         .text-accent { color: var(--accent); }
         .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; }
         .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
+        /* NOVO: Estilos para fixar a tabela e ativar o Scroll */
+        .table-scrollable-container {
+            max-height: 400px; /* Altere este valor para controlar a altura visível da tabela */
+            overflow-y: auto;  /* Ativa o scroll vertical */
+            overflow-x: auto;  /* Ativa o scroll horizontal se a tela for pequena */
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .table-scrollable-container table {
+            border-collapse: separate; /* Necessário para o efeito sticky funcionar corretamente */
+            margin-bottom: 0;
+        }
+
+        .table-scrollable-container thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background-color: #f1f3f5 !important; /* Cor de fundo para não sobrepor o texto rolando por baixo */
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12); /* Garante a linha divisória inferior */
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+        }
+        .modern-search-group { position: relative; max-width: 380px; width: 100%; }
+        .modern-search-input { padding: 9px 16px 9px 40px; font-size: 13px; border-radius: 10px; border: 1px solid #e2e8f0; background-color: #f8fafc; transition: all 0.2s ease-in-out; }
+        .modern-search-input:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); outline: none; }
+        .modern-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; display: flex; align-items: center; }
     </style>
 </head>
 <body>
@@ -150,7 +181,13 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold m-0 text-dark">Banco de Candidatos</h2>
-                <p class="text-muted small mb-0">Triagem de currículos e controlo de candidaturas submetidas por vaga</p>
+                <p class="text-accent">Triagem de currículos e controlo de candidaturas submetidas por vaga</p>
+            </div>
+            <div class="modern-search-group">
+                <span class="modern-search-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
+                <input type="text" class="form-control modern-search-input" id="searchCandidato" placeholder="Pesquisar por nome, vagas pretendidas ou departamento...">
             </div>
             <button type="button" class="btn text-white fw-medium shadow-sm px-3" style="background-color: #0d9488; font-size: 14px; border: none; height: 38px;" data-bs-toggle="modal" data-bs-target="#createCandidatoModal">
                 <i class="fa-solid fa-user-plus me-1"></i> Adicionar Candidato
@@ -233,8 +270,8 @@
                 <h6 class="fw-bold text-dark m-0">Processos de Candidatura Recebidos</h6>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+            <div class="table-scrollable-container">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
                             <th>Candidato / Contacto</th>
@@ -261,7 +298,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($candidatura->cv_especifico)
-                                        <a href="{{ asset('storage/' . $candidatura->cv_especifico) }}" target="_blank" class="btn btn-sm btn-light border text-dark fw-medium">
+                                        <a href="{{ route('storage.file', ['path' => $candidatura->cv_especifico]) }}" target="_blank" class="btn btn-sm btn-light border text-dark fw-medium">
                                             <i class="fa-solid fa-file-pdf text-danger me-1"></i> Ver CV
                                         </a>
                                     @else
@@ -393,6 +430,39 @@
     </div>
 </div>
 
+<!-- Script do Bootstrap já existente -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Adiciona o Script de Pesquisa Dinâmica aqui: -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Seleciona o input de pesquisa e todas as linhas do corpo da tabela
+        const searchInput = document.getElementById('searchCandidato');
+        const tableRows = document.querySelectorAll('table tbody tr');
+
+        // Escuta o evento de digitação (keyup) no campo de texto
+        searchInput.addEventListener('keyup', function (e) {
+            // Obtém o termo digitado, transforma em minúsculas e remove espaços extras nas pontas
+            const searchTerm = e.target.value.toLowerCase().trim();
+
+            tableRows.forEach(row => {
+                // Se a tabela estiver vazia, ignora a linha de aviso "Nenhuma candidatura registada..."
+                if (row.cells.length === 1 && row.querySelector('td').getAttribute('colspan')) {
+                    return;
+                }
+
+                // Obtém todo o texto visível da linha (Nome, Email, Telefone, Vaga e Estado)
+                const rowText = row.textContent.toLowerCase();
+
+                // Verifica se o termo pesquisado existe em alguma parte da linha
+                if (rowText.includes(searchTerm)) {
+                    row.style.display = ''; // Mostra a linha se houver correspondência
+                } else {
+                    row.style.display = 'none'; // Esconde a linha se não houver correspondência
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

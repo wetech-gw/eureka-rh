@@ -5,12 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eureka RH - Férias & Ausências</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root { --accent: #0d9488; }
         body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; }
 
         .wrapper { display: flex; width: 100%; min-height: 100vh; }
-        .sidebar { width: 220px; min-height: 100vh; background: white; flex-shrink: 0; }
+
+        /* Menu Lateral Fixo */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            background: white;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
         .main-content { flex-grow: 1; padding: 1.5rem; background-color: #f8f9fa; overflow-y: auto; }
 
         .nav-item-hr { display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: #495057; text-decoration: none; border-radius: 8px; margin-bottom: 2px; font-size: 13px; transition: all 0.2s; cursor: pointer; }
@@ -20,7 +32,34 @@
         .text-accent { color: var(--accent); }
 
         .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; }
-        .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
+
+        /* Fixar Cabeçalho da Tabela e Ativar o Scroll */
+        .table-scrollable-container {
+            max-height: 400px; /* Altura limite para rolagem */
+            overflow-y: auto;
+            overflow-x: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .table-scrollable-container table {
+            border-collapse: separate;
+            margin-bottom: 0;
+        }
+
+        .table-scrollable-container thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background-color: #f1f3f5 !important;
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+        }
 
         .badge-aprovado { background-color: #d1e7dd; color: #0f5132; }
         .badge-pendente { background-color: #fff3cd; color: #664d03; }
@@ -29,6 +68,12 @@
         .form-label-compact { font-size: 11px; font-weight: 600; color: #495057; margin-bottom: 2px; }
         .form-control-compact { padding: 4px 8px; font-size: 13px; border-radius: 6px; }
         .modal-section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent); margin-bottom: 8px; font-weight: 700; }
+
+        /* Correção e Alinhamento da Barra de Pesquisa */
+        .modern-search-group { position: relative; width: 300px; }
+        .modern-search-input { padding: 9px 16px 9px 40px; font-size: 13px; border-radius: 10px; border: 1px solid #e2e8f0; background-color: #f8fafc; transition: all 0.2s ease-in-out; height: 38px; }
+        .modern-search-input:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); outline: none; }
+        .modern-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 4; }
     </style>
 </head>
 <body>
@@ -75,8 +120,7 @@
                 </svg>
                 Folha-Salarial
             </a>
-            <a href="{{ route('recrutamento.index') }}"
-            class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
+            <a href="{{ route('recrutamento.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('recrutamento.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="14" height="11" rx="1.5"></rect>
                     <path d="M6 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"></path>
@@ -84,7 +128,6 @@
                 Recrutamentos
             </a>
             <a href="{{ route('candidatos.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2">
-                <!-- Ícone Candidatos (Corrigido viewBox e tamanho do desenho) -->
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
@@ -97,10 +140,6 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                 Financeiro
             </a>
-            {{-- <a class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                Relatórios
-            </a> --}}
             <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
                 Operacional/Estratégia
@@ -146,25 +185,19 @@
 
     <main class="main-content">
 
-        <div class="d-flex justify-content-between align-items-end align-items-md-center flex-column flex-md-row gap-3 mb-4">
-            <div class="text-nowrap flex-shrink-0">
-                <h2 class="fw-bold m-0 text-dark" style="white-space: nowrap; font-size: calc(1.3rem + 0.6vw);">Férias & Licenças</h2>
-                <p class="text-muted small mb-0">Eureka Consulting - Controlo de Disponibilidade e Faltas</p>
+        <div class="row align-items-center mb-4 g-3">
+            <div class="col-12 col-md-5">
+                <h2 class="fw-bold m-0 text-dark">Férias & Licenças</h2>
+                <p class="text-accent mb-0">Eureka Consulting - Controlo de Disponibilidade e Faltas</p>
             </div>
 
-            <div class="d-flex align-items-center gap-2 gap-sm-3 w-100 w-md-auto justify-content-md-end flex-wrap flex-sm-nowrap">
-                <div class="position-relative flex-grow-1 flex-sm-grow-0" style="min-width: 260px;">
-                    <input type="text"
-                           id="searchFuncionario"
-                           class="form-control bg-white border-secondary-subtle pe-5 py-2 rounded-3 small text-muted"
-                           placeholder="Pesquisar por nome ou telefone..."
-                           style="font-size: 14px; box-shadow: none;">
-                    <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted">
-                        <i class="bi bi-search" style="font-size: 14px;"></i>
-                    </span>
+            <div class="col-12 col-md-7 d-flex justify-content-md-end align-items-center gap-2">
+                <div class="modern-search-group">
+                    <i class="bi bi-search modern-search-icon"></i>
+                    <input type="text" class="form-control modern-search-input" id="searchEmployee" placeholder="Pesquisar funcionário em férias ou licenças...">
                 </div>
 
-                <button class="btn text-white px-4 py-2 fw-medium rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0" style="background-color: var(--accent); font-size: 14px;" data-bs-toggle="modal" data-bs-target="#modalLancar">
+                <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent); height: 38px;" data-bs-toggle="modal" data-bs-target="#modalLancar">
                     + Registar Férias / Licença
                 </button>
             </div>
@@ -202,18 +235,15 @@
         @endif
 
         <div class="card-custom p-4">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+            <div class="table-scrollable-container">
+                <table class="table table-hover align-middle">
                     <thead>
-                        <tr class="border-bottom funcionario-row"
-                            data-nome="{{ strtolower($pedido->funcionario->nome ?? '') }}"
-                            data-telefone="{{ $pedido->funcionario->telefone ?? '' }}">
+                        <tr>
                             <th>Funcionário</th>
                             <th>Tipo</th>
                             <th>Início</th>
                             <th>Fim</th>
                             <th>Dias</th>
-                            <!--<th>Justificado</th>-->
                             <th>Estado</th>
                             <th class="text-center">Ações</th>
                         </tr>
@@ -221,8 +251,8 @@
                     <tbody>
                         @forelse($registos as $r)
                         <tr class="border-bottom funcionario-row"
-                            data-nome="{{ strtolower($pedido->funcionario->nome ?? '') }}"
-                            data-telefone="{{ $pedido->funcionario->telefone ?? '' }}">
+                            data-nome="{{ strtolower($r->nome ?? '') }}"
+                            data-telefone="{{ $r->telefone ?? '' }}">
                                 <td>
                                     <div class="fw-bold text-dark">{{ $r->nome }}</div>
                                     <span class="text-muted small">{{ $r->cargo }}</span>
@@ -235,7 +265,6 @@
                                 <td>{{ date('d/m/Y', strtotime($r->data_inicio)) }}</td>
                                 <td>{{ date('d/m/Y', strtotime($r->data_fim)) }}</td>
                                 <td class="fw-bold">{{ $r->dias }}</td>
-
                                 <td>
                                     <span class="badge badge-{{ strtolower($r->estado_pedido) }} px-3 py-1.5 rounded-5 fw-medium">
                                         {{ $r->estado_pedido }}
@@ -253,10 +282,8 @@
                                 </td>
                             </tr>
                         @empty
-                        <tr class="border-bottom funcionario-row"
-                            data-nome="{{ strtolower($pedido->funcionario->nome ?? '') }}"
-                            data-telefone="{{ $pedido->funcionario->telefone ?? '' }}">
-                                <td colspan="8" class="text-center text-muted py-4">Nenhum registo de ausência ou férias encontrado.</td>
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">Nenhum registo de ausência ou férias encontrado.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -269,7 +296,7 @@
 <div class="modal fade" id="modalLancar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
-            <div class="modal-header bg-light py-2 px-3">
+            <div class="modal-header text-white" style="background-color: #0d9488;">
                 <h6 class="modal-title fw-bold m-0">Registar Férias ou Licença</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -308,13 +335,6 @@
                             <label class="form-label-compact">Data de Fim *</label>
                             <input type="date" name="data_fim" class="form-control form-control-compact" required>
                         </div>
-                        <!--<div class="col-md-12">
-                            <label class="form-label-compact">Justificado? (Se for Falta)</label>
-                            <select name="justificado" class="form-select form-control-compact">
-                                <option value="Não">Não</option>
-                                <option value="Sim">Sim</option>
-                            </select>
-                        </div>-->
                         <div class="col-md-12">
                             <label class="form-label-compact">Observações / Motivo</label>
                             <textarea name="observacoes" rows="2" class="form-control form-control-compact" placeholder="Ex: Gozo de férias regulamentares ou Motivo de doença..."></textarea>
@@ -334,8 +354,8 @@
     <div class="modal fade" id="modalVerRegisto{{ $r->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 12px;">
-                <div class="modal-header bg-dark text-white py-2 px-3">
-                    <h6 class="modal-title fw-bold m-0">Detalhes da Ausência</h6>
+                <div class="modal-header text-white" style="background-color: #0d9488;">
+                    <h6 class="modal-title fw-bold m-0">Detalhes de férias ou licença</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-3" style="font-size: 13px;">
@@ -353,7 +373,7 @@
     <div class="modal fade" id="modalEditarRegisto{{ $r->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 12px;">
-                <div class="modal-header bg-primary text-white py-2 px-3">
+                <div class="modal-header text-white" style="background-color: #0d9488;">
                     <h6 class="modal-title fw-bold m-0">Modificar Registo: {{ $r->nome }}</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -385,7 +405,6 @@
                                 <label class="form-label-compact">Data Fim</label>
                                 <input type="date" name="data_fim" value="{{ $r->data_fim }}" class="form-control form-control-compact" required>
                             </div>
-
                             <div class="col-md-12">
                                 <label class="form-label-compact">Observações</label>
                                 <textarea name="observacoes" rows="2" class="form-control form-control-compact">{{ $r->observacoes }}</textarea>
@@ -394,7 +413,7 @@
                     </div>
                     <div class="modal-footer bg-light py-1">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary btn-sm">Atualizar Registo</button>
+                        <button type="submit" class="btn btn-success btn-sm">Atualizar Registo</button>
                     </div>
                 </form>
             </div>
@@ -405,43 +424,34 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const inputPesquisa = document.getElementById('searchFuncionario');
-    const linhasFuncionarios = document.querySelectorAll('.funcionario-row');
-    const linhaSemResultados = document.getElementById('searchEmptyRow');
+    const inputPesquisa = document.getElementById('searchEmployee');
+    // Seleciona as linhas dentro do container com rolagem
+    const linhasFuncionarios = document.querySelectorAll('.table-scrollable-container tbody tr.funcionario-row');
 
     if (inputPesquisa) {
-        // Bloqueia a submissão e executa o filtro apenas ao carregar no ENTER
+        inputPesquisa.addEventListener('input', function() {
+            const termoPesquisa = this.value.toLowerCase().trim();
+
+            linhasFuncionarios.forEach(row => {
+                const nameElement = row.querySelector('.fw-bold.text-dark');
+                const nomeText = nameElement ? nameElement.textContent.toLowerCase() : '';
+
+                const nomeAttr = row.getAttribute('data-nome') || '';
+                const telefone = row.getAttribute('data-telefone') || '';
+
+                if (termoPesquisa === '') {
+                    row.style.setProperty('display', '', 'important');
+                } else if (nomeText.includes(termoPesquisa) || nomeAttr.includes(termoPesquisa) || telefone.includes(termoPesquisa)) {
+                    row.style.setProperty('display', '', 'important');
+                } else {
+                    row.style.setProperty('display', 'none', 'important');
+                }
+            });
+        });
+
         inputPesquisa.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Impede o recarregamento automático da página
-
-                const termoPesquisa = this.value.toLowerCase().trim();
-                let encontrouAlgum = false;
-
-                linhasFuncionarios.forEach(row => {
-                    const nome = row.getAttribute('data-nome') || '';
-                    const telefone = row.getAttribute('data-telefone') || '';
-
-                    // Se a barra estiver vazia, volta a mostrar todas as linhas
-                    if (termoPesquisa === '') {
-                        row.style.setProperty('display', '', 'important');
-                        encontrouAlgum = true;
-                    }
-                    // Caso contrário, filtra comparando com o Nome ou Telefone
-                    else if (nome.includes(termoPesquisa) || telefone.includes(termoPesquisa)) {
-                        row.style.setProperty('display', '', 'important');
-                        encontrouAlgum = true;
-                    } else {
-                        row.style.setProperty('display', 'none', 'important');
-                    }
-                });
-
-                // Controla a exibição da linha de aviso "Nenhum resultado encontrado"
-                if (!encontrouAlgum && termoPesquisa !== '') {
-                    if (linhaSemResultados) linhaSemResultados.style.display = '';
-                } else {
-                    if (linhaSemResultados) linhaSemResultados.style.display = 'none';
-                }
+                e.preventDefault();
             }
         });
     }

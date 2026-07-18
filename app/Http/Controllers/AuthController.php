@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -86,5 +88,79 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect("/");
+    }
+
+    /**
+     * Exibe o formulário de solicitação de redefinição de senha
+     */
+    public function showForgotForm()
+    {
+        return view("auth.forgot-password");
+    }
+
+    /**
+     * Gera o token e redireciona diretamente para o formulário de redefinição
+     */
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate([
+            "email" => "required|email|exists:users,email",
+        ]);
+
+        $user = \App\Models\User::where("email", $request->email)->first();
+        $token = Password::broker()->createToken($user);
+
+        return redirect()->route("password.reset", ["token" => $token]);
+    }
+
+    /**
+     * Exibe o formulário de redefinição de senha
+     */
+    public function showResetForm(string $token)
+    {
+        return view("auth.reset-password", ["token" => $token]);
+    }
+
+    /**
+     * Processa a redefinição da senha
+     */
+    public function reset(Request $request)
+    {
+        $request->validate([
+            "token" => "required",
+            "email" => "required|email|exists:users,email",
+            "password" => "required|confirmed|min:8",
+        ]);
+
+        $status = Password::reset(
+            $request->only(
+                "email",
+                "password",
+                "password_confirmation",
+                "token",
+            ),
+            function ($user, $password) {
+                $user
+                    ->forceFill([
+                        "password" => bcrypt($password),
+                    ])
+                    ->setRememberToken(Str::random(60));
+
+                $user->save();
+            },
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()
+                ->route("login")
+                ->with(
+                    "status",
+                    __(
+                        "Palavra-passe redefinida com sucesso! Faça login com a nova palavra-passe.",
+                    ),
+                )
+            : back()->withErrors([
+                "email" => [__("Token de redefinição inválido ou expirado.")],
+            ]);
     }
 }

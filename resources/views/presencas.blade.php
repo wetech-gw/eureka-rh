@@ -32,7 +32,25 @@
 
         .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; }
         .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
+        /* Fixa o cabeçalho e adiciona rolagem na tabela */
+        .table-scrollable-container {
+            max-height: 450px;       /* Altura máxima para a tabela antes de começar a rolar */
+            overflow-y: auto;         /* Ativa a rolagem vertical */
+            overflow-x: auto;         /* Mantém compatibilidade horizontal se o ecrã for pequeno */
+            position: relative;
+        }
 
+        .table-scrollable-container table {
+            border-collapse: separate; /* Necessário para o sticky header funcionar sem quebras visuais */
+        }
+
+        .table-scrollable-container thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;              /* Garante que o cabeçalho fica por cima do conteúdo ao rolar */
+            background-color: #f1f3f5 !important; /* Mantém a cor de fundo do cabeçalho fixa */
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12); /* Cria uma linha de separação sutil embaixo do cabeçalho */
+        }
         /* Cores dos Badges de Presença */
         .badge-presente { background-color: #d1e7dd; color: #0f5132; }
         .badge-justificada { background-color: #cff4fc; color: #055160; } /* Azul claro para Justificada */
@@ -40,6 +58,31 @@
 
         .form-label-compact { font-size: 11px; font-weight: 600; color: #495057; margin-bottom: 2px; }
         .form-control-compact { padding: 4px 8px; font-size: 13px; border-radius: 6px; }
+
+        /* Estilo da Barra de Pesquisa Moderna */
+        .modern-search-group {
+            position: relative;
+            width: 300px; /* Largura fixa para não desconfigurar */
+        }
+
+        .modern-search-input {
+            padding-left: 2.5rem !important; /* Espaço para o ícone de lupa */
+            font-size: 13px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .modern-search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+            z-index: 4;
+        }
     </style>
 </head>
 <body>
@@ -151,14 +194,27 @@
 
     <main class="main-content">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
+        <div class="row align-items-center mb-4 g-3">
+            <div class="col-12 col-md-5">
                 <h2 class="fw-bold m-0 text-dark">Controlo de Presenças</h2>
-                <p class="text-muted small mb-0">Registo diário de assiduidade, atrasos e faltas dos colaboradores</p>
+                <p class="text-accent mb-0">Registo diário de assiduidade, atrasos e faltas dos colaboradores</p>
             </div>
-            <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent);" data-bs-toggle="modal" data-bs-target="#modalRegistar">
-                + Registar Presença
-            </button>
+
+            <div class="col-12 col-md-7 d-flex justify-content-md-end align-items-center gap-2">
+                <div class="modern-search-group">
+                    <span class="modern-search-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </span>
+                    <input type="text" class="form-control modern-search-input" id="searchPresenca" placeholder="Pesquisar por colaborador ou cargo...">
+                </div>
+
+                <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent); height: 38px;" data-bs-toggle="modal" data-bs-target="#modalRegistar">
+                    + Registar Presença
+                </button>
+            </div>
         </div>
 
         <div class="row g-3 mb-4">
@@ -166,7 +222,7 @@
                 <div class="card-custom p-3 shadow-sm">
                     <span class="text-muted small fw-bold d-block text-uppercase">Presenças Hoje</span>
                     <h3 class="fw-bold my-1 text-success">{{ $presencasHoje }}</h3>
-                    <span class="text-muted small">Colaboradores ativos hoje</span>
+                    <span class="text-muted small">Colaboradores activos hoje</span>
                 </div>
             </div>
             <div class="col-md-4">
@@ -193,8 +249,8 @@
         @endif
 
         <div class="card-custom p-4">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+            <div class="table-scrollable-container border rounded-3">
+                        <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th>Funcionário</th>
@@ -207,7 +263,7 @@
                     </thead>
                     <tbody>
                         @forelse($presencas as $p)
-                            <tr>
+                            <tr class="presenca-row">
                                 <td>
                                     <div class="fw-bold text-dark">{{ $p->nome }}</div>
                                     <span class="text-muted small">{{ $p->cargo }}</span>
@@ -258,7 +314,7 @@
 <div class="modal fade" id="modalRegistar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
-            <div class="modal-header bg-light py-2 px-3">
+            <div class="modal-header text-white" style="background-color: #0d9488;">
                 <h6 class="modal-title fw-bold m-0">Registar Presença / Ponto</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -291,7 +347,8 @@
                             <label class="form-label-compact">Estado *</label>
                             <select name="estado" class="form-select form-control-compact" required>
                                 <option value="Presente">Presente</option>
-                                <option value="Falta">Falta</option>
+                                <option value="Falta">Falta Injustificada</option>
+                                <option value="Falta Justificada">Falta Justificada</option>
                             </select>
                         </div>
                         <div class="col-md-12">
@@ -313,7 +370,7 @@
     <div class="modal fade" id="modalVer{{ $p->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 12px;">
-                <div class="modal-header bg-dark text-white py-2 px-3">
+                <div class="modal-header text-white" style="background-color: #0d9488;">
                     <h6 class="modal-title fw-bold m-0">Registo de: {{ $p->nome }}</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -334,7 +391,7 @@
     <div class="modal fade" id="modalEditar{{ $p->id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 12px;">
-                <div class="modal-header bg-primary text-white py-2 px-3">
+                <div class="modal-header text-white" style="background-color: #0d9488;">
                     <h6 class="modal-title fw-bold m-0">Editar Presença - {{ $p->nome }}</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -371,7 +428,7 @@
                     </div>
                     <div class="modal-footer bg-light py-1">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-primary btn-sm">Atualizar Registo</button>
+                        <button type="submit" class="btn btn-success btn-sm">Atualizar Registo</button>
                     </div>
                 </form>
             </div>
@@ -380,5 +437,36 @@
 @endforeach
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const inputPesquisa = document.getElementById('searchPresenca');
+    // Seletor atualizado para encontrar as linhas dentro do novo contentor scrollable
+    const linhasPresencas = document.querySelectorAll('.table-scrollable-container tbody tr.presenca-row');
+
+    if (inputPesquisa) {
+        inputPesquisa.addEventListener('input', function() {
+            const query = inputPesquisa.value.toLowerCase().trim();
+
+            linhasPresencas.forEach(function(linha) {
+                // Obtém o texto visível da linha para comparar com a pesquisa
+                const textoLinha = linha.textContent.toLowerCase();
+
+                if (textoLinha.includes(query)) {
+                    linha.style.setProperty('display', 'table-row', 'important');
+                } else {
+                    linha.style.setProperty('display', 'none', 'important');
+                }
+            });
+        });
+
+        // Evita que o "Enter" na pesquisa tente submeter formulários na página
+        inputPesquisa.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>

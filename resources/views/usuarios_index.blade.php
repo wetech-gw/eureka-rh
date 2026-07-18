@@ -27,6 +27,39 @@
         .badge-ativo { background-color: #dcfce7; color: #15803d; }
         .badge-inativo { background-color: #f3f4f6; color: #4b5563; }
         .badge-suspenso { background-color: #fee2e2; color: #b91c1c; }
+
+        .modern-search-group { position: relative; max-width: 380px; width: 100%; }
+        .modern-search-input { padding: 9px 16px 9px 40px; font-size: 13px; border-radius: 10px; border: 1px solid #e2e8f0; background-color: #f8fafc; transition: all 0.2s ease-in-out; }
+        .modern-search-input:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); outline: none; }
+        .modern-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; display: flex; align-items: center; }
+
+        /* NOVO: Estilos para fixar a tabela e ativar o Scroll */
+        .table-scrollable-container {
+            max-height: 400px; /* Altere este valor para controlar a altura visível da tabela */
+            overflow-y: auto;  /* Ativa o scroll vertical */
+            overflow-x: auto;  /* Ativa o scroll horizontal se a tela for pequena */
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .table-scrollable-container table {
+            border-collapse: separate; /* Necessário para o efeito sticky funcionar corretamente */
+            margin-bottom: 0;
+        }
+
+        .table-scrollable-container thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background-color: #f1f3f5 !important; /* Cor de fundo para não sobrepor o texto rolando por baixo */
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12); /* Garante a linha divisória inferior */
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
 <body>
@@ -152,7 +185,13 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold m-0 text-dark">Utilizadores do Sistema</h2>
-                <p class="text-muted small mb-0">Gerir credenciais, permissões e contas da equipa de Recursos Humanos</p>
+                <p class="text-accent">Gerir credenciais, permissões e contas da equipa de Recursos Humanos</p>
+            </div>
+            <div class="modern-search-group">
+                <span class="modern-search-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
+                <input type="text" class="form-control modern-search-input" id="searchUsuario" placeholder="Pesquisar por nome ou email...">
             </div>
             <button class="btn btn-accent px-3 py-2 small d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCriarUsuario">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -162,8 +201,8 @@
 
         <div class="card-custom p-4">
             <h5 class="fw-bold text-dark mb-3">Contas Ativas no Departamento</h5>
-            <div class="table-responsive">
-                <table class="table align-middle">
+            <div class="table-scrollable-container">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
                             <th>Nome / Detalhes</th>
@@ -228,8 +267,8 @@
 <div class="modal fade" id="modalCriarUsuario" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
-            <div class="modal-header border-0 pt-4 px-4">
-                <h5 class="modal-title fw-bold text-dark">Criar Conta de Acesso</h5>
+            <div class="modal-header text-white" style="background-color: #0d9488;">
+                <h5 class="modal-title fw-bold m-0">Criar Conta de Acesso</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('usuarios.store') }}" method="POST">
@@ -278,8 +317,8 @@
 <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
-            <div class="modal-header border-0 pt-4 px-4">
-                <h5 class="modal-title fw-bold text-dark">Modificar Conta</h5>
+            <div class="modal-header text-white" style="background-color: #0d9488;">
+                <h5 class="modal-title fw-bold m-0">Modificar Conta</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="formEditarUsuario" method="POST">
@@ -345,6 +384,22 @@
             document.getElementById('formEditarUsuario').action = `/usuarios/${id}`;
         });
     }
-</script>
+    // Filtro / Pesquisa Instantânea em Javascript
+        document.getElementById('searchUsuario').addEventListener('keyup', function() {
+            const value = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#tabelaUsuarios .user-row');
+
+            rows.forEach(row => {
+                const name = row.querySelector('.user-name').textContent.toLowerCase();
+                const email = row.querySelector('.user-email').textContent.toLowerCase();
+
+                if (name.includes(value) || email.includes(value)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

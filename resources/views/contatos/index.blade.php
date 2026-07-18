@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eureka RH - Documentos</title>
+    <title>Eureka RH - Contactos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -56,6 +56,7 @@
             font-size: 10px;
             letter-spacing: 0.05em;
         }
+
     </style>
 </head>
 <body>
@@ -181,101 +182,69 @@
     <main class="main-content">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold m-0 text-dark">Arquivo de Documentos</h2>
-                <p class="text-accent">Controlo de fluxos, termos, guias de entrega e saídas oficiais</p>
+                <h2 class="fw-bold m-0 text-dark">Contactos Recebidos</h2>
+                <p class="text-accent">Mensagens e pedidos de contacto enviados através da plataforma</p>
             </div>
-            <button type="button" class="btn text-white fw-medium shadow-sm px-3" style="background-color: #0d9488; font-size: 14px;" data-bs-toggle="modal" data-bs-target="#createDocumentoModal">
-                <i class="fa-solid fa-file-circle-plus me-1"></i> Registar Documento
+            <button type="button" class="btn text-white fw-medium shadow-sm px-3" style="background-color: #0d9488; font-size: 14px;" data-bs-toggle="modal" data-bs-target="#createContatoModal">
+                <i class="fa-solid fa-address-book me-1"></i> Novo Contacto
             </button>
         </div>
 
-        <!-- INDICADORES (CARDS PEQUENOS) -->
+        <!-- INDICADOR -->
         <div class="row g-2 mb-4 row-cols-1 row-cols-md-3">
             <div class="col">
                 <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #495057;">
                     <div class="lh-sm">
-                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Total Movimentado</span>
-                        <h4 class="fw-bold m-0 text-dark">{{ $totalDocumentos }}</h4>
+                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Total Contactos</span>
+                        <h4 class="fw-bold m-0 text-dark">{{ count($contatos) }}</h4>
                     </div>
                     <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                        <i class="fa-solid fa-folder-open" style="font-size: 13px;"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #10b981;">
-                    <div class="lh-sm">
-                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Entradas</span>
-                        <h4 class="fw-bold m-0 text-success">{{ $totalEntradas }}</h4>
-                    </div>
-                    <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                        <i class="fa-solid fa-arrow-down" style="font-size: 13px;"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #ef4444;">
-                    <div class="lh-sm">
-                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Saídas</span>
-                        <h4 class="fw-bold m-0 text-danger">{{ $totalSaidas }}</h4>
-                    </div>
-                    <div class="bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                        <i class="fa-solid fa-arrow-up" style="font-size: 13px;"></i>
+                        <i class="fa-solid fa-envelope" style="font-size: 13px;"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        @if(session('success'))
+        @if(session('sucesso'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <span class="small fw-medium">{{ session('success') }}</span>
+                <span class="small fw-medium">{{ session('sucesso') }}</span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
-        <!-- TABELA DE REGISTOS -->
+        <!-- TABELA DE CONTACTOS -->
         <div class="card-custom p-4 shadow-sm">
             <div class="pb-2 mb-3 border-bottom">
-                <h6 class="fw-bold text-dark m-0">Histórico de Movimentação de Arquivos</h6>
+                <h6 class="fw-bold text-dark m-0">Histórico de Mensagens Recebidas</h6>
             </div>
 
             <div class="table-scrollable-container">
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
-                            <th>Nome do Documento</th>
-                            <th>Tipo</th>
-                            <th>Data de Operação</th>
-                            <th>Departamento</th>
-                            <th class="text-center">Arquivo</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Mensagem</th>
+                            <th>Data de Receção</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($documentos as $doc)
+                        @forelse($contatos as $contato)
                             <tr>
-                                <td class="fw-bold text-dark">{{ $doc->nome }}</td>
+                                <td class="fw-bold text-dark">{{ $contato->nome }}</td>
                                 <td>
-                                    @if($doc->tipo == 'Entrada')
-                                        <span class="badge bg-success-subtle text-success border border-success px-3 py-1.5 rounded-5 fw-medium">Entrada</span>
-                                    @else
-                                        <span class="badge bg-danger-subtle text-danger border border-danger px-3 py-1.5 rounded-5 fw-medium">Saída</span>
-                                    @endif
+                                    <a href="mailto:{{ $contato->email }}" class="text-accent text-decoration-none small">
+                                        {{ $contato->email }}
+                                    </a>
                                 </td>
-                                <td class="small text-muted">{{ date('d/m/Y', strtotime($doc->data_operacao)) }}</td>
-                                <td class="fw-semibold text-secondary">{{ $doc->departamento }}</td>
-                                <td class="text-center">
-                                    @if($doc->arquivo_pdf)
-                                        <a href="{{ route('storage.file', ['path' => $doc->arquivo_pdf]) }}" target="_blank" class="btn btn-sm btn-light border text-dark fw-medium">
-                                            <i class="fa-solid fa-file-pdf text-danger me-1"></i> Abrir PDF
-                                        </a>
-                                    @else
-                                        <span class="text-muted small">Sem ficheiro</span>
-                                    @endif
+                                <td class="text-muted small" style="max-width: 300px; white-space: pre-wrap;">
+                                    {{ Str::limit($contato->mensagem, 120) }}
                                 </td>
+                                <td class="small text-muted">{{ date('d/m/Y H:i', strtotime($contato->created_at)) }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-4 small">Nenhum registo documental encontrado.</td>
+                                <td colspan="4" class="text-center text-muted py-4 small">Nenhum contacto registado até ao momento.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -285,44 +254,33 @@
     </main>
 </div>
 
-<!-- MODAL BOOTSTRAP ORIGINAL PARA REGISTO -->
-<div class="modal fade" id="createDocumentoModal" tabindex="-1" aria-hidden="true">
+<!-- MODAL BOOTSTRAP PARA REGISTAR CONTACTO -->
+<div class="modal fade" id="createContatoModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header text-white" style="background-color: #0d9488;">
-                <h5 class="modal-title fw-bold">Novo Registo de Documentação</h5>
+                <h5 class="modal-title fw-bold">Novo Contacto</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('documentos.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('contatos.store') }}" method="POST">
                 @csrf
                 <div class="modal-body text-start p-4">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Nome do Documento / Título</label>
-                        <input type="text" name="nome" class="form-control border-secondary-subtle" placeholder="Ex: Termo de Entrega de Portátil" required>
+                        <label class="form-label small fw-bold text-secondary">Nome Completo</label>
+                        <input type="text" name="nome" class="form-control border-secondary-subtle" placeholder="Ex: Maria Santos" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Tipo de Operação</label>
-                        <select name="tipo" class="form-select border-secondary-subtle" required>
-                            <option value="Entrada">Entrada (Recebido)</option>
-                            <option value="Saída">Saída (Enviado)</option>
-                        </select>
+                        <label class="form-label small fw-bold text-secondary">E-mail</label>
+                        <input type="email" name="email" class="form-control border-secondary-subtle" placeholder="maria@exemplo.com" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Data de Operação</label>
-                        <input type="date" name="data_operacao" value="{{ date('Y-m-d') }}" class="form-control border-secondary-subtle" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Departamento Relacionado</label>
-                        <input type="text" name="departamento" class="form-control border-secondary-subtle" placeholder="Ex: Contabilidade, Administração" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Ficheiro (Apenas PDF)</label>
-                        <input type="file" name="arquivo_pdf" class="form-control border-secondary-subtle" accept=".pdf" required>
+                        <label class="form-label small fw-bold text-secondary">Mensagem</label>
+                        <textarea name="mensagem" class="form-control border-secondary-subtle" rows="4" placeholder="Escreva a mensagem..." required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer bg-light border-top-0">
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-sm text-white px-3" style="background-color: #0d9488;">Salvar Registo</button>
+                    <button type="submit" class="btn btn-sm text-white px-3" style="background-color: #0d9488;">Salvar Contacto</button>
                 </div>
             </form>
         </div>

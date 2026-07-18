@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eureka RH - Recuperar Palavra-passe</title>
+    <title>Eureka RH - Redefinir Senha</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -28,7 +28,7 @@
             overflow-x: hidden;
         }
 
-        /* --- CÍRCULOS DE FUNDO --- */
+        /* --- CÍRCULOS DE FUNDO DECORATIVOS --- */
         .bg-circle {
             position: absolute;
             border-radius: 50%;
@@ -108,10 +108,10 @@
             line-height: 1.6;
         }
 
-        /* --- COLUNA DIREITA (Formulário) --- */
+        /* --- COLUNA DIREITA (Formulário de Nova Senha) --- */
         .form-side {
             flex: 1.1;
-            padding: 50px 60px;
+            padding: 45px 60px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -126,13 +126,13 @@
         .form-header p {
             color: #64748b;
             font-size: 0.9rem;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
-        /* Estilização Customizada do Input */
+        /* Estilização Customizada dos Inputs */
         .input-group-custom {
             position: relative;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .input-group-custom i {
@@ -149,11 +149,16 @@
             background-color: var(--input-bg);
             border: none;
             border-radius: 12px;
-            padding: 15px 20px 15px 50px;
+            padding: 15px 75px 15px 50px; /* Espaço aumentado na direita para o botão Show */
             font-size: 0.95rem;
             color: #334155;
             box-shadow: none;
             transition: all 0.2s ease;
+        }
+
+        /* Ajuste específico para o e-mail que não possui botão Show */
+        .input-group-custom .form-control[type="email"] {
+            padding-right: 20px;
         }
 
         .input-group-custom .form-control:focus {
@@ -161,7 +166,23 @@
             box-shadow: 0 0 0 3px rgba(16, 99, 122, 0.15);
         }
 
-        /* Botão Principal */
+        /* Botão Mostrar/Ocultar Senha */
+        .btn-toggle-password {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 10;
+            text-transform: uppercase;
+        }
+
+        /* Botão de Ação */
         .btn-primary-custom {
             background-color: var(--accent);
             color: #ffffff;
@@ -172,6 +193,7 @@
             font-size: 1rem;
             transition: all 0.2s ease;
             width: 100%;
+            margin-top: 5px;
             margin-bottom: 20px;
         }
 
@@ -180,7 +202,7 @@
             transform: translateY(-1px);
         }
 
-        /* Link para Voltar */
+        /* Link de Retorno */
         .back-link {
             color: var(--accent);
             font-size: 0.88rem;
@@ -189,7 +211,6 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: transform 0.2s ease;
         }
         .back-link:hover {
             text-decoration: underline;
@@ -239,14 +260,14 @@
             <div class="brand-content">
                 <h1>EUREKA Consulting</h1>
                 <h3>Plataforma de Gestão</h3>
-                <p>Acesso seguro à sua área administrativa corporativa e gestão estratégica.</p>
+                <p>Crie uma credencial forte e garanta a proteção dos seus dados corporativos.</p>
             </div>
         </div>
 
         <div class="form-side">
             <div class="form-header">
-                <h2 style="color: #10637A;">Recuperar Acesso</h2>
-                <p>Introduza o seu e-mail corporativo para receber as instruções de redefinição.</p>
+                <h2 style="color: #10637A;">Nova Palavra-passe</h2>
+                <p>Defina a sua nova credencial de acesso abaixo.</p>
             </div>
 
             @if(session('status'))
@@ -261,15 +282,28 @@
                 </div>
             @endif
 
-            <form action="{{ route('password.email') }}" method="POST">
+            <form action="{{ route('password.update') }}" method="POST">
                 @csrf
+                <input type="hidden" name="token" value="{{ $token }}">
 
                 <div class="input-group-custom">
                     <i class="fa-regular fa-envelope"></i>
                     <input type="email" name="email" class="form-control" placeholder="E-mail Corporativo" required value="{{ old('email') }}">
                 </div>
 
-                <button type="submit" class="btn-primary-custom">Enviar Link de Recuperação</button>
+                <div class="input-group-custom">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Nova Palavra-passe" required>
+                    <button type="button" class="btn-toggle-password" data-target="password">Show</button>
+                </div>
+
+                <div class="input-group-custom">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirmar Nova Palavra-passe" required>
+                    <button type="button" class="btn-toggle-password" data-target="password_confirmation">Show</button>
+                </div>
+
+                <button type="submit" class="btn-primary-custom">Redefinir Palavra-passe</button>
 
                 <div class="text-center">
                     <a href="{{ route('login') }}" class="back-link">
@@ -286,6 +320,24 @@
 
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Lógica unificada para os botões "SHOW" das duas senhas
+        const toggleButtons = document.querySelectorAll('.btn-toggle-password');
+
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.textContent = 'Hide';
+                } else {
+                    input.type = 'password';
+                    this.textContent = 'Show';
+                }
+            });
+        });
     </script>
 </body>
 </html>

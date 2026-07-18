@@ -39,7 +39,7 @@ class FuncionarioController extends Controller
             "bi" => $request->bi,
             "nif" => $request->nif,
             "cargo" => $request->cargo,
-
+            //"iniciais" => strtoupper($request->iniciais),
             "estado" => $request->estado ?? "Activo",
             "tipo_contrato" => $request->tipo_contrato ?? "Permanente",
             "data_inicio_contrato" => $request->data_inicio_contrato,

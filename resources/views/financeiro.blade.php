@@ -29,6 +29,33 @@
         .text-accent { color: var(--accent); }
         .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: white; }
         .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
+        /* NOVO: Estilos para fixar a tabela e ativar o Scroll */
+        .table-scrollable-container {
+            max-height: 400px; /* Altere este valor para controlar a altura visível da tabela */
+            overflow-y: auto;  /* Ativa o scroll vertical */
+            overflow-x: auto;  /* Ativa o scroll horizontal se a tela for pequena */
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .table-scrollable-container table {
+            border-collapse: separate; /* Necessário para o efeito sticky funcionar corretamente */
+            margin-bottom: 0;
+        }
+
+        .table-scrollable-container thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background-color: #f1f3f5 !important; /* Cor de fundo para não sobrepor o texto rolando por baixo */
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12); /* Garante a linha divisória inferior */
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
 <body>
@@ -153,7 +180,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold m-0 text-dark">Gestão Financeira Corporativa</h2>
-                <p class="text-muted small mb-0">Controlo de orçamentos, custos de RH, despesas operacionais e fluxos de caixa</p>
+                <p class="text-accent">Controlo de orçamentos, custos de RH, despesas operacionais e fluxos de caixa</p>
             </div>
             <div class="d-flex gap-2">
                 <a href="{{ route('financeiro.exportar') }}" class="btn btn-light border fw-medium px-3 shadow-sm d-inline-flex align-items-center" style="font-size: 14px; height: 38px;">
@@ -223,8 +250,8 @@
                         <span class="text-muted small">Histórico Geral</span>
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                    <div class="table-scrollable-container">
+                        <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
                                     <th>Descrição / Categoria</th>
