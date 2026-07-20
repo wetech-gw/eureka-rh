@@ -347,8 +347,8 @@
                             <label class="form-label-compact">Estado *</label>
                             <select name="estado" class="form-select form-control-compact" required>
                                 <option value="Presente">Presente</option>
-                                <option value="Falta">Falta Injustificada</option>
-                                <option value="Falta Justificada">Falta Justificada</option>
+                                <option value="Falta">Falta</option>
+                                <!--<option value="Falta Justificada">Falta Justificada</option>-->
                             </select>
                         </div>
                         <div class="col-md-12">
