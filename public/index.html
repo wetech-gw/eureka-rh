@@ -463,6 +463,152 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   </div>
 </section>
 
+<!-- ===== RECRUTAMENTO E FORMAÇÕES ===== -->
+<section class="section section-tint" id="recrutamento">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Carreiras & Capacitação</span>
+      <h2>Oportunidades de Recrutamento e Formações</h2>
+      <p>Consulte os processos seletivos abertos e a agenda das nossas formações.</p>
+    </div>
+
+    <!-- Lista Dinâmica de Recrutamentos e Formações -->
+    <div class="news-grid" style="margin-bottom: 50px;">
+
+      <!-- Loop das Vagas de Recrutamento -->
+      @forelse($recrutamentos as $recrutamento)
+        <article class="news-card">
+          <div class="news-body">
+            <span class="news-cat" style="background: var(--teal); color: #fff;">{{ $recrutamento->tipo_contrato ?? 'Recrutamento' }}</span>
+            <div class="news-date">Prazo: {{ \Carbon\Carbon::parse($recrutamento->data_limite)->format('d/m/Y') }}</div>
+
+            <h3>{{ $recrutamento->titulo_vaga }}</h3>
+            <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 8px;">
+              <strong>Dep:</strong> {{ $recrutamento->departamento }} | <strong>Local:</strong> {{ $recrutamento->localizacao }} | <strong>Vagas:</strong> {{ $recrutamento->vagas_disponiveis }}
+            </p>
+            <p>{{ Str::limit($recrutamento->descricao_vaga, 120) }}</p>
+
+            <a href="#formulario-candidatura" onclick="selecionarVaga('{{ $recrutamento->id }}', '{{ $recrutamento->titulo_vaga }}')" class="btn btn-line btn-block">
+              Candidatar-me
+            </a>
+          </div>
+        </article>
+      @empty
+        <p>Não há processos de recrutamento abertos no momento.</p>
+      @endforelse
+
+      <!-- Loop Apenas Visual de Formações -->
+      @forelse($formacoes as $formacao)
+        <article class="news-card">
+          <div class="news-body">
+            <span class="news-cat" style="background: var(--clay); color: #fff;">Formação Agendada</span>
+            <div class="news-date">
+              {{ \Carbon\Carbon::parse($formacao->data_inicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($formacao->data_fim)->format('d/m/Y') }}
+            </div>
+
+            <h3>{{ $formacao->tema }}</h3>
+            <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 8px;">
+              <strong>Entidade:</strong> {{ $formacao->entidade }} | <strong>Carga Horária:</strong> {{ $formacao->carga_horaria }}h
+            </p>
+            <span class="badge" style="display: inline-block; padding: 4px 8px; background: #e9ecef; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">
+              Status: {{ ucfirst($formacao->status) }}
+            </span>
+          </div>
+        </article>
+      @empty
+        <p>Não há formações agendadas no momento.</p>
+      @endforelse
+
+    </div>
+
+    <!-- Formulário Único de Submissão de Candidatura -->
+    <div class="form-card" id="formulario-candidatura" style="max-width: 780px; margin: 0 auto;">
+      <h3 style="margin-bottom: 6px; text-align: center;">Formulário de Candidatura</h3>
+      <p style="text-align: center; color: var(--muted); margin-bottom: 24px; font-size: 0.95rem;">
+        Preencha os seus dados pessoais e profissionais abaixo para se candidatar.
+      </p>
+
+      @if(session('success'))
+        <div class="form-feedback ok" style="margin-bottom: 15px; padding: 12px; background: #eaf8f0; border-radius: 8px; color: #1e7e34;">
+          {{ session('success') }}
+        </div>
+      @endif
+
+      <form action="{{ route('candidatos.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+
+        <!-- Vaga Selecionada -->
+        <div class="field" style="margin-bottom: 15px;">
+          <label for="vaga_display">Vaga Selecionada</label>
+          <input type="text" id="vaga_display" readonly placeholder="Selecione uma vaga acima ou deixe em branco para candidatura espontânea" style="background: #f0f4f6;">
+          <input type="hidden" id="recrutamento_id" name="recrutamento_id">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="nome">Nome Completo <span>*</span></label>
+            <input type="text" id="nome" name="nome" required placeholder="Seu nome completo">
+          </div>
+          <div class="field">
+            <label for="email">E-mail <span>*</span></label>
+            <input type="email" id="email" name="email" required placeholder="seu.email@exemplo.com">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="telefone">Telefone / WhatsApp <span>*</span></label>
+            <input type="tel" id="telefone" name="telefone" required placeholder="+245 ...">
+          </div>
+          <div class="field">
+            <label for="profissao">Profissão / Cargo Atual <span>*</span></label>
+            <input type="text" id="profissao" name="profissao" required placeholder="Ex: Desenvolvedor, Contabilista">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="nivel_academico">Nível Académico <span>*</span></label>
+            <select id="nivel_academico" name="nivel_academico" required>
+              <option value="">Selecione...</option>
+              <option value="Ensino Secundário">Ensino Secundário</option>
+              <option value="Bacharelato">Bacharelato</option>
+              <option value="Licenciatura">Licenciatura</option>
+              <option value="Mestrado">Mestrado</option>
+              <option value="Doutoramento">Doutoramento</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="anos_experiencia">Anos de Experiência <span>*</span></label>
+            <input type="number" id="anos_experiencia" name="anos_experiencia" min="0" required placeholder="Ex: 2">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="localizacao">Localização (Cidade/País) <span>*</span></label>
+            <input type="text" id="localizacao" name="localizacao" required placeholder="Ex: Bissau, Guiné-Bissau">
+          </div>
+          <div class="field">
+            <label for="cv_arquivo">Curriculum Vitae (PDF/DOC, max 5MB) <span>*</span></label>
+            <input type="file" id="cv_arquivo" name="cv_arquivo" accept=".pdf,.doc,.docx" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="competencias">Competências / Resumo do Perfil</label>
+          <textarea id="competencias" name="competencias" rows="3" placeholder="Descreva sucintamente as suas principais competências técnicas e relacionais..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg">
+          <span class="btn-label">Enviar Candidatura</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
 <!-- ===== DIFERENCIAIS ===== -->
 <section class="section diff" id="diferenciais">
   <div class="container diff-grid">
@@ -951,6 +1097,10 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   document.getElementById("year").textContent = new Date().getFullYear();
 })();
 
+function selecionarVaga(id, titulo) {
+    document.getElementById('recrutamento_id').value = id;
+    document.getElementById('vaga_display').value = titulo;
+  }
 </script>
 </body>
 </html>
