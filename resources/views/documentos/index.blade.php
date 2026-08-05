@@ -64,10 +64,10 @@
 
         <!-- SIDEBAR ORIGINAL EUREKA -->
         <aside class="sidebar border-end p-3 d-flex flex-column" style="min-height: 100vh;">
-        <div class="mb-4">
-            <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
-            <span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>
-        </div>
+            <div class="mb-4">
+                <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
+                <!--<span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>-->
+            </div>
 
         <nav class="flex-grow-1">
             <a href="{{ route('dashboard') }}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
@@ -128,14 +128,18 @@
                 Candidatos
             </a>
 
-            <a href="{{ route('financeiro.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                Financeiro
+            <a href="{{ route('documentos.colaboradores.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('documentos.colaboradores.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Dossiê do Colaborador
             </a>
-
-            <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                Operacional/Estratégia
+            <a href="{{ route('estagiarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('estagiarios.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                Gestão de Estagiários
             </a>
 
             <a href="{{ route('usuarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
@@ -182,12 +186,36 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold m-0 text-dark">Arquivo de Documentos</h2>
-                <p class="text-accent">Controlo de fluxos, termos, guias de entrega e saídas oficiais</p>
+                <p class="text-accent">Gestão documental por categoria, versão e nível de acesso</p>
             </div>
             <button type="button" class="btn text-white fw-medium shadow-sm px-3" style="background-color: #0d9488; font-size: 14px;" data-bs-toggle="modal" data-bs-target="#createDocumentoModal">
                 <i class="fa-solid fa-file-circle-plus me-1"></i> Registar Documento
             </button>
         </div>
+
+        <form method="GET" action="{{ route('documentos.index') }}" class="card-custom p-3 mb-3">
+            <div class="row g-2">
+                <div class="col-md-5"><input type="text" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="Pesquisar por nome, categoria, departamento ou versão"></div>
+                <div class="col-md-3">
+                    <select name="categoria" class="form-select form-select-sm">
+                        <option value="">Categoria</option>
+                        @foreach($categorias as $categoria)
+                            <option value="{{ $categoria }}" {{ request('categoria') == $categoria ? 'selected' : '' }}>{{ $categoria }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="nivel_acesso" class="form-select form-select-sm">
+                        <option value="">Nível de acesso</option>
+                        <option value="Interno" {{ request('nivel_acesso') == 'Interno' ? 'selected' : '' }}>Interno</option>
+                        <option value="RH" {{ request('nivel_acesso') == 'RH' ? 'selected' : '' }}>RH</option>
+                        <option value="Gestão" {{ request('nivel_acesso') == 'Gestão' ? 'selected' : '' }}>Gestão</option>
+                        <option value="Confidencial" {{ request('nivel_acesso') == 'Confidencial' ? 'selected' : '' }}>Confidencial</option>
+                    </select>
+                </div>
+                <div class="col-md-1 d-grid"><button class="btn btn-sm btn-outline-secondary">Filtrar</button></div>
+            </div>
+        </form>
 
         <!-- INDICADORES (CARDS PEQUENOS) -->
         <div class="row g-2 mb-4 row-cols-1 row-cols-md-3">
@@ -244,9 +272,12 @@
                     <thead>
                         <tr>
                             <th>Nome do Documento</th>
-                            <th>Tipo</th>
+                            <th>Categoria</th>
+                            <!--<th>Versão</th>
+                            <th>Nível de Acesso</th>-->
+                            <th>Tipo de Operação</th>
                             <th>Data de Operação</th>
-                            <th>Departamento</th>
+                            <th>Departamento Relacionado</th>
                             <th class="text-center">Arquivo</th>
                         </tr>
                     </thead>
@@ -254,13 +285,10 @@
                         @forelse($documentos as $doc)
                             <tr>
                                 <td class="fw-bold text-dark">{{ $doc->nome }}</td>
-                                <td>
-                                    @if($doc->tipo == 'Entrada')
-                                        <span class="badge bg-success-subtle text-success border border-success px-3 py-1.5 rounded-5 fw-medium">Entrada</span>
-                                    @else
-                                        <span class="badge bg-danger-subtle text-danger border border-danger px-3 py-1.5 rounded-5 fw-medium">Saída</span>
-                                    @endif
-                                </td>
+                                <td>{{ $doc->categoria }}</td>
+                                <!--<td>{{ $doc->versao }}</td>
+                                <td>{{ $doc->nivel_acesso }}</td>-->
+                                <td>{{ $doc->tipo }}</td>
                                 <td class="small text-muted">{{ date('d/m/Y', strtotime($doc->data_operacao)) }}</td>
                                 <td class="fw-semibold text-secondary">{{ $doc->departamento }}</td>
                                 <td class="text-center">
@@ -275,7 +303,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-4 small">Nenhum registo documental encontrado.</td>
+                                <td colspan="7" class="text-center text-muted py-4 small">Nenhum registo documental encontrado.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -301,6 +329,25 @@
                         <input type="text" name="nome" class="form-control border-secondary-subtle" placeholder="Ex: Termo de Entrega de Portátil" required>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Categoria</label>
+                        <input type="text" name="categoria" class="form-control border-secondary-subtle" placeholder="Ex: Contrato, Política Interna, Declaração" required>
+                    </div>
+                    <!--<div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Versão</label>
+                            <input type="text" name="versao" value="1.0" class="form-control border-secondary-subtle" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Nível de Acesso</label>
+                            <select name="nivel_acesso" class="form-select border-secondary-subtle" required>
+                                <option value="Interno">Interno</option>
+                                <option value="RH">RH</option>
+                                <option value="Gestão">Gestão</option>
+                                <option value="Confidencial">Confidencial</option>
+                            </select>
+                        </div>
+                    </div>-->
+                    <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Tipo de Operação</label>
                         <select name="tipo" class="form-select border-secondary-subtle" required>
                             <option value="Entrada">Entrada (Recebido)</option>
@@ -317,7 +364,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Ficheiro (Apenas PDF)</label>
-                        <input type="file" name="arquivo_pdf" class="form-control border-secondary-subtle" accept=".pdf" required>
+                        <input type="file" name="arquivo_pdf" class="form-control border-secondary-subtle" accept=".pdf">
                     </div>
                 </div>
                 <div class="modal-footer bg-light border-top-0">

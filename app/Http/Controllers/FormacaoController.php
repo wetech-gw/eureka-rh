@@ -29,6 +29,8 @@ class FormacaoController extends Controller
             'entidade'      => 'required|string|max:255',
             'data_inicio'   => 'required|date',
             'data_fim'      => 'required|date|after_or_equal:data_inicio',
+            'hora_inicio'   => 'required|date_format:H:i',
+            'hora_fim'      => 'required|date_format:H:i',
             'carga_horaria' => 'required|integer|min:1',
             'status'        => 'required|string'
         ]);
@@ -38,6 +40,8 @@ class FormacaoController extends Controller
             'entidade'      => $request->entidade,
             'data_inicio'   => $request->data_inicio,
             'data_fim'      => $request->data_fim,
+            'hora_inicio'   => $request->hora_inicio,
+            'hora_fim'      => $request->hora_fim,
             'carga_horaria' => $request->carga_horaria,
             'status'        => $request->status,
             'created_at'    => Carbon::now(),

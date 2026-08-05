@@ -35,7 +35,7 @@
 
         /* Fixar Cabeçalho da Tabela e Ativar o Scroll */
         .table-scrollable-container {
-            max-height: 400px; /* Altura limite para rolagem */
+            max-height: 650px; /* Altura limite para rolagem */
             overflow-y: auto;
             overflow-x: auto;
             border: 1px solid #dee2e6;
@@ -82,8 +82,8 @@
 
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
-            <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
-            <span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>
+            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
+            <!--<span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>-->
         </div>
 
         <nav class="flex-grow-1">
@@ -136,14 +136,21 @@
                 </svg>
                 Candidatos
             </a>
-            <a href="{{ route('financeiro.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                Financeiro
+
+            <a href="{{ route('documentos.colaboradores.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('documentos.colaboradores.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Dossiê do Colaborador
             </a>
-            <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                Operacional/Estratégia
+            <a href="{{ route('estagiarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('estagiarios.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                Gestão de Estagiários
             </a>
+
             <a href="{{ route('usuarios.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
@@ -234,6 +241,17 @@
             </div>
         @endif
 
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0 ps-3">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         <div class="card-custom p-4">
             <div class="table-scrollable-container">
                 <table class="table table-hover align-middle">
@@ -245,6 +263,9 @@
                             <th>Fim</th>
                             <th>Dias</th>
                             <th>Estado</th>
+                            <th>Valor Total</th>
+                            <th>Valor Levantado</th>
+                            <th>Saldo Restante</th>
                             <th class="text-center">Ações</th>
                         </tr>
                     </thead>
@@ -258,7 +279,7 @@
                                     <span class="text-muted small">{{ $r->cargo }}</span>
                                 </td>
                                 <td>
-                                    <span class="badge {{ $r->tipo == 'Férias' ? 'bg-info text-dark' : 'bg-secondary' }}">
+                                    <span class="badge {{ $r->tipo == 'Férias anuais' ? 'bg-info text-dark' : 'bg-secondary' }}">
                                         {{ $r->tipo }}
                                     </span>
                                 </td>
@@ -269,6 +290,29 @@
                                     <span class="badge badge-{{ strtolower($r->estado_pedido) }} px-3 py-1.5 rounded-5 fw-medium">
                                         {{ $r->estado_pedido }}
                                     </span>
+                                </td>
+                                <td>
+                                    @if($r->direito_subsidio_ferias)
+                                        <span class="fw-bold">{{ number_format($r->valor_total_subsidio ?? 0, 0, ',', '.') }} XOF</span>
+                                    @else
+                                        <small class="text-muted">—</small>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($r->direito_subsidio_ferias)
+                                        <span>{{ number_format($r->valor_subsidio_ferias ?? 0, 0, ',', '.') }} XOF</span>
+                                        <small class="d-block text-muted">{{ $r->estado_pagamento_subsidio }}</small>
+                                    @else
+                                        <small class="text-muted">—</small>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($r->direito_subsidio_ferias)
+                                        <span class="fw-bold text-success">{{ number_format($r->saldo_subsidio ?? 0, 0, ',', '.') }} XOF</span>
+                                        <small class="d-block text-muted">Disponível para levantamento</small>
+                                    @else
+                                        <small class="text-muted">—</small>
+                                    @endif
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm">
@@ -283,7 +327,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4">Nenhum registo de ausência ou férias encontrado.</td>
+                                <td colspan="10" class="text-center text-muted py-4">Nenhum registo de ausência ou férias encontrado.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -300,7 +344,7 @@
                 <h6 class="modal-title fw-bold m-0">Registar Férias ou Licença</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="{{ route('ferias.store') }}" method="POST">
+            <form action="{{ route('ferias.store') }}" method="POST" data-subsidio-form>
                 @csrf
                 <div class="modal-body p-3">
                     <div class="row g-2">
@@ -309,15 +353,23 @@
                             <select name="funcionario_id" class="form-select form-control-compact" required>
                                 <option value="">Selecione o Funcionário...</option>
                                 @foreach($funcionarios as $func)
-                                    <option value="{{ $func->id }}">{{ $func->nome }} ({{ $func->cargo }})</option>
+                                    <option value="{{ $func->id }}">
+                                        {{ $func->nome }} ({{ $func->cargo }})
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label-compact">Tipo de Registo *</label>
                             <select name="tipo" class="form-select form-control-compact" required>
-                                <option value="Férias">Férias</option>
-                                <option value="Licença">Licença</option>
+                                <option value="Férias anuais">Férias anuais</option>
+                                <option value="Licença de maternidade">Licença de maternidade</option>
+                                <option value="Licença de paternidade">Licença de paternidade</option>
+                                <option value="Licença por falecimento de familiar de 1.º grau">Licença por falecimento de familiar de 1.º grau</option>
+                                <option value="Licença por falecimento de familiar de 2.º grau">Licença por falecimento de familiar de 2.º grau</option>
+                                <option value="Licença por casamento civil">Licença por casamento civil</option>
+                                <option value="Licença sem vencimento">Licença sem vencimento</option>
+                                <option value="Outra licença">Outra licença</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -334,6 +386,29 @@
                         <div class="col-md-6">
                             <label class="form-label-compact">Data de Fim *</label>
                             <input type="date" name="data_fim" class="form-control form-control-compact" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-compact">Direito ao Subsídio</label>
+                            <select name="direito_subsidio_ferias" class="form-select form-control-compact" data-direito-subsidio>
+                                <option value="0">Não</option>
+                                <option value="1">Sim</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-compact">Valor Total do Subsídio</label>
+                            <input type="number" min="0" step="0.01" name="valor_total_subsidio" class="form-control form-control-compact" value="0">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-compact">Valor a Levantar</label>
+                            <input type="number" min="0" step="0.01" name="valor_subsidio_ferias" class="form-control form-control-compact" value="0">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-compact">Estado de Pagamento</label>
+                            <select name="estado_pagamento_subsidio" class="form-select form-control-compact">
+                                <option value="Não aplicável">Não aplicável</option>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Pago">Pago</option>
+                            </select>
                         </div>
                         <div class="col-md-12">
                             <label class="form-label-compact">Observações / Motivo</label>
@@ -361,9 +436,16 @@
                 <div class="modal-body p-3" style="font-size: 13px;">
                     <p><strong>Funcionário:</strong> {{ $r->nome }}</p>
                     <p><strong>Tipo:</strong> {{ $r->tipo }}</p>
+                    <!--<p><strong>Saldo de Férias Disponível:</strong> {{ $r->ferias_disponiveis_dias }} dia(s)</p>-->
                     <p><strong>Período:</strong> {{ date('d/m/Y', strtotime($r->data_inicio)) }} até {{ date('d/m/Y', strtotime($r->data_fim)) }}</p>
                     <p><strong>Total de Dias:</strong> {{ $r->dias }} dia(s)</p>
                     <p><strong>Estado do Pedido:</strong> {{ $r->estado_pedido }}</p>
+                    @if($r->direito_subsidio_ferias)
+                        <p><strong>Valor Total do Subsídio:</strong> {{ number_format($r->valor_total_subsidio ?? 0, 0, ',', '.') }} XOF</p>
+                        <p><strong>Valor Levantado:</strong> {{ number_format($r->valor_subsidio_ferias ?? 0, 0, ',', '.') }} XOF</p>
+                        <p><strong>Saldo do Subsídio:</strong> {{ number_format($r->saldo_subsidio ?? 0, 0, ',', '.') }} XOF</p>
+                        <p><strong>Estado do Pagamento:</strong> {{ $r->estado_pagamento_subsidio }}</p>
+                    @endif
                     <p><strong>Observações:</strong> {{ $r->observacoes ?? 'Sem observações gravadas.' }}</p>
                 </div>
             </div>
@@ -377,7 +459,10 @@
                     <h6 class="modal-title fw-bold m-0">Modificar Registo: {{ $r->nome }}</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <form action="{{ route('ferias.update', $r->id) }}" method="POST">
+                @php
+                    $valorTotalSubsidioEdicao = (float) ($r->valor_total_subsidio ?? 0);
+                @endphp
+                <form action="{{ route('ferias.update', $r->id) }}" method="POST" data-subsidio-form>
                     @csrf
                     @method('PUT')
                     <div class="modal-body p-3">
@@ -385,8 +470,14 @@
                             <div class="col-md-6">
                                 <label class="form-label-compact">Tipo</label>
                                 <select name="tipo" class="form-select form-control-compact">
-                                    <option value="Férias" {{ $r->tipo == 'Férias' ? 'selected' : '' }}>Férias</option>
-                                    <option value="Licença" {{ $r->tipo == 'Licença' ? 'selected' : '' }}>Licença</option>
+                                    <option value="Férias anuais" {{ $r->tipo == 'Férias anuais' ? 'selected' : '' }}>Férias anuais</option>
+                                    <option value="Licença de maternidade" {{ $r->tipo == 'Licença de maternidade' ? 'selected' : '' }}>Licença de maternidade</option>
+                                    <option value="Licença de paternidade" {{ $r->tipo == 'Licença de paternidade' ? 'selected' : '' }}>Licença de paternidade</option>
+                                    <option value="Licença por falecimento de familiar de 1.º grau" {{ $r->tipo == 'Licença por falecimento de familiar de 1.º grau' ? 'selected' : '' }}>Licença por falecimento de familiar de 1.º grau</option>
+                                    <option value="Licença por falecimento de familiar de 2.º grau" {{ $r->tipo == 'Licença por falecimento de familiar de 2.º grau' ? 'selected' : '' }}>Licença por falecimento de familiar de 2.º grau</option>
+                                    <option value="Licença por casamento civil" {{ $r->tipo == 'Licença por casamento civil' ? 'selected' : '' }}>Licença por casamento civil</option>
+                                    <option value="Licença sem vencimento" {{ $r->tipo == 'Licença sem vencimento' ? 'selected' : '' }}>Licença sem vencimento</option>
+                                    <option value="Outra licença" {{ $r->tipo == 'Outra licença' ? 'selected' : '' }}>Outra licença</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -404,6 +495,29 @@
                             <div class="col-md-6">
                                 <label class="form-label-compact">Data Fim</label>
                                 <input type="date" name="data_fim" value="{{ $r->data_fim }}" class="form-control form-control-compact" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label-compact">Direito ao Subsídio</label>
+                                <select name="direito_subsidio_ferias" class="form-select form-control-compact" data-direito-subsidio>
+                                    <option value="0" {{ !$r->direito_subsidio_ferias ? 'selected' : '' }}>Não</option>
+                                    <option value="1" {{ $r->direito_subsidio_ferias ? 'selected' : '' }}>Sim</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label-compact">Valor Total do Subsídio</label>
+                                <input type="number" min="0" step="0.01" name="valor_total_subsidio" value="{{ $valorTotalSubsidioEdicao }}" class="form-control form-control-compact">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label-compact">Valor a Levantar</label>
+                                <input type="number" name="valor_subsidio_ferias" min="0" step="0.01" value="{{ $r->valor_subsidio_ferias ?? 0 }}" class="form-control form-control-compact">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label-compact">Estado de Pagamento</label>
+                                <select name="estado_pagamento_subsidio" class="form-select form-control-compact">
+                                    <option value="Não aplicável" {{ ($r->estado_pagamento_subsidio ?? 'Não aplicável') == 'Não aplicável' ? 'selected' : '' }}>Não aplicável</option>
+                                    <option value="Pendente" {{ ($r->estado_pagamento_subsidio ?? '') == 'Pendente' ? 'selected' : '' }}>Pendente</option>
+                                    <option value="Pago" {{ ($r->estado_pagamento_subsidio ?? '') == 'Pago' ? 'selected' : '' }}>Pago</option>
+                                </select>
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label-compact">Observações</label>
@@ -427,6 +541,31 @@ document.addEventListener("DOMContentLoaded", function() {
     const inputPesquisa = document.getElementById('searchEmployee');
     // Seleciona as linhas dentro do container com rolagem
     const linhasFuncionarios = document.querySelectorAll('.table-scrollable-container tbody tr.funcionario-row');
+    const formulariosSubsidio = document.querySelectorAll('[data-subsidio-form]');
+    const tipoFeriasAnuais = 'Férias anuais';
+    const estadoAprovado = 'Aprovado';
+
+    function sincronizarDireitoSubsidio(form) {
+        const tipoSelect = form.querySelector('[name="tipo"]');
+        const estadoPedidoSelect = form.querySelector('[name="estado_pedido"]');
+        const direitoSelect = form.querySelector('[data-direito-subsidio]');
+        const aplicaSubsidio = tipoSelect?.value === tipoFeriasAnuais && estadoPedidoSelect?.value === estadoAprovado;
+
+        if (direitoSelect) {
+            direitoSelect.value = aplicaSubsidio ? '1' : '0';
+        }
+    }
+
+    formulariosSubsidio.forEach(form => {
+        ['tipo', 'estado_pedido'].forEach(nomeCampo => {
+            const campo = form.querySelector(`[name="${nomeCampo}"]`);
+            if (campo) {
+                campo.addEventListener('change', () => sincronizarDireitoSubsidio(form));
+            }
+        });
+
+        sincronizarDireitoSubsidio(form);
+    });
 
     if (inputPesquisa) {
         inputPesquisa.addEventListener('input', function() {

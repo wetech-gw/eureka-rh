@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eureka RH - Folha Salarial</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root { --accent: #0d9488; }
         body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; }
@@ -33,7 +34,7 @@
         .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
         /* NOVO: Estilos para fixar a tabela e ativar o Scroll */
         .table-scrollable-container {
-            max-height: 400px; /* Altere este valor para controlar a altura visível da tabela */
+            max-height: 650px; /* Altere este valor para controlar a altura visível da tabela */
             overflow-y: auto;  /* Ativa o scroll vertical */
             overflow-x: auto;  /* Ativa o scroll horizontal se a tela for pequena */
             border: 1px solid #dee2e6;
@@ -72,8 +73,8 @@
 
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
-            <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
-            <span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>
+            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
+            <!--<span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>-->
         </div>
 
         <nav class="flex-grow-1">
@@ -128,18 +129,25 @@
                 </svg>
                 Candidatos
             </a>
-            <a href="{{ route('financeiro.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                Financeiro
+
+            <a href="{{ route('documentos.colaboradores.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('documentos.colaboradores.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Dossiê do Colaborador
             </a>
+            <a href="{{ route('estagiarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('estagiarios.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                Gestão de Estagiários
+            </a>
+
             {{-- <a class="nav-item-hr p-2.5 rounded-3 mb-1">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                 Relatórios
             </a> --}}
-            <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                Operacional/Estratégia
-            </a>
             <a href="{{ route('usuarios.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
@@ -187,19 +195,22 @@
             </div>
 
             <div class="d-flex gap-2">
-            <a href="{{ route('folhas.exportar', ['mes' => $mesSelecionado, 'ano' => $anoSelecionado]) }}" class="btn btn-light border btn-sm fw-medium rounded-3 d-inline-flex align-items-center gap-1.5 shadow-sm">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Exportar CSV
-            </a>
+                <!-- Botão Moderno de Exportar PDF -->
+                <button type="button" onclick="exportarFolhaPDF()" class="btn btn-light border btn-sm fw-semibold rounded-3 d-inline-flex align-items-center gap-2 shadow-sm text-dark px-3" style="height: 38px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="12" y2="18"></line>
+                        <line x1="15" y1="15" x2="12" y2="18"></line>
+                    </svg>
+                    Exportar PDF
+                </button>
 
-            <button class="btn text-white px-3 btn-sm fw-medium rounded-3" style="background-color: var(--accent);" data-bs-toggle="modal" data-bs-target="#modalGerarFolha">
-                ⚡ Rodar Folha do Mês
-            </button>
-        </div>
+                <button class="btn text-white px-3 btn-sm fw-medium rounded-3" style="background-color: var(--accent); height: 38px;" data-bs-toggle="modal" data-bs-target="#modalGerarFolha">
+                    ⚡ Rodar Folha do Mês
+                </button>
+            </div>
         </div>
 
         <div class="row g-3 mb-4">
@@ -240,7 +251,8 @@
                         <tr>
                             <th>Colaborador</th>
                             <th>Salário Bruto</th>
-                            <th>Impostos Retidos</th>
+                            <th>INSS</th>
+                            <th>Imposto Rendimento</th>
                             <th>Faltas (Dias)</th>
                             <th>Líquido Final</th>
                             <th>Estado</th>
@@ -256,10 +268,10 @@
                                 </td>
                                 <td class="fw-medium">{{ number_format($f->salario_bruto, 0, ',', '.') }} XOF</td>
                                 <td class="text-danger small" style="font-size: 11px; line-height: 1.4;">
-                                    Prof: {{ number_format($f->imposto_profissional, 0, ',', '.') }} |
-                                    Dem: {{ number_format($f->imposto_democracia, 0, ',', '.') }} <br>
-                                    INSS (8%): {{ number_format($f->inss, 0, ',', '.') }} |
-                                    Selo: {{ number_format($f->imposto_selo, 0, ',', '.') }}
+                                    {{ number_format($f->inss, 0, ',', '.') }} XOF
+                                </td>
+                                <td class="text-danger small" style="font-size: 11px; line-height: 1.4;">
+                                    {{ number_format($f->imposto_rendimento, 0, ',', '.') }} XOF
                                 </td>
                                 <td>
                                     <div class="fw-bold m-0">{{ $f->faltas }}</div>
@@ -286,7 +298,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4 small">Nenhum registo processado para o período selecionado.</td>
+                                <td colspan="8" class="text-center text-muted py-4 small">Nenhum registo processado para o período selecionado.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -329,5 +341,253 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function exportarFolhaPDF() {
+    // 1. Extrair os dados da tabela presente no Blade
+    const linhas = document.querySelectorAll(".table-scrollable-container table tbody tr");
+    let linhasHTML = "";
+    let totalBruto = 0;
+    let totalLiquido = 0;
+    let totalFuncionarios = 0;
+
+    linhas.forEach(linha => {
+        const colunas = linha.querySelectorAll("td");
+
+        // Ignorar a linha de "Nenhum registo"
+        if (colunas.length >= 7 && !linha.innerText.includes("Nenhum registo")) {
+            totalFuncionarios++;
+
+            const funcionario = colunas[0].querySelector('.fw-bold')?.innerText.trim() || '';
+            const cargo = colunas[0].querySelector('.text-muted')?.innerText.trim() || '';
+            const bruto = colunas[1].innerText.trim();
+            const inss = colunas[2].innerText.trim();
+            const ir = colunas[3].innerText.trim();
+            const faltas = colunas[4].innerText.trim().replace(/\n/g, ' ');
+            const liquido = colunas[5].innerText.trim();
+            const estado = colunas[6].innerText.trim();
+
+            const isPago = estado.toLowerCase().includes("pago");
+            const badgeClass = isPago ? 'badge-pago' : 'badge-pendente';
+
+            linhasHTML += `
+                <tr>
+                    <td>
+                        <div style="font-weight: 700; color: #0f172a;">${funcionario}</div>
+                        <div style="font-size: 8pt; color: #64748b;">${cargo}</div>
+                    </td>
+                    <td style="text-align: right; font-weight: 600;">${bruto}</td>
+                    <td style="text-align: right; color: #dc2626;">${inss}</td>
+                    <td style="text-align: right; color: #dc2626;">${ir}</td>
+                    <td style="text-align: center;">${faltas}</td>
+                    <td style="text-align: right; font-weight: 700; color: #0f172a;">${liquido}</td>
+                    <td style="text-align: center;">
+                        <span class="badge ${badgeClass}">${estado}</span>
+                    </td>
+                </tr>
+            `;
+        }
+    });
+
+    if (totalFuncionarios === 0) {
+        alert("Nenhum registo de folha salarial encontrado para exportar.");
+        return;
+    }
+
+    // 2. Extrair informações dos cards KPI da página
+    const totalGastoLiquido = document.querySelector('.card-custom h3')?.innerText.trim() || '0 XOF';
+
+    // 3. Montar a estrutura HTML para renderização no PDF
+    const mesAno = "{{ $mesSelecionado }}/{{ $anoSelecionado }}";
+    const dataEmissao = new Date().toLocaleDateString('pt-PT');
+
+    const container = document.createElement('div');
+    container.innerHTML = `
+        <style>
+            .pdf-container {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                padding: 15px;
+                color: #1e293b;
+                background-color: #ffffff;
+            }
+            .pdf-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 2px solid #0d9488;
+                padding-bottom: 12px;
+                margin-bottom: 15px;
+            }
+            .logo-box {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .logo-img {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+            .company-title {
+                font-size: 14px;
+                font-weight: 800;
+                color: #0f172a;
+                text-transform: uppercase;
+                margin: 0;
+                line-height: 1.1;
+            }
+            .company-sub {
+                font-size: 9px;
+                color: #0d9488;
+                font-weight: 700;
+                letter-spacing: 0.8px;
+                text-transform: uppercase;
+                margin: 0;
+            }
+            .pdf-title-block {
+                text-align: right;
+            }
+            .pdf-title-block h2 {
+                margin: 0;
+                color: #0d9488;
+                font-size: 16px;
+                font-weight: 800;
+                text-transform: uppercase;
+            }
+            .pdf-title-block p {
+                margin: 2px 0 0 0;
+                font-size: 9px;
+                color: #64748b;
+            }
+            .kpi-cards {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            .kpi-card {
+                flex: 1;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                padding: 8px 10px;
+            }
+            .kpi-card-title {
+                font-size: 8px;
+                font-weight: 700;
+                color: #64748b;
+                text-transform: uppercase;
+            }
+            .kpi-card-value {
+                font-size: 14px;
+                font-weight: 800;
+                margin-top: 2px;
+                color: #0f172a;
+            }
+            .pdf-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 5px;
+            }
+            .pdf-table th {
+                background-color: #0d9488;
+                color: #ffffff;
+                font-size: 8pt;
+                font-weight: 700;
+                text-transform: uppercase;
+                padding: 6px 8px;
+                text-align: left;
+            }
+            .pdf-table td {
+                padding: 8px;
+                font-size: 8pt;
+                border-bottom: 1px solid #f1f5f9;
+            }
+            .pdf-table tr:nth-child(even) td {
+                background-color: #f8fafc;
+            }
+            .badge {
+                padding: 3px 8px;
+                border-radius: 10px;
+                font-size: 7.5pt;
+                font-weight: 700;
+                display: inline-block;
+            }
+            .badge-pago { background-color: #d1e7dd; color: #0f5132; }
+            .badge-pendente { background-color: #fff3cd; color: #664d03; }
+            .footer-note {
+                margin-top: 25px;
+                padding-top: 10px;
+                border-top: 1px dashed #cbd5e1;
+                font-size: 7.5pt;
+                color: #94a3b8;
+                text-align: center;
+            }
+        </style>
+
+        <div class="pdf-container">
+            <!-- Cabeçalho com Logótipo Arredondado -->
+            <div class="pdf-header">
+                <div class="logo-box">
+                    <img src="{{ asset('eureka.jpeg') }}" class="logo-img" alt="Eureka Consulting">
+                    <div>
+                        <div class="company-title">Eureka Consulting</div>
+                        <div class="company-sub">Recursos Humanos</div>
+                    </div>
+                </div>
+                <div class="pdf-title-block">
+                    <h2>Folha Salarial</h2>
+                    <p>Período: <strong>${mesAno}</strong> | Gerado em: ${dataEmissao}</p>
+                </div>
+            </div>
+
+            <!-- Resumo Financeiro -->
+            <div class="kpi-cards">
+                <div class="kpi-card">
+                    <div class="kpi-card-title">Total Processado</div>
+                    <div class="kpi-card-value">${totalFuncionarios} Colaboradores</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-card-title">Total Líquido Emitido</div>
+                    <div class="kpi-card-value" style="color: #0d9488;">${totalGastoLiquido}</div>
+                </div>
+            </div>
+
+            <!-- Tabela da Folha Salarial -->
+            <table class="pdf-table">
+                <thead>
+                    <tr>
+                        <th style="width: 28%;">Colaborador / Cargo</th>
+                        <th style="width: 15%; text-align: right;">S. Bruto</th>
+                        <th style="width: 12%; text-align: right;">INSS</th>
+                        <th style="width: 13%; text-align: right;">Imp. Rend.</th>
+                        <th style="width: 12%; text-align: center;">Faltas</th>
+                        <th style="width: 12%; text-align: right;">Líquido</th>
+                        <th style="width: 8%; text-align: center;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${linhasHTML}
+                </tbody>
+            </table>
+
+            <div class="footer-note">
+                Este relatório foi gerado automaticamente pelo Sistema Eureka RH. Confirme os valores junto da direção financeira.
+            </div>
+        </div>
+    `;
+
+    // 4. Configurações de exportação (Orientação Paisagem / Landscape para caberem todas as colunas)
+    const opt = {
+        margin:       [8, 8, 8, 8],
+        filename:     `folha_salarial_${mesAno.replace('/', '_')}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, logging: false, useCORS: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    };
+
+    // 5. Executar o download do PDF
+    html2pdf().set(opt).from(container).save();
+}
+</script>
 </body>
 </html>

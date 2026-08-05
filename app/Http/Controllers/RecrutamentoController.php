@@ -8,31 +8,27 @@ use Carbon\Carbon;
 
 class RecrutamentoController extends Controller
 {
-    // Exibir a página com o formulário e a listagem
     public function index()
     {
-        // Procura todas as vagas na tabela do banco de dados
         $recrutamentos = DB::table('recrutamentos')->orderBy('id', 'desc')->get();
+        $formacoes = DB::table('formacoes')->orderBy('data_inicio', 'desc')->get();
 
-        return view('recrutamento', compact('recrutamentos'));
+        return view('recrutamento', compact('recrutamentos', 'formacoes'));
     }
 
     public function alterarEstado(Request $request, $id)
     {
-        // 1. Valida a coluna correta que é 'status'
         $request->validate([
             'status' => 'required|in:Ativo,Expirado,Inativo'
         ]);
 
-        // 2. Atualiza a base de dados usando 'status' e recebe o valor correto da Request
         DB::table('recrutamentos')
             ->where('id', $id)
-            ->update(['status' => $request->status]); // Alinhado com a base de dados
+            ->update(['status' => $request->status]);
 
         return redirect()->back()->with('success', 'Estado da vaga atualizado com sucesso!');
     }
 
-    // Gravar a nova vaga enviada pelo formulário
     public function store(Request $request)
     {
         $request->validate([
@@ -53,7 +49,7 @@ class RecrutamentoController extends Controller
             'descricao_vaga' => $request->descricao_vaga,
             'requisitos' => $request->requisitos,
             'data_limite' => $request->data_limite,
-            'status' => 'Ativo', // Aqui confirmamos que o nome da coluna é 'status'
+            'status' => 'Ativo',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -61,18 +57,67 @@ class RecrutamentoController extends Controller
         return redirect()->back()->with('success', 'Vaga de recrutamento publicada com sucesso!');
     }
 
-    public function apiIndex()
-{
-    // Faz a mesma busca da tua tabela de recrutamento
-    $recrutamentos = DB::table('recrutamentos')
-        ->orderBy('created_at', 'desc')
-        ->get();
+    public function candidatar(Request $request)
+    {
+        $request->validate([
+            'vaga_id' => 'required|exists:recrutamentos,id',
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'telefone' => 'required|string|max:50',
+            'profissao' => 'nullable|string|max:255',
+            'nivel_academico' => 'nullable|string|max:120',
+            'anos_experiencia' => 'nullable|integer|min:0|max:80',
+            'competencias' => 'nullable|string',
+            'localizacao' => 'nullable|string|max:255',
+            'cv_arquivo' => 'required|file|mimes:pdf,doc,docx|max:2048',
+        ]);
 
-    // Devolve os dados puros em formato JSON com status 200 (Sucesso)
-    return response()->json([
-        'success' => true,
-        'message' => 'Lista de recrutamentos recuperada com sucesso.',
-        'data'    => $recrutamentos
-    ], 200);
-}
+        $caminhoArquivo = null;
+        if ($request->hasFile('cv_arquivo')) {
+            $caminhoArquivo = $request->file('cv_arquivo')->store('cvs', 'public');
+        }
+
+        DB::table('candidatos')->updateOrInsert(
+            ['email' => $request->email],
+            [
+                'nome' => $request->nome,
+                'telefone' => $request->telefone,
+                'profissao' => $request->profissao,
+                'nivel_academico' => $request->nivel_academico,
+                'anos_experiencia' => $request->anos_experiencia,
+                'competencias' => $request->competencias,
+                'localizacao' => $request->localizacao,
+                'updated_at' => now(),
+                'created_at' => now(),
+            ],
+        );
+
+        $candidato = DB::table('candidatos')
+            ->where('email', $request->email)
+            ->first();
+
+        DB::table('candidaturas')->insert([
+            'vaga_id' => $request->vaga_id,
+            'candidato_id' => $candidato->id,
+            'cv_arquivo' => $caminhoArquivo,
+            'status' => 'Pendente',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Candidatura registada com sucesso! A sua candidatura está em análise.');
+    }
+
+    public function apiIndex()
+    {
+        $recrutamentos = DB::table('recrutamentos')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Lista de recrutamentos recuperada com sucesso.',
+            'data'    => $recrutamentos
+        ], 200);
+    }
 }

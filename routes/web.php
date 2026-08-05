@@ -9,13 +9,15 @@ use App\Http\Controllers\PresencaController;
 use App\Http\Controllers\FolhaSalarialController;
 use App\Http\Controllers\RecrutamentoController;
 use App\Http\Controllers\CandidatoController;
-use App\Http\Controllers\FinanceiroController;
+
 use App\Http\Controllers\FormacaoController;
-use App\Http\Controllers\EstrategiaController;
+
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\ContatoController; // <--- Linha obrigatória no topo do routes/web.php
+use App\Http\Controllers\EstagiarioController;
+use App\Http\Controllers\DocumentoColaboradorController;
+use App\Http\Controllers\PublicController;
 
 // 🟢 ADICIONA AS ROTAS DE RECUPERAÇÃO DE SENHA AQUI
 Route::get("/forgot-password", [AuthController::class, "showForgotForm"])
@@ -34,14 +36,12 @@ Route::post("/reset-password", [AuthController::class, "reset"])
     ->name("password.update")
     ->middleware("guest");
 
-use App\Http\Controllers\FolhaSalarialController as ControllersFolhaSalarialController;
-use App\Http\Controllers\FolhaSalarialController as HttpControllersFolhaSalarialController;
-use App\Http\Controllers\FolhaSalarialController as AppHttpControllersFolhaSalarialController;
 use App\Http\Middleware\CheckResponsavel;
 
-// 🆕 ROTA DO DASHBOARD (Adicionada aqui)
-// Isto vai fazer o Dashboard abrir logo na página inicial (http://127.0.0.1:8000)
-Route::get("/", [DashboardController::class, "index"])->name("dashboard");
+// 🆕 ROTA PÚBLICA PRINCIPAL (Vagas + Formações + Candidatura)
+Route::get("/", [PublicController::class, "index"])->name("public.index");
+Route::get("/vagas-formacoes", [PublicController::class, "vagasFormacoes"])->name("public.vagasFormacoes");
+Route::post("/candidatar", [PublicController::class, "candidatar"])->name("public.candidatar");
 
 Route::get("/dashboard", [AuthController::class, "dashboard"])
     ->middleware("auth") // Se tiver proteção de login
@@ -148,17 +148,7 @@ Route::post("/candidatos/store", [CandidatoController::class, "store"])->name(
     "candidatos.store",
 );
 
-// Rotas do Financeiro
-Route::get("/financeiro", [FinanceiroController::class, "index"])->name(
-    "financeiro.index",
-);
-Route::post("/financeiro", [FinanceiroController::class, "store"])->name(
-    "financeiro.store",
-);
-Route::get("/financeiro/exportar", [
-    FinanceiroController::class,
-    "exportar",
-])->name("financeiro.exportar");
+
 
 // Rota de listagem de Formações
 Route::get("/formacoes", [FormacaoController::class, "index"])->name(
@@ -174,29 +164,7 @@ Route::patch("/formacoes/{id}/estado", [
     "alterarEstado",
 ])->name("formacoes.alterarEstado");
 
-// Rotas da Página Operacional e Estratégia
-Route::get("/operacional-estrategia", [
-    EstrategiaController::class,
-    "index",
-])->name("estrategia.index");
-Route::patch("/operacional-estrategia/{id}/progresso", [
-    EstrategiaController::class,
-    "progresso",
-])->name("estrategia.progresso");
-// <<< ADICIONE ESTAS DUAS LINHAS ABAIXO >>>
-Route::post("/operacional-estrategia", [
-    EstrategiaController::class,
-    "store",
-])->name("estrategia.store");
-Route::put("/operacional-estrategia/{id}", [
-    EstrategiaController::class,
-    "update",
-])->name("operacional-estrategia.update");
-// Rotas de indicadores operacionais
-Route::post("/operacional-estrategia/indicadores", [
-    EstrategiaController::class,
-    "updateIndicadores",
-])->name("estrategia.indicadores.update");
+
 
 // Rotas de Usuários
 Route::get("/usuarios", [UsuarioController::class, "index"])->name(
@@ -225,31 +193,18 @@ Route::middleware("auth")->group(function () {
 
     // --- Áreas Restritas (Apenas para Responsável) ---
     Route::middleware("responsavel")->group(function () {
-        Route::get("/financeiro", [FinanceiroController::class, "index"])->name(
-            "financeiro.index",
-        );
-        Route::get("/operacional-estrategia", [
-            EstrategiaController::class,
-            "index",
-        ])->name("estrategia.index");
         Route::get("/usuarios", [UsuarioController::class, "index"])->name(
             "usuarios.index",
         );
     });
 });
 
-// 🟢 GARANTE QUE ESTA LINHA TEM EXATAMENTE ->name('login')
-Route::get("/", [AuthController::class, "showLogin"])
+// 🟢 ROTAS DE LOGIN
+Route::get("/login", [AuthController::class, "showLogin"])
     ->name("login")
     ->middleware("guest");
 
 // Processamento do formulário de login
-Route::post("/login", [AuthController::class, "login"])->name("login.post");
-
-// Rotas Públicas
-Route::get("/", [AuthController::class, "showLogin"])
-    ->name("login")
-    ->middleware("guest");
 Route::post("/login", [AuthController::class, "login"])->name("login.post");
 
 Route::middleware(["auth"])->group(function () {
@@ -259,29 +214,33 @@ Route::middleware(["auth"])->group(function () {
     Route::post("/documentos", [DocumentController::class, "store"])->name(
         "documentos.store",
     );
+
+    Route::get("/documentos-colaboradores", [DocumentoColaboradorController::class, "index"])->name(
+        "documentos.colaboradores.index",
+    );
+    Route::post("/documentos-colaboradores", [DocumentoColaboradorController::class, "store"])->name(
+        "documentos.colaboradores.store",
+    );
+
+    Route::get("/estagiarios", [EstagiarioController::class, "index"])->name(
+        "estagiarios.index",
+    );
+    Route::post("/estagiarios", [EstagiarioController::class, "store"])->name(
+        "estagiarios.store",
+    );
+    Route::put("/estagiarios/{id}", [EstagiarioController::class, "update"])->name(
+        "estagiarios.update",
+    );
 });
 
-// Rota para servir arquivos do storage (using Storage facade for cross-platform reliability)
+// Rota para servir arquivos do storage (cross-platform)
 Route::get('/storage-file/{path}', function ($path) {
     $path = str_replace('|', '/', $path);
 
-    if (!\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+    $disk = \Illuminate\Support\Facades\Storage::disk('public');
+    if (!$disk->exists($path)) {
         abort(404);
     }
 
-    return \Illuminate\Support\Facades\Storage::disk('public')->response($path);
+    return response()->file($disk->path($path));
 })->where('path', '.*')->name('storage.file');
-
-Route::get("/contatos", [ContatoController::class, "index"])->name(
-    "contatos.index",
-);
-Route::post("/contatos", [ContatoController::class, "store"])->name(
-    "contatos.store",
-);
-// Rota que o JavaScript vai chamar em segundo plano
-Route::get("/api/contatos/contagem-pendente", function () {
-    // Conta apenas o que ainda não foi verificado/lido
-    $contagem = \DB::table("contatos")->where("lido", false)->count();
-
-    return response()->json(["total" => $contagem]);
-})->name("api.contatos.contagem");

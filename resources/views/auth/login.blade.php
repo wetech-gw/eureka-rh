@@ -298,7 +298,8 @@
             <div class="brand-shape-1"></div>
             <div class="brand-shape-2"></div>
             <div class="brand-content">
-                <h1>EUREKA Consulting</h1>
+                <!-- Substituição do nome pelo Logo -->
+                <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 300px; height: 300px; border-radius: 40%; object-fit: cover; display: block; margin-bottom: 1rem;">
                 <h3>Plataforma de Gestão</h3>
                 <p>Login para sua plataforma corporativa de gestão estratégica e recursos humanos.</p>
             </div>

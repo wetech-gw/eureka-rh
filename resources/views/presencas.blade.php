@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eureka RH - Controlo de Presenças</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bibliotecas para Geração de PDF no Navegador -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root { --accent: #0d9488; }
         body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; }
@@ -34,7 +36,7 @@
         .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
         /* Fixa o cabeçalho e adiciona rolagem na tabela */
         .table-scrollable-container {
-            max-height: 450px;       /* Altura máxima para a tabela antes de começar a rolar */
+            max-height: 650px;       /* Altura máxima para a tabela antes de começar a rolar */
             overflow-y: auto;         /* Ativa a rolagem vertical */
             overflow-x: auto;         /* Mantém compatibilidade horizontal se o ecrã for pequeno */
             position: relative;
@@ -83,6 +85,16 @@
             pointer-events: none;
             z-index: 4;
         }
+
+        .btn-exportar {
+          background-color: #107c41; /* Verde Excel */
+          color: #ffffff;
+          border: none;
+          padding: 10px 16px;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -91,8 +103,8 @@
 
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
-            <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
-            <span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>
+            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
+            <!--<span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>-->
         </div>
 
         <nav class="flex-grow-1">
@@ -145,14 +157,21 @@
                 </svg>
                 Candidatos
             </a>
-            <a href="{{ route('financeiro.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                Financeiro
+
+            <a href="{{ route('documentos.colaboradores.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('documentos.colaboradores.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Dossiê do Colaborador
             </a>
-            <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                Operacional/Estratégia
+            <a href="{{ route('estagiarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('estagiarios.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                Gestão de Estagiários
             </a>
+
             <a href="{{ route('usuarios.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
@@ -210,7 +229,10 @@
                     </span>
                     <input type="text" class="form-control modern-search-input" id="searchPresenca" placeholder="Pesquisar por colaborador ou cargo...">
                 </div>
-
+                <button type="button" onclick="exportarFaltasPDF()" class="btn text-white px-2 fw-semibold rounded-3 d-flex align-items-center gap-2" style="background-color: #0d9488; height: 38px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="18"></line><line x1="15" y1="15" x2="12" y2="18"></line></svg>
+                    Exportar PDF (Faltas)
+                </button>
                 <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent); height: 38px;" data-bs-toggle="modal" data-bs-target="#modalRegistar">
                     + Registar Presença
                 </button>
@@ -467,6 +489,238 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+function exportarFaltasPDF() {
+    // 1. Coletar dados das faltas presentes na tabela
+    const linhas = document.querySelectorAll("table tbody tr.presenca-row");
+    let faltasHTML = "";
+    let totalFaltas = 0;
+    let faltasJustificadas = 0;
+    let faltasInjustificadas = 0;
+
+    linhas.forEach(linha => {
+        const colunas = linha.querySelectorAll("td");
+        if (colunas.length >= 5) {
+            const funcionario = colunas[0].querySelector('.fw-bold')?.innerText.trim() || '';
+            const cargo = colunas[0].querySelector('.text-muted')?.innerText.trim() || '';
+            const data = colunas[1].innerText.trim();
+            const estado = colunas[4].innerText.trim();
+
+            if (estado.toLowerCase().includes("falta")) {
+                totalFaltas++;
+                const isJustificada = estado.toLowerCase().includes("justificada");
+                if (isJustificada) faltasJustificadas++;
+                else faltasInjustificadas++;
+
+                const badgeClass = isJustificada ? 'badge-justificada' : 'badge-falta';
+
+                faltasHTML += `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: #0f172a;">${funcionario}</div>
+                            <div style="font-size: 8pt; color: #64748b;">${cargo}</div>
+                        </td>
+                        <td style="text-align: center;">${data}</td>
+                        <td style="text-align: center;">
+                            <span class="badge ${badgeClass}">${estado}</span>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+    });
+
+    if (totalFaltas === 0) {
+        alert("Nenhum registo de falta encontrado para exportar.");
+        return;
+    }
+
+    // 2. Montar estrutura completa do relatório com Design Moderno & Logótipo
+    const dataAtual = new Date().toLocaleDateString('pt-PT');
+    const mesAno = new Date().toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
+
+    const container = document.createElement('div');
+    container.innerHTML = `
+        <style>
+            .pdf-container {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                padding: 20px;
+                color: #1e293b;
+                background-color: #ffffff;
+            }
+            .pdf-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 2px solid #0d9488;
+                padding-bottom: 15px;
+                margin-bottom: 20px;
+            }
+            /* Tamanho reduzido da imagem do logótipo */
+            .logo-img {
+                width: 32px;            /* Altera aqui a largura desejada */
+                height: 32px;           /* Altera aqui a altura desejada */
+                border-radius: 50%;     /* Mantém o formato circular (se aplicável) */
+                object-fit: cover;     /* Garante que a imagem não fica distorcida */
+                vertical-align: middle;
+            }
+            .company-title {
+                font-size: 16px;
+                font-weight: 800;
+                color: #0f172a;
+                text-transform: uppercase;
+                margin: 0;
+            }
+            .company-sub {
+                font-size: 10px;
+                color: #0d9488;
+                font-weight: 700;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                margin: 0;
+            }
+            .pdf-title-block {
+                text-align: right;
+            }
+            .pdf-title-block h2 {
+                margin: 0;
+                color: #0d9488;
+                font-size: 18px;
+                font-weight: 800;
+                text-transform: uppercase;
+            }
+            .pdf-title-block p {
+                margin: 2px 0 0 0;
+                font-size: 10px;
+                color: #64748b;
+            }
+            .kpi-cards {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            .kpi-card {
+                flex: 1;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 10px 12px;
+            }
+            .kpi-card-title {
+                font-size: 9px;
+                font-weight: 700;
+                color: #64748b;
+                text-transform: uppercase;
+            }
+            .kpi-card-value {
+                font-size: 18px;
+                font-weight: 800;
+                margin-top: 4px;
+            }
+            .pdf-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+            .pdf-table th {
+                background-color: #0d9488;
+                color: #ffffff;
+                font-size: 9pt;
+                font-weight: 700;
+                text-transform: uppercase;
+                padding: 8px 10px;
+                text-align: left;
+            }
+            .pdf-table td {
+                padding: 10px;
+                font-size: 9pt;
+                border-bottom: 1px solid #f1f5f9;
+            }
+            .pdf-table tr:nth-child(even) td {
+                background-color: #f8fafc;
+            }
+            .badge {
+                padding: 4px 10px;
+                border-radius: 12px;
+                font-size: 8pt;
+                font-weight: 700;
+                display: inline-block;
+            }
+            .badge-falta { background-color: #fee2e2; color: #991b1b; }
+            .badge-justificada { background-color: #e0f2fe; color: #075985; }
+            .footer-note {
+                margin-top: 30px;
+                padding-top: 12px;
+                border-top: 1px dashed #cbd5e1;
+                font-size: 8pt;
+                color: #94a3b8;
+                text-align: center;
+            }
+        </style>
+
+        <div class="pdf-container">
+            <!-- Header com Logótipo -->
+            <div class="pdf-header">
+            <div class="logo-box">
+                <img src="{{ asset('eureka.jpeg') }}" class="logo-img" alt="Eureka Consulting">
+                <div>
+                    <div class="company-sub">Recursos Humanos</div>
+                </div>
+            </div>
+                <div class="pdf-title-block">
+                    <h2>Relatório de Faltas</h2>
+                    <p>Mês: <strong>${mesAno}</strong> | Gerado em: ${dataAtual}</p>
+                </div>
+            </div>
+
+            <!-- Cards Resumo -->
+            <div class="kpi-cards">
+                <div class="kpi-card">
+                    <div class="kpi-card-title">Total de Ausências</div>
+                    <div class="kpi-card-value" style="color: #dc2626;">${totalFaltas}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-card-title">Faltas Injustificadas</div>
+                    <div class="kpi-card-value" style="color: #1e293b;">${faltasInjustificadas}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-card-title">Faltas Justificadas</div>
+                    <div class="kpi-card-value" style="color: #0d9488;">${faltasJustificadas}</div>
+                </div>
+            </div>
+
+            <!-- Tabela de Faltas -->
+            <table class="pdf-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">Colaborador / Cargo</th>
+                        <th style="width: 25%; text-align: center;">Data</th>
+                        <th style="width: 25%; text-align: center;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${faltasHTML}
+                </tbody>
+            </table>
+
+            <div class="footer-note">
+                Documento gerado automaticamente pelo Sistema Eureka RH. Confirme a veracidade das informações junto ao departamento de RH.
+            </div>
+        </div>
+    `;
+
+    // 3. Opções de Configuração do PDF
+    const opt = {
+        margin:       [10, 10, 10, 10],
+        filename:     `relatorio_faltas_${new Date().toISOString().slice(0,7)}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, logging: false },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // 4. Gerar e Descarregar o PDF
+    html2pdf().set(opt).from(container).save();
+}
 </script>
 </body>
 </html>

@@ -143,31 +143,6 @@ class DashboardController extends Controller
             )
             ->get();
 
-        // 7. DADOS FINANCEIROS (Cards inferiores)
-        $saldoCaixa =
-            DB::table("financeiros")
-                ->selectRaw(
-                    "COALESCE(SUM(CASE WHEN tipo = 'Entrada' THEN valor ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN tipo = 'Saída' THEN valor ELSE 0 END), 0) as saldo",
-                )
-                ->value("saldo") ?? 0;
-
-        $receitasMes =
-            DB::table("financeiros")
-                ->where("tipo", "Entrada")
-                ->whereMonth("data_operacao", Carbon::now()->month)
-                ->whereYear("data_operacao", Carbon::now()->year)
-                ->sum("valor") ?? 0;
-
-        $despesasMes =
-            DB::table("financeiros")
-                ->where("tipo", "Saída")
-                ->whereMonth("data_operacao", Carbon::now()->month)
-                ->whereYear("data_operacao", Carbon::now()->year)
-                ->sum("valor") ?? 0;
-
-        $budgetExecutado =
-            $receitasMes > 0 ? round(($despesasMes / $receitasMes) * 100) : 0;
-
         // 8. RETORNO SEGURO PARA A VIEW (Com as variáveis incluídas)
         return view(
             "dashboard",
@@ -189,10 +164,6 @@ class DashboardController extends Controller
                 "diaSemanaInicio",
                 "diasComAusencia",
                 "presencasDetalhadasHoje",
-                "saldoCaixa",
-                "receitasMes",
-                "despesasMes",
-                "budgetExecutado",
             ),
         );
     }

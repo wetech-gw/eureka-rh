@@ -5,8 +5,8 @@
 
         <aside class="sidebar border-end p-3 d-flex flex-column" style="min-height: 100vh;">
         <div class="mb-4">
-            <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
-            <span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>
+            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
+            <!--<span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>-->
         </div>
 
         <nav class="flex-grow-1">
@@ -68,14 +68,18 @@
                 Candidatos
             </a>
 
-            <a href="{{ route('financeiro.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                Financeiro
+            <a href="{{ route('documentos.colaboradores.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('documentos.colaboradores.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Dossiê do Colaborador
             </a>
-
-            <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                Operacional/Estratégia
+            <a href="{{ route('estagiarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('estagiarios.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                Gestão de Estagiários
             </a>
 
             <a href="{{ route('usuarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
@@ -125,17 +129,6 @@
                     <p class="text-accent fw-normal mb-0" style="font-size: 15px;">Eureka Consulting — visão geral da equipa</p>
                 </div>
                 <div class="d-flex gap-2 align-items-center">
-
-                    <a href="{{ route('contatos.index') }}" class="btn btn-light bg-white border p-2 text-secondary rounded-3 d-flex align-items-center justify-content-center position-relative" style="width: 38px; height: 38px; text-decoration: none;" title="Mensagens de Contacto">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                        </svg>
-
-                        <span id="badge-sms" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light d-none" style="font-size: 9px; padding: 3px 6px; margin-top: 6px; margin-left: -6px;">
-                            0
-                        </span>
-                    </a>
 
                     <a href="{{ route('documentos.index') }}" class="btn btn-light bg-white border px-3 py-2 text-secondary fw-medium rounded-3" style="font-size: 13px; text-decoration: none; height: 38px; display: flex; align-items: center;">
                         Registo de Documentos
@@ -397,82 +390,8 @@
         </div>
         </div>
 
-        <div class="row g-2 mb-4 row-cols-2 row-cols-md-4 row-cols-lg-4">
-            <div class="col">
-                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #0d9488;">
-                    <div class="lh-sm">
-                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Saldo em Caixa</span>
-                        <h4 class="fw-bold m-0 text-dark">{{ number_format($saldoCaixa, 0, ',', '.') }} FCFA</h4>
-                    </div>
-                    <div class="bg-teal-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: #e6fdfa; color: #0d9488;">
-                        <i class="fa-solid fa-wallet" style="font-size: 13px;"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #10b981;">
-                    <div class="lh-sm">
-                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Receitas (Mês)</span>
-                        <h4 class="fw-bold m-0 text-success">+{{ number_format($receitasMes, 0, ',', '.') }} FCFA</h4>
-                    </div>
-                    <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                        <i class="fa-solid fa-arrow-up-long" style="font-size: 13px;"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #ef4444;">
-                    <div class="lh-sm">
-                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Despesas (Mês)</span>
-                        <h4 class="fw-bold m-0 text-danger">-{{ number_format($despesasMes, 0, ',', '.') }} FCFA</h4>
-                    </div>
-                    <div class="bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                        <i class="fa-solid fa-arrow-down-long" style="font-size: 13px;"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card-custom p-2 shadow-sm d-flex align-items-center justify-content-between" style="border-left: 4px solid #6b21a8;">
-                    <div class="lh-sm">
-                        <span class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Budget Executado</span>
-                        <h4 class="fw-bold m-0" style="color: #6b21a8;">{{ $budgetExecutado }}%</h4>
-                    </div>
-                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: #f3e8ff; color: #6b21a8;">
-                        <i class="fa-solid fa-chart-pie" style="font-size: 13px;"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
 
     </main>
 </div>
-<script>
-    function verificarNovasMensagens() {
-        // Faz a requisição para a rota que criámos no Passo 2
-        fetch("{{ route('api.contatos.contagem') }}")
-            .then(response => response.json())
-            .then(data => {
-                const badge = document.getElementById('badge-sms');
 
-                if (data.total > 0) {
-                    badge.innerText = data.total; // Atualiza o número
-                    badge.classList.remove('d-none'); // Mostra a bolinha se houver mensagens
-                } else {
-                    badge.classList.add('d-none'); // Esconde se for zero
-                }
-            })
-            .catch(error => console.error('Erro ao buscar contagem de SMS:', error));
-    }
-
-    // Executa assim que a página carregar
-    document.addEventListener("DOMContentLoaded", function() {
-        verificarNovasMensagens();
-
-        // Verifica automaticamente a cada 10 segundos (10000 milissegundos)
-        setInterval(verificarNovasMensagens, 10000);
-    });
-</script>
 @endsection

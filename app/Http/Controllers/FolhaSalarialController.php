@@ -27,7 +27,17 @@ class FolhaSalarialController extends Controller
             )
             ->where("folhas_salariais.mes", $mesSelecionado)
             ->where("folhas_salariais.ano", $anoSelecionado)
-            ->get();
+            ->get()
+            ->map(function ($f) {
+                if ((float) ($f->imposto_rendimento ?? 0) <= 0) {
+                    $f->imposto_rendimento =
+                        (float) ($f->imposto_profissional ?? 0) +
+                        (float) ($f->imposto_democracia ?? 0) +
+                        (float) ($f->imposto_selo ?? 0);
+                }
+
+                return $f;
+            });
 
         $totalGastoLiquido = $folhas->sum("salario_liquido");
         $totalPagos = $folhas->where("status", "Pago")->count();
@@ -127,6 +137,8 @@ class FolhaSalarialController extends Controller
 
             $impostoSelo = $bruto * 0.003;
             $inss = $bruto * 0.08;
+            $impostoRendimento =
+                $impostoProfissional + $impostoDemocracia + $impostoSelo;
 
             // 4. Cálculo Automático do Desconto de Faltas
             $valorPorDiaFalta = $bruto / 30;
@@ -135,9 +147,7 @@ class FolhaSalarialController extends Controller
             // 5. Salário Final Líquido com o desconto aplicado
             $salarioLiquidoFinal =
                 $bruto -
-                $impostoProfissional -
-                $impostoDemocracia -
-                $impostoSelo -
+                $impostoRendimento -
                 $inss -
                 $descontoFaltas;
 
@@ -155,6 +165,7 @@ class FolhaSalarialController extends Controller
                 "imposto_profissional" => $impostoProfissional,
                 "imposto_democracia" => $impostoDemocracia,
                 "imposto_selo" => $impostoSelo,
+                "imposto_rendimento" => $impostoRendimento,
                 "inss" => $inss,
                 "desconto_faltas" => $descontoFaltas,
                 "salario_liquido" => $salarioLiquidoFinal,
@@ -217,9 +228,7 @@ class FolhaSalarialController extends Controller
                     "Ano",
                     "Faltas",
                     "Salário Bruto",
-                    "Imp. Profissional",
-                    "Imp. Democracia",
-                    "Imp. Selo",
+                    "Imposto Rendimento",
                     "INSS",
                     "Desconto Faltas",
                     "Salário Líquido",
@@ -238,9 +247,16 @@ class FolhaSalarialController extends Controller
                         $linha->ano,
                         $linha->faltas,
                         number_format($linha->salario_bruto, 2, ",", ""),
-                        number_format($linha->imposto_profissional, 2, ",", ""),
-                        number_format($linha->imposto_democracia, 2, ",", ""),
-                        number_format($linha->imposto_selo, 2, ",", ""),
+                        number_format(
+                            ($linha->imposto_rendimento ?? 0) > 0
+                                ? $linha->imposto_rendimento
+                                : (($linha->imposto_profissional ?? 0) +
+                                    ($linha->imposto_democracia ?? 0) +
+                                    ($linha->imposto_selo ?? 0)),
+                            2,
+                            ",",
+                            "",
+                        ),
                         number_format($linha->inss, 2, ",", ""),
                         number_format($linha->desconto_faltas, 2, ",", ""),
                         number_format($linha->salario_liquido, 2, ",", ""),

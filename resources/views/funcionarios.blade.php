@@ -29,7 +29,7 @@
 
         /* Estilos para fixar a tabela e ativar o Scroll */
         .table-scrollable-container {
-            max-height: 500px;
+            max-height: 800px;
             overflow-y: auto;
             overflow-x: auto;
             border: 1px solid #dee2e6;
@@ -77,8 +77,8 @@
 
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
-            <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
-            <span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>
+            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
+            <!--<span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>-->
         </div>
 
         <nav class="flex-grow-1">
@@ -131,14 +131,21 @@
                 </svg>
                 Candidatos
             </a>
-            <a href="{{ route('financeiro.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                Financeiro
+
+            <a href="{{ route('documentos.colaboradores.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('documentos.colaboradores.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Dossiê do Colaborador
             </a>
-            <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                Operacional/Estratégia
+            <a href="{{ route('estagiarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('estagiarios.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                Gestão de Estagiários
             </a>
+
             <a href="{{ route('usuarios.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
@@ -331,7 +338,7 @@
                             <label class="form-label-compact">Tipo Trabalhador</label>
                             <select name="tipo_trabalhador" class="form-select form-control-compact">
                                 <option value="Subordinado">Subordinado (Outrem)</option>
-                                <option value="Liberal">Liberal (Própria)</option>
+                                <option value="Supervisor">Supervisor(a)</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -339,6 +346,10 @@
                             <select name="tipo_contrato" class="form-select form-control-compact">
                                 <option value="Permanente">Permanente</option>
                                 <option value="Temporário">Temporário</option>
+                                <option value="Contrato a termo certo">Contrato a termo certo</option>
+                                <option value="Contrato a termo incerto">Contrato a termo incerto</option>
+                                <option value="Estágio Profissional">Estágio Profissional</option>
+                                <option value="Prestação de Serviços">Prestação de Serviços</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -410,14 +421,14 @@
                         <div class="col-6"><strong>Nº B.I.:</strong> {{ $f->bi ?? 'N/A' }}</div>
                         <div class="col-6"><strong>NIF:</strong> {{ $f->nif }}</div>
                         <div class="col-6"><strong>Nº INSS:</strong> {{ $f->num_seguranca_social ?? 'N/A' }}</div>
-                        <div class="col-6"><strong>Inscrição INSS:</strong> {{ $f->data_inscricao_inss ?? 'N/A' }}</div>
+                        <div class="col-6"><strong>Inscrição INSS:</strong> {{ $f->data_inscricao_inss ? date('d/m/Y', strtotime($f->data_inscricao_inss)) : 'N/A' }}</div>
                         <hr class="my-1 text-muted">
                         <div class="col-6"><strong>Cargo/Função:</strong> {{ $f->cargo }}</div>
                         <div class="col-6"><strong>Tipo Trabalho:</strong> {{ $f->tipo_trabalhador }}</div>
                         <div class="col-6"><strong>Contrato:</strong> {{ $f->tipo_contrato }}</div>
                         <div class="col-6"><strong>Início Contrato:</strong> {{ date('d/m/Y', strtotime($f->data_inicio_contrato)) }}</div>
-                        <div class="col-6"><strong>Fin periodo Exp:</strong> {{ $f->data_fim_periodo_experiencia }}</div>
-                        <div class="col-6"><strong>Fin de Contrato:</strong> {{ $f->data_fim_contrato }}</div>
+                        <div class="col-6"><strong>Fin periodo Exp:</strong> {{ date('d/m/Y', strtotime($f->data_fim_periodo_experiencia)) }}</div>
+                        <div class="col-6"><strong>Fin de Contrato:</strong> {{ date('d/m/Y', strtotime($f->data_fim_contrato)) }}</div>
                         <hr class="my-1 text-muted">
                         <div class="col-12"><strong>Salário Bruto:</strong> <span class="text-primary fw-bold">{{ number_format($f->salario_bruto, 0, ',', '.') }} XOF</span></div>
                         <div class="col-6"><strong>Banco:</strong> {{ $f->banco ?? 'N/A' }}</div>
@@ -496,7 +507,7 @@
                                 <label class="form-label-compact">Tipo Trabalhador</label>
                                 <select name="tipo_trabalhador" class="form-select form-control-compact">
                                     <option value="Subordinado" {{ $f->tipo_trabalhador == 'Subordinado' ? 'selected' : '' }}>Subordinado (Outrem)</option>
-                                    <option value="Liberal" {{ $f->tipo_trabalhador == 'Liberal' ? 'selected' : '' }}>Liberal (Própria)</option>
+                                    <option value="Supervisor" {{ $f->tipo_trabalhador == 'Supervisor' ? 'selected' : '' }}>Supervisor(a)</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -504,6 +515,10 @@
                                 <select name="tipo_contrato" class="form-select form-control-compact">
                                     <option value="Permanente" {{ $f->tipo_contrato == 'Permanente' ? 'selected' : '' }}>Permanente</option>
                                     <option value="Temporário" {{ $f->tipo_contrato == 'Temporário' ? 'selected' : '' }}>Temporário</option>
+                                    <option value="Contrato a termo certo" {{ $f->tipo_contrato == 'Contrato a termo certo' ? 'selected' : '' }}>Contrato a termo certo</option>
+                                    <option value="Contrato a termo incerto" {{ $f->tipo_contrato == 'Contrato a termo incerto' ? 'selected' : '' }}>Contrato a termo incerto</option>
+                                    <option value="Estágio Profissional" {{ $f->tipo_contrato == 'Estágio Profissional' ? 'selected' : '' }}>Estágio Profissional</option>
+                                    <option value="Prestação de Serviços" {{ $f->tipo_contrato == 'Prestação de Serviços' ? 'selected' : '' }}>Prestação de Serviços</option>
                                 </select>
                             </div>
                             <div class="col-md-4">

@@ -26,6 +26,8 @@ class FuncionarioController extends Controller
             "cargo" => "required|string|max:100",
             // 'iniciais' => 'required|string|max:3',
             "data_inicio_contrato" => "required|date",
+            "tipo_trabalhador" => "required|in:Subordinado,Supervisor,Liberal",
+            "tipo_contrato" => "required|in:Contrato a termo certo,Contrato a termo incerto,Estágio Profissional,Prestação de Serviços,Permanente,Temporário",
             "salario_bruto" => "required|numeric|min:0",
         ]);
 
@@ -41,7 +43,7 @@ class FuncionarioController extends Controller
             "cargo" => $request->cargo,
             //"iniciais" => strtoupper($request->iniciais),
             "estado" => $request->estado ?? "Activo",
-            "tipo_contrato" => $request->tipo_contrato ?? "Permanente",
+            "tipo_contrato" => $request->tipo_contrato ?? "Contrato a termo certo",
             "data_inicio_contrato" => $request->data_inicio_contrato,
             "data_fim_periodo_experiencia" =>
                 $request->data_fim_periodo_experiencia,
@@ -82,7 +84,7 @@ class FuncionarioController extends Controller
             ],
             "cargo" => "required|string|max:100",
             //"iniciais" => "required|string|max:3",
-            "tipo_contrato" => "nullable|string|max:255",
+            "tipo_contrato" => "required|in:Contrato a termo certo,Contrato a termo incerto,Estágio Profissional,Prestação de Serviços,Permanente,Temporário",
             "data_inicio_contrato" => "required|date",
             "data_fim_periodo_experiencia" => "nullable|date",
             "data_fim_contrato" => "nullable|date",
@@ -90,7 +92,7 @@ class FuncionarioController extends Controller
             "num_seguranca_social" => "nullable|string|max:50",
             "num_conta_bancaria" => "nullable|string|max:50",
             "banco" => "nullable|string|max:100",
-            "tipo_trabalhador" => "required|in:Subordinado,Liberal",
+            "tipo_trabalhador" => "required|in:Subordinado,Supervisor,Liberal",
             "estado" => "required|in:Activo,Inactivo,Suspenso",
             "salario_bruto" => "required|numeric|min:0",
         ]);
@@ -107,7 +109,7 @@ class FuncionarioController extends Controller
                 "nif" => $request->nif,
                 "cargo" => $request->cargo,
                 //"iniciais" => strtoupper($request->iniciais),
-                "tipo_contrato" => $request->tipo_contrato ?? "Permanente",
+                "tipo_contrato" => $request->tipo_contrato ?? "Contrato a termo certo",
                 "data_inicio_contrato" => $request->data_inicio_contrato,
                 "data_fim_periodo_experiencia" =>
                     $request->data_fim_periodo_experiencia,

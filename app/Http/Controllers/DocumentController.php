@@ -5,18 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-// Certifica-te de que a classe se chama DocumentController (sem o 'o')
 class DocumentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $documentos = DB::table("documentos")
-            ->orderBy("data_operacao", "desc")
-            ->get();
+        $query = DB::table("documentos")->orderBy("data_operacao", "desc");
+
+        if ($request->filled('q')) {
+            $q = trim($request->q);
+            $query->where(function ($sub) use ($q) {
+                $sub->where('nome', 'like', "%{$q}%")
+                    ->orWhere('categoria', 'like', "%{$q}%")
+                    ->orWhere('departamento', 'like', "%{$q}%");
+                    // ->orWhere('versao', 'like', "%{$q}%");
+            });
+        }
+
+        if ($request->filled('categoria')) {
+            $query->where('categoria', $request->categoria);
+        }
+
+        // if ($request->filled('nivel_acesso')) {
+        //     $query->where('nivel_acesso', $request->nivel_acesso);
+        // }
+
+        $documentos = $query->get();
 
         $totalDocumentos = $documentos->count();
         $totalEntradas = $documentos->where("tipo", "Entrada")->count();
         $totalSaidas = $documentos->where("tipo", "Saída")->count();
+
+        $categorias = DB::table('documentos')->select('categoria')->distinct()->orderBy('categoria')->pluck('categoria');
 
         return view(
             "documentos.index",
@@ -25,6 +44,7 @@ class DocumentController extends Controller
                 "totalDocumentos",
                 "totalEntradas",
                 "totalSaidas",
+                "categorias",
             ),
         );
     }
@@ -33,10 +53,13 @@ class DocumentController extends Controller
     {
         $request->validate([
             "nome" => "required|string|max:255",
+            "categoria" => "required|string|max:120",
+            // "versao" => "required|string|max:20",
+            // "nivel_acesso" => "required|in:Interno,RH,Gestão,Confidencial",
             "tipo" => "required|in:Entrada,Saída",
             "data_operacao" => "required|date",
             "departamento" => "required|string|max:255",
-            "arquivo_pdf" => "required|file|mimes:pdf|max:2048",
+            "arquivo_pdf" => "nullable|file|mimes:pdf|max:4096",
         ]);
 
         $path = null;
@@ -48,6 +71,9 @@ class DocumentController extends Controller
 
         DB::table("documentos")->insert([
             "nome" => $request->nome,
+            "categoria" => $request->categoria,
+            // "versao" => $request->versao,
+            // "nivel_acesso" => $request->nivel_acesso,
             "tipo" => $request->tipo,
             "data_operacao" => $request->data_operacao,
             "departamento" => $request->departamento,

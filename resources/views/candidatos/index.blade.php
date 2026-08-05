@@ -31,7 +31,7 @@
         .table th { background-color: #f1f3f5; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; }
         /* NOVO: Estilos para fixar a tabela e ativar o Scroll */
         .table-scrollable-container {
-            max-height: 400px; /* Altere este valor para controlar a altura visível da tabela */
+            max-height: 650px; /* Altere este valor para controlar a altura visível da tabela */
             overflow-y: auto;  /* Ativa o scroll vertical */
             overflow-x: auto;  /* Ativa o scroll horizontal se a tela for pequena */
             border: 1px solid #dee2e6;
@@ -68,8 +68,8 @@
 
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
-            <div class="font-serif fs-5 fw-normal text-dark lh-1">Eureka<span class="text-accent"> Consulting.</span></div>
-            <span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>
+            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
+            <!--<span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>-->
         </div>
 
         <nav class="flex-grow-1">
@@ -125,18 +125,23 @@
                 </svg>
                 Candidatos
             </a>
-            <a href="{{ route('financeiro.index')}}" class="nav-item-hr p-2.5 rounded-3 mb-1">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                Financeiro
+            <a href="{{ route('documentos.colaboradores.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('documentos.colaboradores.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Dossiê do Colaborador
+            </a>
+            <a href="{{ route('estagiarios.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('estagiarios.index') ? 'active' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                Gestão de Estagiários
             </a>
             {{-- <a class="nav-item-hr p-2.5 rounded-3 mb-1">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                 Relatórios
             </a> --}}
-            <a href="{{ route('estrategia.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('estrategia.index') ? 'active' : '' }}">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                Operacional/Estratégia
-            </a>
             <a href="{{ route('usuarios.index') }}" class="nav-item-hr">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
@@ -187,7 +192,7 @@
                 <span class="modern-search-icon">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </span>
-                <input type="text" class="form-control modern-search-input" id="searchCandidato" placeholder="Pesquisar por nome, vagas pretendidas ou departamento...">
+                <input type="text" class="form-control modern-search-input" id="searchCandidato" placeholder="Pesquisar por nome, profissão, competências, localização...">
             </div>
             <button type="button" class="btn text-white fw-medium shadow-sm px-3" style="background-color: #0d9488; font-size: 14px; border: none; height: 38px;" data-bs-toggle="modal" data-bs-target="#createCandidatoModal">
                 <i class="fa-solid fa-user-plus me-1"></i> Adicionar Candidato
@@ -265,6 +270,35 @@
             </div>
         @endif
 
+        <form method="GET" action="{{ route('candidatos.index') }}" class="card-custom p-3 mb-3">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" name="profissao" value="{{ request('profissao') }}" class="form-control form-control-sm" placeholder="Profissão">
+                </div>
+                <div class="col-md-2">
+                    <select name="nivel_academico" class="form-select form-select-sm">
+                        <option value="">Nível académico</option>
+                        <option value="Secundário" {{ request('nivel_academico') == 'Secundário' ? 'selected' : '' }}>Secundário</option>
+                        <option value="Licenciatura" {{ request('nivel_academico') == 'Licenciatura' ? 'selected' : '' }}>Licenciatura</option>
+                        <option value="Mestrado" {{ request('nivel_academico') == 'Mestrado' ? 'selected' : '' }}>Mestrado</option>
+                        <option value="Doutoramento" {{ request('nivel_academico') == 'Doutoramento' ? 'selected' : '' }}>Doutoramento</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" min="0" name="anos_experiencia_min" value="{{ request('anos_experiencia_min') }}" class="form-control form-control-sm" placeholder="Exp. mínima (anos)">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="competencia" value="{{ request('competencia') }}" class="form-control form-control-sm" placeholder="Competência">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="localizacao" value="{{ request('localizacao') }}" class="form-control form-control-sm" placeholder="Localização">
+                </div>
+                <div class="col-md-1 d-grid">
+                    <button class="btn btn-sm btn-outline-secondary">Filtrar</button>
+                </div>
+            </div>
+        </form>
+
         <div class="card-custom p-4 shadow-sm">
             <div class="pb-2 mb-3 border-bottom">
                 <h6 class="fw-bold text-dark m-0">Processos de Candidatura Recebidos</h6>
@@ -277,6 +311,9 @@
                             <th>Candidato / Contacto</th>
                             <th>Vaga Pretendida</th>
                             <th>Data Submissão</th>
+                            <th>Nível Académico</th>
+                            <th>Anos Experiência</th>
+                            <th>Competências</th>
                             <th class="text-center">Currículo</th>
                             <th class="text-center">Estado</th>
                             <th class="text-center">Ações de Mudar Status</th>
@@ -289,6 +326,8 @@
                                     <div class="fw-bold text-dark">{{ $candidatura->candidato_nome }}</div>
                                     <span class="text-muted small d-block"><i class="fa-solid fa-envelope me-1"></i>{{ $candidatura->candidato_email }}</span>
                                     <span class="text-muted small d-block"><i class="fa-solid fa-phone me-1"></i>{{ $candidatura->candidato_telefone }}</span>
+                                    <span class="text-muted small d-block"><i class="fa-solid fa-briefcase me-1"></i>{{ $candidatura->profissao ?? 'Profissão não informada' }}</span>
+                                    <span class="text-muted small d-block"><i class="fa-solid fa-location-dot me-1"></i>{{ $candidatura->localizacao ?? 'Localização não informada' }}</span>
                                 </td>
                                 <td>
                                     <span class="fw-semibold text-secondary">{{ $candidatura->vaga_titulo }}</span>
@@ -296,6 +335,31 @@
                                 <td class="small text-muted">
                                     {{ date('d/m/Y H:i', strtotime($candidatura->data_candidatura)) }}
                                 </td>
+
+                                <!-- Nível Académico -->
+                                <td>
+                                    <span class="fw-medium text-dark">{{ $candidatura->nivel_academico ?? 'Não informado' }}</span>
+                                </td>
+
+                                <!-- Anos de Experiência -->
+                                <td>
+                                    <span class="fw-medium text-dark">
+                                        {{ isset($candidatura->anos_experiencia) ? $candidatura->anos_experiencia . ' ano(s)' : 'Não informado' }}
+                                    </span>
+                                </td>
+
+                                <!-- Competências -->
+                                <td>
+                                    @if(!empty($candidatura->competencias))
+                                        {{-- Caso as competências sejam armazenadas como texto separado por vírgula --}}
+                                        @foreach(explode(',', $candidatura->competencias) as $skill)
+                                            <span class="badge bg-light text-dark border me-1 mb-1">{{ trim($skill) }}</span>
+                                        @endforeach
+                                    @else
+                                        <span class="text-muted small">Nenhuma listada</span>
+                                    @endif
+                                </td>
+                                <!-- Currículo -->
                                 <td class="text-center">
                                     @if($candidatura->cv_especifico)
                                         <a href="{{ route('storage.file', ['path' => $candidatura->cv_especifico]) }}" target="_blank" class="btn btn-sm btn-light border text-dark fw-medium">
@@ -305,6 +369,8 @@
                                         <span class="text-muted small">Sem arquivo</span>
                                     @endif
                                 </td>
+
+                                <!-- Estado -->
                                 <td class="text-center">
                                     @if(strtolower($candidatura->status) == 'pendente')
                                         <span class="badge bg-warning-subtle text-warning border border-warning px-3 py-1.5 rounded-5 fw-medium">Pendente</span>
@@ -316,9 +382,10 @@
                                         <span class="badge bg-danger-subtle text-danger border border-danger px-3 py-1.5 rounded-5 fw-medium">Rejeitado</span>
                                     @endif
                                 </td>
+
+                                <!-- Ações -->
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
-
                                         @if(strtolower($candidatura->status) != 'aceito')
                                             <form action="{{ route('candidatos.alterarStatus', $candidatura->candidatura_id) }}" method="POST" class="d-inline">
                                                 @csrf
@@ -362,13 +429,12 @@
                                                 </button>
                                             </form>
                                         @endif
-
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4 small">Nenhuma candidatura registada até ao momento.</td>
+                                <td colspan="8" class="text-center text-muted py-4 small">Nenhuma candidatura registada até ao momento.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -412,6 +478,38 @@
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Telefone / WhatsApp</label>
                         <input type="text" name="telefone" class="form-control border-secondary-subtle" placeholder="Ex: +245..." required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Profissão</label>
+                        <input type="text" name="profissao" class="form-control border-secondary-subtle" placeholder="Ex: Gestor de RH">
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Nível Académico</label>
+                            <select name="nivel_academico" class="form-select border-secondary-subtle">
+                                <option value="">Selecionar...</option>
+                                <option value="Secundário">Secundário</option>
+                                <option value="Licenciatura">Licenciatura</option>
+                                <option value="Mestrado">Mestrado</option>
+                                <option value="Doutoramento">Doutoramento</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-secondary">Anos de Experiência</label>
+                            <input type="number" min="0" name="anos_experiencia" class="form-control border-secondary-subtle" placeholder="Ex: 3">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Competências</label>
+                        <input type="text" name="competencias" class="form-control border-secondary-subtle" placeholder="Ex: Excel avançado, Laravel, Recrutamento">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Localização</label>
+                        <input type="text" name="localizacao" class="form-control border-secondary-subtle" placeholder="Ex: Bissau">
                     </div>
 
                     <div class="mb-3">
