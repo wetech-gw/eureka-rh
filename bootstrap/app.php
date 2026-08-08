@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         
         // 🟢 CORREÇÃO: Passamos o caminho diretamente sem o parâmetro 'guest:'
-        $middleware->redirectTo('/'); 
+        $middleware->redirectGuestsTo(fn () => route('login'));
 
         // Mantém a exceção do Token CSRF temporariamente para o Login
         $middleware->validateCsrfTokens(except: [

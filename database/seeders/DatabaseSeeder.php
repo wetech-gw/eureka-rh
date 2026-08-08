@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
 
              $this->call([
             CoresEletivasSeeder::class,
+            SiteContentSeeder::class,
         ]);
     }
 }

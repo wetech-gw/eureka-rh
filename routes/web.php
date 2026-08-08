@@ -18,6 +18,12 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EstagiarioController;
 use App\Http\Controllers\DocumentoColaboradorController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\SiteController;
+use App\Http\Controllers\InicioController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\NewsController;
 
 // 🟢 ADICIONA AS ROTAS DE RECUPERAÇÃO DE SENHA AQUI
 Route::get("/forgot-password", [AuthController::class, "showForgotForm"])
@@ -38,8 +44,14 @@ Route::post("/reset-password", [AuthController::class, "reset"])
 
 use App\Http\Middleware\CheckResponsavel;
 
+// 🆕 PÁGINAS PÚBLICAS DO SITE (Blade)
+Route::get("/", [SiteController::class, "inicio"])->name("site.inicio");
+Route::get("/servicos", [SiteController::class, "servicos"])->name("site.servicos");
+Route::get("/recursos", [SiteController::class, "recursos"])->name("site.recursos");
+Route::get("/sobre", [SiteController::class, "sobre"])->name("site.sobre");
+Route::get("/noticias", [SiteController::class, "noticias"])->name("site.noticias");
+
 // 🆕 ROTA PÚBLICA PRINCIPAL (Vagas + Formações + Candidatura)
-Route::get("/", [PublicController::class, "index"])->name("public.index");
 Route::get("/vagas-formacoes", [PublicController::class, "vagasFormacoes"])->name("public.vagasFormacoes");
 Route::post("/candidatar", [PublicController::class, "candidatar"])->name("public.candidatar");
 
@@ -244,3 +256,12 @@ Route::get('/storage-file/{path}', function ($path) {
 
     return response()->file($disk->path($path));
 })->where('path', '.*')->name('storage.file');
+
+// Rotas CRUD para cada secção (Gestão CMS)
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('inicio', InicioController::class)->except(['show']); // Gestão da secção Início
+    Route::resource('servicos', ServiceController::class)->except(['show']);
+    Route::resource('recursos', ResourceController::class)->except(['show']);
+    Route::resource('sobre', AboutController::class)->except(['show']);
+    Route::resource('noticias', NewsController::class)->except(['show']);
+});

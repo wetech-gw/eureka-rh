@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 /* =========================================================
    EUREKA CONSULTING
@@ -36,6 +37,7 @@
   --line:#DDE6EA;
   --paper:#FCFBF8;       /* off-white levemente quente */
   --white:#fff;
+  --header-bg:rgba(252,251,248,.86);
 
   --maxw:1180px;
   --r:14px;
@@ -94,7 +96,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .btn-line-light:hover{background:rgba(255,255,255,.12);border-color:#fff}
 
 /* ---------- Cabeçalho ---------- */
-.site-header{position:fixed;inset:0 0 auto 0;z-index:100;background:rgba(252,251,248,.86);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.25s}
+.site-header{position:fixed;inset:0 0 auto 0;z-index:100;background:var(--header-bg);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.25s}
 .site-header.scrolled{border-bottom-color:var(--line);box-shadow:0 6px 22px -22px rgba(11,46,59,.6)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;height:78px;gap:20px}
 .brand-logo{height:46px;width:auto;object-fit:contain}
@@ -107,9 +109,25 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .nav-mobile-extra{display:none}
 
 .header-actions{display:flex;align-items:center;gap:14px}
-.lang-switch{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.lang-switch{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--white)}
 .lang-btn{border:0;background:transparent;padding:7px 10px;font-family:var(--f-display);font-weight:600;font-size:.76rem;color:var(--muted);cursor:pointer;transition:.2s}
 .lang-btn.is-active{background:var(--teal);color:#fff}
+
+/* Alternador de tema (sol/lua) */
+.theme-toggle{
+  display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);
+  background:var(--white);color:var(--teal-text);cursor:pointer;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.theme-toggle:hover{border-color:var(--teal);color:var(--clay)}
+.theme-toggle svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.theme-toggle .icon-sun{display:none}
+html[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+html[data-theme="dark"] .theme-toggle .icon-sun{display:block}
+
+/* Scrim por cima da página quando o menu móvel está aberto */
+.nav-scrim{position:fixed;inset:0;z-index:999;background:rgba(5,12,16,.55);opacity:0;pointer-events:none;transition:opacity .3s}
 
 .menu-toggle{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px}
 .menu-toggle span{width:24px;height:2px;background:var(--teal-800);border-radius:2px;transition:.3s}
@@ -321,6 +339,50 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .form-feedback.ok{color:var(--teal-text)}
 .form-feedback.bad{color:#C0492F}
 
+/* ---------- Vagas & Formações ---------- */
+.search-box{position:relative;max-width:420px;margin:0 auto 2rem}
+.search-box input{width:100%;padding:13px 16px 13px 44px;font-family:var(--f-body);font-size:.95rem;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--white);transition:.2s}
+.search-box input:focus{outline:none;border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(24,96,128,.13)}
+.search-box .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.grid-vagas{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px}
+.grid-formacoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px}
+.vaga-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:transform .22s,box-shadow .22s}
+.vaga-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.vaga-card-body{padding:26px;display:flex;flex-direction:column;flex:1}
+.vaga-card h3{font-size:1.1rem;margin-bottom:10px;line-height:1.25}
+.vaga-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.vaga-tag{font-family:var(--f-display);font-weight:600;font-size:.76rem;letter-spacing:.03em;padding:5px 12px;border-radius:6px;background:var(--teal-050);color:var(--teal-text)}
+.vaga-desc{color:var(--muted);font-size:.93rem;margin-bottom:16px;flex:1}
+.vaga-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.vaga-prazo{font-family:var(--f-display);font-weight:600;font-size:.82rem;color:var(--clay);display:inline-flex;align-items:center;gap:6px}
+.btn-candidatar{background:var(--clay);color:#fff;border:none;padding:9px 22px;border-radius:var(--r-sm);font-family:var(--f-display);font-weight:600;font-size:.88rem;cursor:pointer;transition:background .2s,transform .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-candidatar:hover{background:var(--clay-soft);transform:translateY(-1px)}
+.formacao-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:9px;aspect-ratio:1/1;transition:transform .22s,box-shadow .22s}
+.formacao-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.formacao-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.formacao-icone{width:38px;height:38px;border-radius:11px;background:var(--teal-050);color:var(--teal-text);display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0}
+.formacao-card h3{font-size:.98rem;line-height:1.25}
+.formacao-info{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.formacao-info li{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);min-width:0}
+.formacao-info li>i{width:15px;color:var(--teal-text);flex-shrink:0;text-align:center}
+.formacao-info li span{display:flex;flex-direction:column;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.formacao-info li small{font-family:var(--f-display);font-weight:600;font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.btn-inscrever{margin-top:auto;background:var(--teal);color:#fff;border:none;padding:8px 16px;border-radius:var(--r-sm);font-family:var(--f-display);font-weight:600;font-size:.84rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:background .2s,transform .15s}
+.btn-inscrever:hover{background:var(--teal-800);transform:translateY(-1px)}
+.badge-status{font-family:var(--f-display);font-weight:600;font-size:.76rem;letter-spacing:.03em;padding:5px 14px;border-radius:999px}
+.badge-em-curso{background:var(--teal);color:#fff}
+.badge-planejada{background:var(--clay-050);color:var(--clay)}
+.empty-state{text-align:center;padding:4rem 1rem;color:var(--muted);grid-column:1/-1}
+.empty-state i{font-size:3rem;margin-bottom:1rem;display:block;color:var(--teal-100)}
+.candidatura-panel{background:var(--teal-050);border:1px solid var(--line);border-top:4px solid var(--clay);border-radius:var(--r);box-shadow:var(--shadow-sm);max-width:820px;margin:0 auto}
+.candidatura-panel-head{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;border-bottom:1px solid var(--line)}
+.candidatura-panel-head h3{font-size:1.25rem;color:var(--teal-800)}
+.candidatura-panel-head .btn-close-cand{background:var(--teal);color:#fff;border:none;width:34px;height:34px;border-radius:50%;font-family:var(--f-display);font-weight:700;font-size:1rem;cursor:pointer;transition:background .2s}
+.candidatura-panel-head .btn-close-cand:hover{background:var(--clay)}
+.candidatura-panel-body{padding:28px}
+.candidatura-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:8px;flex-wrap:wrap}
+@media(max-width:760px){.grid-vagas{grid-template-columns:1fr}}
+
 /* ---------- Rodapé ---------- */
 .site-footer{background:var(--teal-900);color:rgba(255,255,255,.7)}
 .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:40px;padding:60px 26px 42px}
@@ -334,6 +396,8 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .footer-legal{display:flex;gap:22px}
 .footer-legal a{font-size:.84rem}
 .footer-legal a:hover{color:var(--clay-soft)}
+.footer-admin-btn{margin-left:8px;font-size:.84rem;padding:8px 16px}
+.footer-admin-btn i{margin-right:6px}
 
 /* ---------- Reveal ---------- */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
@@ -350,12 +414,15 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 }
 @media (max-width:760px){
   .header-actions .lang-switch,.header-actions .btn-primary{display:none}
+  .site-header{backdrop-filter:none}
   .menu-toggle{display:flex}
-  .main-nav{position:fixed;top:78px;right:0;bottom:0;width:min(82vw,330px);background:var(--paper);flex-direction:column;align-items:stretch;gap:0;padding:24px;box-shadow:-20px 0 50px -30px rgba(11,46,59,.5);transform:translateX(110%);transition:transform .3s;overflow-y:auto}
+  .main-nav{position:fixed;top:0;right:0;bottom:0;height:100vh;height:100dvh;width:min(84vw,340px);background:var(--paper);flex-direction:column;align-items:stretch;gap:0;padding:96px 24px 24px;box-shadow:-20px 0 50px -30px rgba(0,0,0,.55);transform:translateX(110%);transition:transform .3s;overflow-y:auto;z-index:1000}
   .main-nav.open{transform:none}
+  .nav-scrim.show{opacity:1;pointer-events:auto}
   .main-nav>a{padding:14px 0;border-bottom:1px solid var(--line);font-size:1.05rem}
   .nav-mobile-extra{display:flex;flex-direction:column;gap:16px;margin-top:22px}
   .nav-mobile-extra .lang-switch{align-self:flex-start}
+  .nav-mobile-extra .theme-toggle{align-self:flex-start}
   .section{padding:62px 0}
   .diff-list{grid-template-columns:1fr}
   .mv-grid{grid-template-columns:1fr}
@@ -373,7 +440,43 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   .container{padding:0 18px}
 }
 
+/* =========================================================
+   MODO ESCURO
+   ========================================================= */
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --teal:#2A85A9;
+  --teal-text:#5FB6D1;
+  --teal-700:#1B6E90;
+  --teal-800:#0E3C52;
+  --teal-900:#0B2E3B;
+  --teal-050:#13242D;
+  --teal-100:#1B3340;
+  --clay:#D98A5E;
+  --clay-soft:#E3A67E;
+  --clay-050:#2C1F17;
+  --ink:#E7EEF2;
+  --muted:#9DB0B9;
+  --line:#253A44;
+  --paper:#0E1A20;
+  --white:#16242C;
+  --header-bg:rgba(14,26,32,.92);
+  --shadow:0 22px 48px -30px rgba(0,0,0,.8);
+  --shadow-sm:0 10px 26px -20px rgba(0,0,0,.75);
+}
+html[data-theme="dark"] .map-slot{background:repeating-linear-gradient(135deg,var(--teal-050),var(--teal-050) 16px,var(--teal-100) 16px,var(--teal-100) 32px)}
+html[data-theme="dark"] .field input:focus,
+html[data-theme="dark"] .field select:focus,
+html[data-theme="dark"] .field textarea:focus,
+html[data-theme="dark"] .search-box input:focus{background:var(--paper)}
+html[data-theme="dark"] .field.invalid input,
+html[data-theme="dark"] .field.invalid textarea{background:#2A1A18;border-color:#C0492F}
+html[data-theme="dark"] .values-list li{color:var(--teal-text)}
+html[data-theme="dark"] .candidatura-panel-head h3{color:var(--teal-text)}
+html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
+
 </style>
+<script>try{var t=localStorage.getItem("eureka-theme");if(t!=="dark"&&t!=="light"){t=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";}document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
 
@@ -385,28 +488,51 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
     </a>
 
     <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
-      <a href="#topo">Início</a>
-      <a href="#servicos">Serviços</a>
-      <a href="#recursos">Recursos</a>
-      <a href="#sobre">Sobre</a>
-      <a href="#noticias">Notícias</a>
-      <a href="#contacto">Contacto</a>
+      <a href="#topo" data-i18n="nav.top">Início</a>
+      <a href="#servicos" data-i18n="nav.servicos">Serviços</a>
+      <a href="#recrutamento" data-i18n="nav.recrutamento">Vagas & Formações</a>
+      <a href="#recursos" data-i18n="nav.recursos">Recursos</a>
+      <a href="#sobre" data-i18n="nav.sobre">Sobre</a>
+      <a href="#noticias" data-i18n="nav.noticias">Notícias</a>
+      <a href="#contacto" data-i18n="nav.contacto">Contacto</a>
       <div class="nav-mobile-extra">
-        <div class="lang-switch" role="group" aria-label="Idioma">
-          <button class="lang-btn is-active" data-lang="pt">PT</button>
-          <button class="lang-btn" data-lang="fr">FR</button>
-          <button class="lang-btn" data-lang="en">EN</button>
-        </div>
-        <a href="#contacto" class="btn btn-primary">Solicitar consultoria</a>
+          <button type="button" class="theme-toggle" data-theme-toggle aria-label="Modo escuro">
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </button>
+          <div class="lang-switch" role="group" aria-label="Idioma">
+              <!-- Exemplo com SVG inline para garantir compatibilidade total -->
+              <button class="lang-btn is-active" data-lang="pt" aria-label="Português">
+                  <svg width="20" height="15" viewBox="0 0 640 480"><path fill="#006600" d="M0 0h640v480H0z"/><path fill="#ff0000" d="M0 0h256v480H0z"/></svg>
+              </button>
+              <button class="lang-btn" data-lang="fr" aria-label="Français">
+                  <svg width="20" height="15" viewBox="0 0 900 600"><path fill="#fff" d="M0 0h900v600H0z"/><path fill="#002654" d="M0 0h300v600H0z"/><path fill="#ce1126" d="M600 0h300v600H600z"/></svg>
+              </button>
+              <button class="lang-btn" data-lang="en" aria-label="English">
+                  <svg width="20" height="15" viewBox="0 0 640 480"><path fill="#012169" d="M0 0h640v480H0z"/><path fill="#fff" d="m75 0 244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 62V0h75z"/><path fill="#CC142B" d="m0 0 236 174L0 348V0zM640 0 404 174l236 174V0zM0 480l240-178L0 124v356zM640 480 400 302l240 178V480z"/><path fill="#fff" d="M0 192h640v96H0z"/><path fill="#CC142B" d="M0 216h640v48H0z"/><path fill="#fff" d="M256 0h128v480H256z"/><path fill="#CC142B" d="M280 0h80v480h-80z"/></svg>
+              </button>
+          </div>
+        <a href="#contacto" class="btn btn-primary" data-i18n="nav.cta">Solicitar consultoria</a>
       </div>
     </nav>
 
     <div class="header-actions">
-      <div class="lang-switch" role="group" aria-label="Idioma">
-        <button class="lang-btn is-active" data-lang="pt">PT</button>
-        <button class="lang-btn" data-lang="fr">FR</button>
-        <button class="lang-btn" data-lang="en">EN</button>
-      </div>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Modo escuro">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <div class="lang-switch" role="group" aria-label="Idioma">
+            <!-- Exemplo com SVG inline para garantir compatibilidade total -->
+            <button class="lang-btn is-active" data-lang="pt" aria-label="Português">
+                <svg width="20" height="15" viewBox="0 0 640 480"><path fill="#006600" d="M0 0h640v480H0z"/><path fill="#ff0000" d="M0 0h256v480H0z"/></svg>
+            </button>
+            <button class="lang-btn" data-lang="fr" aria-label="Français">
+                <svg width="20" height="15" viewBox="0 0 900 600"><path fill="#fff" d="M0 0h900v600H0z"/><path fill="#002654" d="M0 0h300v600H0z"/><path fill="#ce1126" d="M600 0h300v600H600z"/></svg>
+            </button>
+            <button class="lang-btn" data-lang="en" aria-label="English">
+                <svg width="20" height="15" viewBox="0 0 640 480"><path fill="#012169" d="M0 0h640v480H0z"/><path fill="#fff" d="m75 0 244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 62V0h75z"/><path fill="#CC142B" d="m0 0 236 174L0 348V0zM640 0 404 174l236 174V0zM0 480l240-178L0 124v356zM640 480 400 302l240 178V480z"/><path fill="#fff" d="M0 192h640v96H0z"/><path fill="#CC142B" d="M0 216h640v48H0z"/><path fill="#fff" d="M256 0h128v480H256z"/><path fill="#CC142B" d="M280 0h80v480h-80z"/></svg>
+            </button>
+        </div>
       <a href="#contacto" class="btn btn-primary">Solicitar consultoria</a>
       <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false" aria-controls="mainNav">
         <span></span><span></span><span></span>
@@ -421,12 +547,12 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="hero">
   <div class="container hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow">Consultoria empresarial · Bissau & África Ocidental</span>
-      <h1>Estruturamos negócios que <span class="ink-accent">crescem</span> no terreno africano.</h1>
-      <p class="lede">Acompanhamos empresas, instituições e empreendedores com estratégia, finanças e gestão de projetos — do diagnóstico aos resultados medidos.</p>
+      <span class="eyebrow" data-i18n="hero.eyebrow">Consultoria empresarial · Bissau & África Ocidental</span>
+      <h1 data-i18n-html="hero.title">Estruturamos negócios que <span class="ink-accent">crescem</span> no terreno africano.</h1>
+      <p class="lede" data-i18n="hero.lede">Acompanhamos empresas, instituições e empreendedores com estratégia, finanças e gestão de projetos — do diagnóstico aos resultados medidos.</p>
       <div class="hero-cta">
-        <a href="#servicos" class="btn btn-primary btn-lg">Conhecer os serviços</a>
-        <a href="#contacto" class="btn btn-line btn-lg">Entrar em contacto</a>
+        <a href="#servicos" class="btn btn-primary btn-lg" data-i18n="hero.cta1">Conhecer os serviços</a>
+        <a href="#contacto" class="btn btn-line btn-lg" data-i18n="hero.cta2">Entrar em contacto</a>
       </div>
     </div>
 
@@ -444,9 +570,9 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 
   <div class="container hero-stats-wrap">
     <ul class="hero-stats">
-      <li><strong>10<span>+</span></strong><span class="hs-label">anos de experiência</span></li>
-      <li><strong>200<span>+</span></strong><span class="hs-label">clientes acompanhados</span></li>
-      <li><strong>12<span>+</span></strong><span class="hs-label">serviços especializados</span></li>
+      <li><strong>10<span>+</span></strong><span class="hs-label" data-i18n="hero.stat1">anos de experiência</span></li>
+      <li><strong>200<span>+</span></strong><span class="hs-label" data-i18n="hero.stat2">clientes acompanhados</span></li>
+      <li><strong>12<span>+</span></strong><span class="hs-label" data-i18n="hero.stat3">serviços especializados</span></li>
     </ul>
   </div>
 </section>
@@ -455,9 +581,9 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section" id="servicos">
   <div class="container">
     <header class="section-head">
-      <span class="eyebrow">O que fazemos</span>
-      <h2>Serviços especializados, do diagnóstico à execução</h2>
-      <p>Competências multidisciplinares para cada fase do percurso empresarial, desenhadas para o contexto local.</p>
+      <span class="eyebrow" data-i18n="sec.servicos.eyebrow">O que fazemos</span>
+      <h2 data-i18n="sec.servicos.title">Serviços especializados, do diagnóstico à execução</h2>
+      <p data-i18n="sec.servicos.desc">Competências multidisciplinares para cada fase do percurso empresarial, desenhadas para o contexto local.</p>
     </header>
     <div class="services-grid" id="servicesGrid"></div>
   </div>
@@ -467,143 +593,97 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section section-tint" id="recrutamento">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Carreiras & Capacitação</span>
-      <h2>Oportunidades de Recrutamento e Formações</h2>
-      <p>Consulte os processos seletivos abertos e a agenda das nossas formações.</p>
+      <span class="eyebrow" data-i18n="sec.rec.eyebrow">Carreiras & Capacitação</span>
+      <h2 data-i18n="sec.rec.title">Oportunidades de Recrutamento e Formações</h2>
+      <p data-i18n="sec.rec.desc">Consulte os processos seletivos abertos e a agenda das nossas formações.</p>
     </div>
 
-    <!-- Lista Dinâmica de Recrutamentos e Formações -->
-    <div class="news-grid" style="margin-bottom: 50px;">
-
-      <!-- Loop das Vagas de Recrutamento -->
-      @forelse($recrutamentos as $recrutamento)
-        <article class="news-card">
-          <div class="news-body">
-            <span class="news-cat" style="background: var(--teal); color: #fff;">{{ $recrutamento->tipo_contrato ?? 'Recrutamento' }}</span>
-            <div class="news-date">Prazo: {{ \Carbon\Carbon::parse($recrutamento->data_limite)->format('d/m/Y') }}</div>
-
-            <h3>{{ $recrutamento->titulo_vaga }}</h3>
-            <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 8px;">
-              <strong>Dep:</strong> {{ $recrutamento->departamento }} | <strong>Local:</strong> {{ $recrutamento->localizacao }} | <strong>Vagas:</strong> {{ $recrutamento->vagas_disponiveis }}
-            </p>
-            <p>{{ Str::limit($recrutamento->descricao_vaga, 120) }}</p>
-
-            <a href="#formulario-candidatura" onclick="selecionarVaga('{{ $recrutamento->id }}', '{{ $recrutamento->titulo_vaga }}')" class="btn btn-line btn-block">
-              Candidatar-me
-            </a>
-          </div>
-        </article>
-      @empty
-        <p>Não há processos de recrutamento abertos no momento.</p>
-      @endforelse
-
-      <!-- Loop Apenas Visual de Formações -->
-      @forelse($formacoes as $formacao)
-        <article class="news-card">
-          <div class="news-body">
-            <span class="news-cat" style="background: var(--clay); color: #fff;">Formação Agendada</span>
-            <div class="news-date">
-              {{ \Carbon\Carbon::parse($formacao->data_inicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($formacao->data_fim)->format('d/m/Y') }}
-            </div>
-
-            <h3>{{ $formacao->tema }}</h3>
-            <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 8px;">
-              <strong>Entidade:</strong> {{ $formacao->entidade }} | <strong>Carga Horária:</strong> {{ $formacao->carga_horaria }}h
-            </p>
-            <span class="badge" style="display: inline-block; padding: 4px 8px; background: #e9ecef; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">
-              Status: {{ ucfirst($formacao->status) }}
-            </span>
-          </div>
-        </article>
-      @empty
-        <p>Não há formações agendadas no momento.</p>
-      @endforelse
-
+    <div class="search-box">
+      <i class="fa-solid fa-search search-icon"></i>
+      <input type="text" id="searchVagas" placeholder="Pesquisar por vaga, departamento..." data-i18n-placeholder="sec.rec.searchPh">
     </div>
 
-    <!-- Formulário Único de Submissão de Candidatura -->
-    <div class="form-card" id="formulario-candidatura" style="max-width: 780px; margin: 0 auto;">
-      <h3 style="margin-bottom: 6px; text-align: center;">Formulário de Candidatura</h3>
-      <p style="text-align: center; color: var(--muted); margin-bottom: 24px; font-size: 0.95rem;">
-        Preencha os seus dados pessoais e profissionais abaixo para se candidatar.
-      </p>
+    <!-- Vagas em cima -->
+    <div class="grid-vagas" id="listaVagas"><p style="color: var(--muted);" data-i18n="sec.rec.loadVagas">A carregar vagas...</p></div>
 
-      @if(session('success'))
-        <div class="form-feedback ok" style="margin-bottom: 15px; padding: 12px; background: #eaf8f0; border-radius: 8px; color: #1e7e34;">
-          {{ session('success') }}
-        </div>
-      @endif
+    <!-- Formações por baixo -->
+    <h3 class="sub-section-title" style="margin-top: 56px;"><i class="fa-solid fa-graduation-cap" style="color:var(--clay);margin-right:8px"></i><span data-i18n="sec.rec.subtitle">Formações & Workshops</span></h3>
+    <div class="grid-formacoes" id="listaFormacoes" style="margin-top: 18px;"><p style="color: var(--muted);" data-i18n="sec.rec.loadFormacoes">A carregar formações...</p></div>
 
-      <form action="{{ route('candidatos.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <!-- Vaga Selecionada -->
-        <div class="field" style="margin-bottom: 15px;">
-          <label for="vaga_display">Vaga Selecionada</label>
-          <input type="text" id="vaga_display" readonly placeholder="Selecione uma vaga acima ou deixe em branco para candidatura espontânea" style="background: #f0f4f6;">
-          <input type="hidden" id="recrutamento_id" name="recrutamento_id">
-        </div>
-
-        <div class="field-row">
+    <!-- Formulário de candidatura (oculto, abre ao clicar em Candidatar-se) -->
+    <div class="candidatura-panel" id="candidaturaPanel" style="display:none; margin-top: 56px;">
+      <div class="candidatura-panel-head">
+        <h3><i class="fa-solid fa-paper-plane" style="color:var(--clay);margin-right:8px"></i><span data-i18n="cand.title">Candidatar-se a uma vaga</span></h3>
+        <button type="button" class="btn-close-cand" id="btnFecharCandidatura" aria-label="Fechar">&times;</button>
+      </div>
+      <form action="/candidatar" method="POST" enctype="multipart/form-data" id="candidaturaForm">
+        <input type="hidden" name="_token" id="candToken">
+        <div class="candidatura-panel-body">
+          <div class="form-feedback" id="candFeedback"></div>
           <div class="field">
-            <label for="nome">Nome Completo <span>*</span></label>
-            <input type="text" id="nome" name="nome" required placeholder="Seu nome completo">
-          </div>
-          <div class="field">
-            <label for="email">E-mail <span>*</span></label>
-            <input type="email" id="email" name="email" required placeholder="seu.email@exemplo.com">
-          </div>
-        </div>
-
-        <div class="field-row">
-          <div class="field">
-            <label for="telefone">Telefone / WhatsApp <span>*</span></label>
-            <input type="tel" id="telefone" name="telefone" required placeholder="+245 ...">
-          </div>
-          <div class="field">
-            <label for="profissao">Profissão / Cargo Atual <span>*</span></label>
-            <input type="text" id="profissao" name="profissao" required placeholder="Ex: Desenvolvedor, Contabilista">
-          </div>
-        </div>
-
-        <div class="field-row">
-          <div class="field">
-            <label for="nivel_academico">Nível Académico <span>*</span></label>
-            <select id="nivel_academico" name="nivel_academico" required>
-              <option value="">Selecione...</option>
-              <option value="Ensino Secundário">Ensino Secundário</option>
-              <option value="Bacharelato">Bacharelato</option>
-              <option value="Licenciatura">Licenciatura</option>
-              <option value="Mestrado">Mestrado</option>
-              <option value="Doutoramento">Doutoramento</option>
-              <option value="Outro">Outro</option>
+            <label data-i18n-html="cand.vaga">Vaga Pretendida <span>*</span></label>
+            <select name="vaga_id" id="candidatarVaga" required>
+              <option value="" disabled selected data-i18n="cand.vagaPh">Selecione a vaga...</option>
             </select>
           </div>
+          <div class="field-row">
+            <div class="field">
+              <label data-i18n-html="cand.nome">Nome Completo <span>*</span></label>
+              <input type="text" name="nome" placeholder="Nome completo" data-i18n-placeholder="cand.nomePh" required>
+            </div>
+            <div class="field">
+              <label data-i18n-html="cand.email">Email <span>*</span></label>
+              <input type="email" name="email" placeholder="exemplo@email.com" data-i18n-placeholder="cand.emailPh" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label data-i18n-html="cand.tel">Telefone <span>*</span></label>
+              <input type="text" name="telefone" placeholder="+245..." data-i18n-placeholder="cand.telPh" required>
+            </div>
+            <div class="field">
+              <label data-i18n="cand.prof">Profissão</label>
+              <input type="text" name="profissao" placeholder="Ex: Gestor de RH" data-i18n-placeholder="cand.profPh">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label data-i18n="cand.nivel">Nível Académico</label>
+              <select name="nivel_academico">
+                <option value="" data-i18n="cand.nivelPh">Selecionar...</option>
+                <option value="Secundário" data-i18n="cand.nivelSec">Secundário</option>
+                <option value="Licenciatura" data-i18n="cand.nivelLic">Licenciatura</option>
+                <option value="Mestrado" data-i18n="cand.nivelMes">Mestrado</option>
+                <option value="Doutoramento" data-i18n="cand.nivelDoc">Doutoramento</option>
+              </select>
+            </div>
+            <div class="field">
+              <label data-i18n="cand.exp">Anos de Experiência</label>
+              <input type="number" min="0" name="anos_experiencia" placeholder="Ex: 3" data-i18n-placeholder="cand.expPh">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label data-i18n="cand.comp">Competências</label>
+              <input type="text" name="competencias" placeholder="Ex: Excel avançado, Laravel" data-i18n-placeholder="cand.compPh">
+            </div>
+            <div class="field">
+              <label data-i18n="cand.loc">Localização</label>
+              <input type="text" name="localizacao" placeholder="Ex: Bissau" data-i18n-placeholder="cand.locPh">
+            </div>
+          </div>
           <div class="field">
-            <label for="anos_experiencia">Anos de Experiência <span>*</span></label>
-            <input type="number" id="anos_experiencia" name="anos_experiencia" min="0" required placeholder="Ex: 2">
+            <label data-i18n-html="cand.cv">Currículo (PDF ou DOCX) <span>*</span></label>
+            <input type="file" name="cv_arquivo" accept=".pdf,.doc,.docx" required>
+            <small style="color:var(--muted);font-size:.78rem;margin-top:4px;display:block" data-i18n="cand.cvHint">Tamanho máximo: 2MB</small>
+          </div>
+          <div class="candidatura-actions">
+            <button type="button" class="btn btn-line" id="btnCancelarCandidatura" data-i18n="cand.cancel">Cancelar</button>
+            <button type="submit" class="btn btn-accent">
+              <i class="fa-solid fa-paper-plane"></i> <span data-i18n="cand.submit">Enviar Candidatura</span>
+            </button>
           </div>
         </div>
-
-        <div class="field-row">
-          <div class="field">
-            <label for="localizacao">Localização (Cidade/País) <span>*</span></label>
-            <input type="text" id="localizacao" name="localizacao" required placeholder="Ex: Bissau, Guiné-Bissau">
-          </div>
-          <div class="field">
-            <label for="cv_arquivo">Curriculum Vitae (PDF/DOC, max 5MB) <span>*</span></label>
-            <input type="file" id="cv_arquivo" name="cv_arquivo" accept=".pdf,.doc,.docx" required>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="competencias">Competências / Resumo do Perfil</label>
-          <textarea id="competencias" name="competencias" rows="3" placeholder="Descreva sucintamente as suas principais competências técnicas e relacionais..."></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-block btn-lg">
-          <span class="btn-label">Enviar Candidatura</span>
-        </button>
       </form>
     </div>
   </div>
@@ -613,10 +693,10 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section diff" id="diferenciais">
   <div class="container diff-grid">
     <div class="diff-intro">
-      <span class="eyebrow">Porquê a Eureka</span>
-      <h2>Conhecemos o terreno onde a sua empresa cresce</h2>
-      <p>Rigor técnico com proximidade real ao mercado africano. Trabalhamos lado a lado com cada cliente, do diagnóstico aos resultados.</p>
-      <a href="#contacto" class="btn btn-primary">Falar com um consultor</a>
+      <span class="eyebrow" data-i18n="sec.diff.eyebrow">Porquê a Eureka</span>
+      <h2 data-i18n="sec.diff.title">Conhecemos o terreno onde a sua empresa cresce</h2>
+      <p data-i18n="sec.diff.desc">Rigor técnico com proximidade real ao mercado africano. Trabalhamos lado a lado com cada cliente, do diagnóstico aos resultados.</p>
+      <a href="#contacto" class="btn btn-primary" data-i18n="sec.diff.cta">Falar com um consultor</a>
     </div>
     <ul class="diff-list" id="diffList"></ul>
   </div>
@@ -626,9 +706,9 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section section-tint" id="recursos">
   <div class="container">
     <header class="section-head">
-      <span class="eyebrow">Recursos para empreendedores</span>
-      <h2>Instituições que apoiam quem constrói</h2>
-      <p>Organizações de referência no financiamento e no apoio ao empreendedorismo na sub-região.</p>
+      <span class="eyebrow" data-i18n="sec.res.eyebrow">Recursos para empreendedores</span>
+      <h2 data-i18n="sec.res.title">Instituições que apoiam quem constrói</h2>
+      <p data-i18n="sec.res.desc">Organizações de referência no financiamento e no apoio ao empreendedorismo na sub-região.</p>
     </header>
     <div class="resources-grid" id="resourcesGrid"></div>
   </div>
@@ -638,18 +718,18 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section section-dark" id="sobre">
   <div class="container about-grid">
     <div class="about-main">
-      <span class="eyebrow eyebrow-light">Sobre a Eureka</span>
-      <h2>Uma parceira que entende o contexto empresarial africano</h2>
-      <p>Nascida em Bissau, a Eureka Consulting cresceu ao ritmo das empresas que acompanha. Ajudamos organizações a estruturar-se, a decidir melhor e a expandir-se com confiança por toda a África Ocidental.</p>
-      <p>A nossa equipa multidisciplinar reúne especialistas em estratégia, finanças, gestão de projetos e desenvolvimento de negócios, com um compromisso comum: resultados reais e duradouros.</p>
+      <span class="eyebrow eyebrow-light" data-i18n="sec.about.eyebrow">Sobre a Eureka</span>
+      <h2 data-i18n="sec.about.title">Uma parceira que entende o contexto empresarial africano</h2>
+      <p data-i18n="sec.about.p1">Nascida em Bissau, a Eureka Consulting cresceu ao ritmo das empresas que acompanha. Ajudamos organizações a estruturar-se, a decidir melhor e a expandir-se com confiança por toda a África Ocidental.</p>
+      <p data-i18n="sec.about.p2">A nossa equipa multidisciplinar reúne especialistas em estratégia, finanças, gestão de projetos e desenvolvimento de negócios, com um compromisso comum: resultados reais e duradouros.</p>
       <div class="mv-grid">
         <div class="mv-card">
-          <h3>Missão</h3>
-          <p>Capacitar empresas e empreendedores com soluções estratégicas que geram crescimento sustentável e impacto positivo na economia da região.</p>
+          <h3 data-i18n="sec.about.missao">Missão</h3>
+          <p data-i18n="sec.about.missaoD">Capacitar empresas e empreendedores com soluções estratégicas que geram crescimento sustentável e impacto positivo na economia da região.</p>
         </div>
         <div class="mv-card">
-          <h3>Visão</h3>
-          <p>Ser a consultora de referência na África Ocidental, reconhecida pela proximidade, competência e resultados que transformam negócios.</p>
+          <h3 data-i18n="sec.about.visao">Visão</h3>
+          <p data-i18n="sec.about.visaoD">Ser a consultora de referência na África Ocidental, reconhecida pela proximidade, competência e resultados que transformam negócios.</p>
         </div>
       </div>
     </div>
@@ -661,16 +741,16 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
              onerror="this.closest('.about-photo').classList.add('no-img')">
         <figcaption aria-hidden="true"><small>assets/sobre.webp</small></figcaption>
       </figure>
-      <h3>Áreas de atuação</h3>
+      <h3 data-i18n="sec.about.areas">Áreas de atuação</h3>
       <ul class="area-list">
-        <li>Estratégia e gestão empresarial</li>
-        <li>Finanças, contabilidade e fiscalidade</li>
-        <li>Microfinanças e inclusão financeira</li>
-        <li>Gestão e avaliação de projetos</li>
-        <li>Capital humano e formação</li>
-        <li>Estudos socioeconómicos</li>
+        <li data-i18n="sec.about.area1">Estratégia e gestão empresarial</li>
+        <li data-i18n="sec.about.area2">Finanças, contabilidade e fiscalidade</li>
+        <li data-i18n="sec.about.area3">Microfinanças e inclusão financeira</li>
+        <li data-i18n="sec.about.area4">Gestão e avaliação de projetos</li>
+        <li data-i18n="sec.about.area5">Capital humano e formação</li>
+        <li data-i18n="sec.about.area6">Estudos socioeconómicos</li>
       </ul>
-      <p class="presence"><strong>Presença regional:</strong> Guiné-Bissau · África Ocidental</p>
+      <p class="presence"><strong data-i18n="sec.about.presence">Presença regional: Guiné-Bissau · África Ocidental</strong></p>
     </aside>
   </div>
 </section>
@@ -679,8 +759,8 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section" id="valores">
   <div class="container">
     <header class="section-head">
-      <span class="eyebrow">O que nos guia</span>
-      <h2>Valores que sustentam cada projeto</h2>
+      <span class="eyebrow" data-i18n="sec.val.eyebrow">O que nos guia</span>
+      <h2 data-i18n="sec.val.title">Valores que sustentam cada projeto</h2>
     </header>
     <ul class="values-list" id="valuesList"></ul>
   </div>
@@ -690,8 +770,8 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section section-tint" id="historia">
   <div class="container">
     <header class="section-head">
-      <span class="eyebrow">O nosso percurso</span>
-      <h2>Uma história de crescimento contínuo</h2>
+      <span class="eyebrow" data-i18n="sec.hist.eyebrow">O nosso percurso</span>
+      <h2 data-i18n="sec.hist.title">Uma história de crescimento contínuo</h2>
     </header>
     <ol class="timeline" id="timeline"></ol>
   </div>
@@ -701,18 +781,18 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section boost" id="boost">
   <div class="container boost-grid">
     <div class="boost-copy">
-      <span class="eyebrow eyebrow-light">Programa de aceleração</span>
-      <h2><span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas</h2>
-      <p>Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.</p>
+      <span class="eyebrow eyebrow-light" data-i18n="sec.boost.eyebrow">Programa de aceleração</span>
+      <h2 data-i18n-html="sec.boost.title"><span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas</h2>
+      <p data-i18n="sec.boost.desc">Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.</p>
       <ul class="boost-feats">
-        <li>Diagnóstico e estruturação do negócio</li>
-        <li>Mentoria estratégica personalizada</li>
-        <li>Preparação para financiamento e investimento</li>
+        <li data-i18n="sec.boost.f1">Diagnóstico e estruturação do negócio</li>
+        <li data-i18n="sec.boost.f2">Mentoria estratégica personalizada</li>
+        <li data-i18n="sec.boost.f3">Preparação para financiamento e investimento</li>
       </ul>
       <div class="boost-cta">
-        <a href="#contacto" class="btn btn-accent">Conhecer o programa</a>
-        <a href="#contacto" class="btn btn-line-light">Candidatar-se</a>
-        <a href="#contacto" class="btn btn-line-light">Solicitar informações</a>
+        <a href="#contacto" class="btn btn-accent" data-i18n="sec.boost.cta1">Conhecer o programa</a>
+        <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta2">Candidatar-se</a>
+        <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta3">Solicitar informações</a>
       </div>
     </div>
   </div>
@@ -722,9 +802,9 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section" id="noticias">
   <div class="container">
     <header class="section-head">
-      <span class="eyebrow">Atualidade</span>
-      <h2>Notícias e perspetivas de mercado</h2>
-      <p>Análises sobre economia, negócios e empreendedorismo na Guiné-Bissau e na região.</p>
+      <span class="eyebrow" data-i18n="sec.news.eyebrow">Atualidade</span>
+      <h2 data-i18n="sec.news.title">Notícias e perspetivas de mercado</h2>
+      <p data-i18n="sec.news.desc">Análises sobre economia, negócios e empreendedorismo na Guiné-Bissau e na região.</p>
     </header>
     <div class="news-grid" id="newsGrid"></div>
   </div>
@@ -733,8 +813,8 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <!-- ===== CTA ===== -->
 <section class="cta-band">
   <div class="container cta-inner">
-    <h2>Transforme os seus desafios em oportunidades de crescimento.</h2>
-    <a href="#contacto" class="btn btn-accent btn-lg">Solicitar uma consultoria</a>
+    <h2 data-i18n="cta.title">Transforme os seus desafios em oportunidades de crescimento.</h2>
+    <a href="#contacto" class="btn btn-accent btn-lg" data-i18n="cta.btn">Solicitar uma consultoria</a>
   </div>
 </section>
 
@@ -742,9 +822,9 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 <section class="section section-tint" id="contacto">
   <div class="container contact-grid">
     <div class="contact-info">
-      <span class="eyebrow">Vamos conversar</span>
-      <h2>Conte-nos o seu desafio</h2>
-      <p>Respondemos em até 48 horas úteis. Prefere falar diretamente? Use os contactos abaixo.</p>
+      <span class="eyebrow" data-i18n="sec.contact.eyebrow">Vamos conversar</span>
+      <h2 data-i18n="sec.contact.title">Conte-nos o seu desafio</h2>
+      <p data-i18n="sec.contact.desc">Respondemos em até 48 horas úteis. Prefere falar diretamente? Use os contactos abaixo.</p>
 
       <ul class="contact-points" id="contactPoints"></ul>
 
@@ -764,43 +844,43 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
       <form class="contact-form" id="contactForm" novalidate>
         <div class="field-row">
           <div class="field">
-            <label for="f-nome">Nome <span>*</span></label>
+            <label for="f-nome" data-i18n-html="f.nome">Nome <span>*</span></label>
             <input type="text" id="f-nome" name="nome" required autocomplete="name">
             <small class="err" data-for="f-nome"></small>
           </div>
           <div class="field">
-            <label for="f-empresa">Empresa</label>
+            <label for="f-empresa" data-i18n="f.empresa">Empresa</label>
             <input type="text" id="f-empresa" name="empresa" autocomplete="organization">
           </div>
         </div>
         <div class="field-row">
           <div class="field">
-            <label for="f-email">Email <span>*</span></label>
+            <label for="f-email" data-i18n-html="f.email">Email <span>*</span></label>
             <input type="email" id="f-email" name="email" required autocomplete="email">
             <small class="err" data-for="f-email"></small>
           </div>
           <div class="field">
-            <label for="f-tel">Telefone</label>
+            <label for="f-tel" data-i18n="f.tel">Telefone</label>
             <input type="tel" id="f-tel" name="telefone" autocomplete="tel">
           </div>
         </div>
         <div class="field-row">
           <div class="field">
-            <label for="f-assunto">Assunto</label>
+            <label for="f-assunto" data-i18n="f.assunto">Assunto</label>
             <input type="text" id="f-assunto" name="assunto">
           </div>
           <div class="field">
-            <label for="f-servico">Serviço de interesse</label>
-            <select id="f-servico" name="servico"><option value="">Selecione…</option></select>
+            <label for="f-servico" data-i18n="f.servico">Serviço de interesse</label>
+            <select id="f-servico" name="servico"><option value="" data-i18n="f.servicoPh">Selecione…</option></select>
           </div>
         </div>
         <div class="field">
-          <label for="f-mensagem">Mensagem <span>*</span></label>
+          <label for="f-mensagem" data-i18n-html="f.mensagem">Mensagem <span>*</span></label>
           <textarea id="f-mensagem" name="mensagem" rows="4" required></textarea>
           <small class="err" data-for="f-mensagem"></small>
         </div>
         <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
-          <span class="btn-label">Enviar mensagem</span>
+          <span class="btn-label" data-i18n="f.submit">Enviar mensagem</span>
           <span class="btn-spinner" aria-hidden="true"></span>
         </button>
         <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
@@ -816,27 +896,28 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   <div class="container footer-grid">
     <div class="footer-brand">
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAAC7CAYAAABbyhM9AAAIj0lEQVR4nO3d2ZKkuBJFUUVa/f8vUw9lZJEkgwZ3+aC9Xrrb7k0CJB1cAYL4bNtWACPSg+8jvD33/ljvANKyqAx3n5k22AQYErxP4877lybQBBgjvAf3znG/Q4eZAKNF1MA+CR1mAowaGYN7JVyYCTCerBLcK/uxuw7yl/UOwKWtrB3eI9ftQAXGkevBasjt1JoAoxSC28JVmJlCr42p8hjztqMCr8l84CVierGLCrwWKq4ek3YlwOsguPqmtzEBXgPhnWfqLIcA50d4bUxpdwKcG+G1pd7+BDgvwuuD6pSa20j5ENyFEOAcCK1/KveLmUIDgRFgYC7R78QEOD6mzzGJ9BsBjo3wLo4Ax0V44xvuQwIcE+HNY6gvCXA8hDef7j4lwLEQ3ry6+pYAA4GxEkseVRK9ttK4UosAjyGskNYUYgLcjtDCDQJch9BipuoHHwjwM4IL1wjwNYKLELiN9BOvXYUnr2ORCvwPoUVIq1dgKi68exyfKweY4CK8VQNMeBHJ7Xhd7TswwUUqK1VgwovILsfvCgHmQhWy+DWOsweY4CK17AEGUsscYKovMvoxrrMGmPBiCRkDTHixjGwBJrxYSqYAE16s4nusZwkw4cWSsgQYWFKGAFN9saKtlPgBJrxYWvQAA0uLHGCqL5YXOcDA8qIGmOoLlLJZv5Hj6ndgCCdQySLA54ASWKDT7Ck0YQUEzajAhBZQohFgAgtMIhlgggtMJvUdmPACBiQCTHgBI6MBJryAod7vwAQXcKA1wAQXcCTqWmgApS3AVF/AmdoAE17AoZoAE17AqbcAE17AMS5iAXF9ngJM9QWcu7oPTHCBIJhCA4ERYCCwc4CZPgOBUIGBmD6l/Aww1RcIhgoMxPP9LnUCDAS2B5jpMxAQFRgIjAADsfz4LbGvwvQZCIsKDMRx/iVPAgwE8Su8pRBgIDQCDPh3WX1LIcBAaAQYCIwAA77dTp9LIcBAaAQY8Oux+pZCgAGvXsNbCgEGPKoKbykEGPCo+vmEr9KQdgDqPoUKDITUXEwJMOBD10yYAAOBEWDAXvd1qD3AXMgCbAxljwoM2BkunMcAU4WBeUTyRgUG5hMrlucAU4WBQK4qMCEG9Ijm64/kxgDcUimMd9+BqcKAHLU8UYEBPeqF8OkqNFUY6DclP2+3kQgx0G5abphCAzJMil3NQo6mB4wBzNOyEosQA7+ZFrjWpZSEGPjHxcy0Zy20+U5DzKc4GYjBuGmv3otY+wFUvz0P7pwH4fG/6ddrboK7G70K/Sl5OvvcOVmO66h2AHKC/s9daI8kbiNF72zXHSSk9xhXrcp7YXI/Nj7bJtovkTr5rnPuOi7Sse00BmDEdqjlPrBn0gEuJUYHj3aU92OcNRC9t0OtcMHdaQT4yFsHS3eUp+OzHoSe2uKNdVuJ0Q5wKT46NmtF8j4QPfR9Kf7bqduMAJ/N/ECPHdd6/B6PYZT2GMjYZpcsAvykdmeW6SDgibenkQgm0IDXygKBEWAgMAIMBEaAgcAIMBAYAQYCI8BAYAQYCIwAA4ERYCAwAoxS5j1g4mrhfQbe1kJHFuIVLCf7Ptfu910Aox13GtZPI+0DSGsnagbW8bN7BuLbvr9tc+TYJYIj2fat7d36t7XbGt3urO0P8xBgTb1vmhytSLXbkj7+1sGk0f4jxyvZ7j3bnbV9MdbfgTUP3Mu07m4waIRnU9quBKn9ChOuGawDDB1eQ/zmbb9nHFfPZ5i1NwHOy2pQaX2n76m8qatvKXkDnP21sbUsjsPDu6h79yFcv2cNMP4LNyhPouy/yX5Guw+cfkp04ekXJFr03qee2ebnfewJhWX1nb4WIFIFXjG8T1ra42pgea9sM8MbVqQAQ5bHwT7yI2zaCzZcIsCxtVbhHjMH93b6Zw1vJ6KpJwOr78Ba99q8daa2WQNdagWVxGdJf27Y6lvKnADPPoN7C7GHW1rabbLvo7e2tzJtHGaeQoc+s+LV7OrrcmGIdoAtQ+SusY1kbAfNJ9juPu/q359M2b/MFRg5w7vLfGzVtANMI9twOd2DvBkVeOZAYtDaTfFmr9ga3f8U10hm3UaSeMrkaUmhRXA9DgCNduCkOHYPXbX9MnwHthq03ge2xxNMDc3FKT0LRUapvmQhQ4A11DT4rEHQO6Df/s77CaiW57eQqCPA954GhefFKcsO5gqzbz8dqXxutMcJR7V24GijS1S53rc1WlfYnn34nP7Z2lfWx/xEZd8iBVhqjazlWXiE1X73vg1D6uTVc8KVeoZaksoJhim0HusrwhFPUld672lnOf5HkSpwi7ezXdQq3Mr7tLJFS59JHLfGyVK8P7JWYOvbQJqfnyWQ2kauTmu1MVNoYdJLDmctYVxxKl3KvJOXVpuJ3/JaPcC7keBphvbta4BH2j+A1vszKS0r/nqvnkv/f983ZvzbSLv9u8FT50v/rtGb2n2ReGD/6oVzrWuaP+X9KmzttlqMfpbUvl7denrbtmQ/mvASYAAdmEIDgRFgIDACDATmbSGH1hXMq+1KXDx5+rUDqdVDkheJRi4cSbx58umCS+/VZem/HV1soX0V/gdPFVjr6Z+7v5X6LRyp7Unu59vf9D5H2/O33tSMM42X4Ku0m5cAa9441/5cL9vQcq5I1mu8pUm1vUkfephC393Pu/vfe11NJb14uwduSXLdeM+92hk01oxPGW9eKvDuqhElnkY5/71042p1kIfBvQrJPtxPeuelk+LjxFuAV3YV1qVfFxPU1CfdPAT4qRpu5fpM1upqu1ef30N66abW2mqpY852QpFu66nt4+E78JnUd8HzmdDzwNPcT43jlril5EnY58M9VOBS9KrOrDczalbxnm1rXpA5CjnolbyNYZUx7iXAu7sDHDnwu4aTeKC+5t97tjuynePfSm9TaluW+6DVf09/qzZT+QspTpKQtbcmDAAAAABJRU5ErkJggg==" alt="Eureka Consulting" class="footer-logo" width="150" height="58">
-      <p>Consultoria empresarial de referência na Guiné-Bissau e na África Ocidental. Estratégia, finanças e crescimento — ao seu lado.</p>
+      <p data-i18n="footer.desc">Consultoria empresarial de referência na Guiné-Bissau e na África Ocidental. Estratégia, finanças e crescimento — ao seu lado.</p>
     </div>
     <div class="footer-col">
-      <h4>Navegação</h4>
-      <a href="#servicos">Serviços</a>
-      <a href="#recursos">Recursos</a>
-      <a href="#sobre">Sobre</a>
+      <h4 data-i18n="footer.nav">Navegação</h4>
+      <a href="#recrutamento" data-i18n="nav.recrutamento">Vagas & Formações</a>
+      <a href="#servicos" data-i18n="nav.servicos">Serviços</a>
+      <a href="#recursos" data-i18n="nav.recursos">Recursos</a>
+      <a href="#sobre" data-i18n="nav.sobre">Sobre</a>
       <a href="#boost">BOOST_ME</a>
-      <a href="#noticias">Notícias</a>
-      <a href="#contacto">Contacto</a>
+      <a href="#noticias" data-i18n="nav.noticias">Notícias</a>
+      <a href="#contacto" data-i18n="nav.contacto">Contacto</a>
     </div>
     <div class="footer-col">
-      <h4>Serviços</h4>
-      <a href="#servicos">Gestão e Estratégia</a>
-      <a href="#servicos">Finanças e Auditoria</a>
-      <a href="#servicos">Gestão de Projetos</a>
-      <a href="#servicos">Microfinanças</a>
-      <a href="#servicos">Formações</a>
+      <h4 data-i18n="footer.svc">Serviços</h4>
+      <a href="#servicos" data-i18n="svc.gestao.t">Gestão e Estratégia</a>
+      <a href="#servicos" data-i18n="svc.financas.t">Finanças e Auditoria</a>
+      <a href="#servicos" data-i18n="svc.projetos.t">Gestão de Projetos</a>
+      <a href="#servicos" data-i18n="svc.microfin.t">Microfinanças</a>
+      <a href="#servicos" data-i18n="svc.formacoes.t">Formações</a>
     </div>
     <div class="footer-col">
-      <h4>Contacto</h4>
+      <h4 data-i18n="footer.contact">Contacto</h4>
       <p>Av. Dr. Koumba Yalá — Antula, Bissau</p>
       <p>+245 966 164 555</p>
       <p>+245 956 965 050</p>
@@ -845,11 +926,14 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   </div>
   <div class="footer-bar">
     <div class="container footer-bar-inner">
-      <p>© <span id="year"></span> Eureka Consulting. Todos os direitos reservados.</p>
+      <p>© <span id="year"></span> Eureka Consulting. <span data-i18n="footer.rights">Todos os direitos reservados.</span></p>
       <nav class="footer-legal" aria-label="Avisos legais">
-        <a href="#">Política de privacidade</a>
-        <a href="#">Aviso legal</a>
+        <a href="#" data-i18n="footer.privacy">Política de privacidade</a>
+        <a href="#" data-i18n="footer.legal">Aviso legal</a>
       </nav>
+      <a href="/login" class="btn btn-line-light footer-admin-btn">
+        <i class="fa-solid fa-lock" style="font-size:.78rem"></i> <span data-i18n="footer.admin">Admin</span>
+      </a>
     </div>
   </div>
 </footer>
@@ -886,164 +970,482 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
     clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
   };
 
+  /* ---------- Traduções (pt / fr / en) ---------- */
+  const I18N = {
+    pt: {
+      "nav.top":"Início","nav.servicos":"Serviços","nav.recrutamento":"Vagas & Formações","nav.recursos":"Recursos","nav.sobre":"Sobre","nav.noticias":"Notícias","nav.contacto":"Contacto","nav.cta":"Solicitar consultoria",
+      "hero.eyebrow":"Consultoria empresarial · Bissau & África Ocidental",
+      "hero.title":'Estruturamos negócios que <span class="ink-accent">crescem</span> no terreno africano.',
+      "hero.lede":"Acompanhamos empresas, instituições e empreendedores com estratégia, finanças e gestão de projetos — do diagnóstico aos resultados medidos.",
+      "hero.cta1":"Conhecer os serviços","hero.cta2":"Entrar em contacto",
+      "hero.stat1":"anos de experiência","hero.stat2":"clientes acompanhados","hero.stat3":"serviços especializados",
+      "sec.servicos.eyebrow":"O que fazemos","sec.servicos.title":"Serviços especializados, do diagnóstico à execução","sec.servicos.desc":"Competências multidisciplinares para cada fase do percurso empresarial, desenhadas para o contexto local.",
+      "svc.more":"Saber mais",
+      "svc.consultoria.t":"Consultoria","svc.consultoria.d":"Aconselhamento estratégico transversal para decisões empresariais mais seguras.",
+      "svc.gestao.t":"Gestão e Estratégia","svc.gestao.d":"Estruturação, planeamento e otimização de operações orientadas a resultados.",
+      "svc.marketing.t":"Marketing e Comunicação","svc.marketing.d":"Posicionamento de marca, comunicação e captação de mercado.",
+      "svc.financas.t":"Finanças, Contabilidade, Auditoria e Fiscalidade","svc.financas.d":"Gestão financeira, conformidade e auditoria com rigor técnico.",
+      "svc.microfin.t":"Microfinanças","svc.microfin.d":"Soluções de inclusão financeira e apoio a instituições de microcrédito.",
+      "svc.estudos.t":"Estudos Socioeconómicos","svc.estudos.d":"Diagnósticos e análises de impacto baseados em dados do terreno.",
+      "svc.projetos.t":"Gestão de Projetos","svc.projetos.d":"Planeamento, execução e controlo de projetos do início ao fim.",
+      "svc.monitoria.t":"Monitorização e Avaliação","svc.monitoria.d":"Medição de desempenho e avaliação de resultados de programas.",
+      "svc.invest.t":"Financiamento e Investimento","svc.invest.d":"Preparação de dossiês e ligação a fontes de financiamento.",
+      "svc.traducao.t":"Tradução e Interpretação","svc.traducao.d":"Serviços linguísticos profissionais para negócios e instituições.",
+      "svc.rh.t":"Recursos Humanos","svc.rh.d":"Recrutamento, gestão de talento e desenvolvimento de equipas.",
+      "svc.formacoes.t":"Formações","svc.formacoes.d":"Capacitação prática adaptada às necessidades de cada organização.",
+      "svc.equipas.t":"Construção de Equipas","svc.equipas.d":"Programas de coesão e desempenho coletivo.",
+      "svc.boost.t":"BOOST_ME — Acelerador de Empresas","svc.boost.d":"O nosso programa de aceleração para empreendedores e empresas em crescimento.",
+      "sec.rec.eyebrow":"Carreiras & Capacitação","sec.rec.title":"Oportunidades de Recrutamento e Formações","sec.rec.desc":"Consulte os processos seletivos abertos e a agenda das nossas formações.",
+      "sec.rec.searchPh":"Pesquisar por vaga, departamento...","sec.rec.loadVagas":"A carregar vagas...","sec.rec.subtitle":"Formações & Workshops","sec.rec.loadFormacoes":"A carregar formações...",
+      "cand.title":"Candidatar-se a uma vaga",
+      "cand.vaga":'Vaga Pretendida <span>*</span>',"cand.vagaPh":"Selecione a vaga...",
+      "cand.nome":'Nome Completo <span>*</span>',"cand.nomePh":"Nome completo",
+      "cand.email":'Email <span>*</span>',"cand.emailPh":"exemplo@email.com",
+      "cand.tel":'Telefone <span>*</span>',"cand.telPh":"+245...",
+      "cand.prof":"Profissão","cand.profPh":"Ex: Gestor de RH",
+      "cand.nivel":"Nível Académico","cand.nivelPh":"Selecionar...","cand.nivelSec":"Secundário","cand.nivelLic":"Licenciatura","cand.nivelMes":"Mestrado","cand.nivelDoc":"Doutoramento",
+      "cand.exp":"Anos de Experiência","cand.expPh":"Ex: 3",
+      "cand.comp":"Competências","cand.compPh":"Ex: Excel avançado, Laravel",
+      "cand.loc":"Localização","cand.locPh":"Ex: Bissau",
+      "cand.cv":'Currículo (PDF ou DOCX) <span>*</span>',"cand.cvHint":"Tamanho máximo: 2MB",
+      "cand.cancel":"Cancelar","cand.submit":"Enviar Candidatura","cand.sending":"A enviar...",
+      "cand.errVaga":"Selecione uma vaga para se candidatar.","cand.errSend":"Não foi possível registar a candidatura.","cand.errGeneric":"Ocorreu um erro ao enviar a candidatura.",
+      "vg.empty":"Não há processos de recrutamento abertos no momento.","vg.geral":"Geral","vg.bissau":"Bissau","vg.recrutamento":"Recrutamento","vg.prazo":"Prazo:","vg.cand":"Candidatar-se",
+      "frm.empty":"Não há formações agendadas no momento.","frm.horario":"Horário","frm.entidade":"Entidade Formadora","frm.inicio":"Início","frm.fim":"Fim","frm.carga":"Carga Horária","frm.inscrever":"Inscrever-se","frm.inscricao":"Inscrição em formação: ",
+      "vg.errVagas":"Não foi possível carregar as vagas.","frm.errFormacoes":"Não foi possível carregar as formações.",
+      "sec.diff.eyebrow":"Porquê a Eureka","sec.diff.title":"Conhecemos o terreno onde a sua empresa cresce","sec.diff.desc":"Rigor técnico com proximidade real ao mercado africano. Trabalhamos lado a lado com cada cliente, do diagnóstico aos resultados.","sec.diff.cta":"Falar com um consultor",
+      "diff.1.t":"Conhecimento do contexto local","diff.1.d":"Dominamos as especificidades do mercado da Guiné-Bissau e da região.",
+      "diff.2.t":"Experiência no mercado africano","diff.2.d":"Mais de uma década a apoiar organizações em vários setores.",
+      "diff.3.t":"Soluções personalizadas","diff.3.d":"Cada projeto desenhado à medida da realidade do cliente.",
+      "diff.4.t":"Equipa multidisciplinar","diff.4.d":"Especialistas em finanças, estratégia, projetos e capital humano.",
+      "diff.5.t":"Acompanhamento estratégico","diff.5.d":"Presença próxima do diagnóstico à implementação.",
+      "diff.6.t":"Compromisso com resultados","diff.6.d":"Medimos o sucesso pelo impacto real nos negócios.",
+      "sec.res.eyebrow":"Recursos para empreendedores","sec.res.title":"Instituições que apoiam quem constrói","sec.res.desc":"Organizações de referência no financiamento e no apoio ao empreendedorismo na sub-região.",
+      "res.1.d":"Apoio ao desenvolvimento e financiamento de jovens empreendedores.",
+      "res.2.d":"Agência de desenvolvimento e enquadramento das PME.",
+      "res.3.d":"Fundo de garantia para o investimento prioritário.",
+      "res.4.d":"Fundo soberano de investimentos estratégicos.",
+      "res.visit":"Visitar site",
+      "sec.about.eyebrow":"Sobre a Eureka","sec.about.title":"Uma parceira que entende o contexto empresarial africano",
+      "sec.about.p1":"Nascida em Bissau, a Eureka Consulting cresceu ao ritmo das empresas que acompanha. Ajudamos organizações a estruturar-se, a decidir melhor e a expandir-se com confiança por toda a África Ocidental.",
+      "sec.about.p2":"A nossa equipa multidisciplinar reúne especialistas em estratégia, finanças, gestão de projetos e desenvolvimento de negócios, com um compromisso comum: resultados reais e duradouros.",
+      "sec.about.missao":"Missão","sec.about.missaoD":"Capacitar empresas e empreendedores com soluções estratégicas que geram crescimento sustentável e impacto positivo na economia da região.",
+      "sec.about.visao":"Visão","sec.about.visaoD":"Ser a consultora de referência na África Ocidental, reconhecida pela proximidade, competência e resultados que transformam negócios.",
+      "sec.about.areas":"Áreas de atuação",
+      "sec.about.area1":"Estratégia e gestão empresarial","sec.about.area2":"Finanças, contabilidade e fiscalidade","sec.about.area3":"Microfinanças e inclusão financeira","sec.about.area4":"Gestão e avaliação de projetos","sec.about.area5":"Capital humano e formação","sec.about.area6":"Estudos socioeconómicos",
+      "sec.about.presence":"Presença regional: Guiné-Bissau · África Ocidental",
+      "sec.val.eyebrow":"O que nos guia","sec.val.title":"Valores que sustentam cada projeto",
+      "val.1":"Profissionalismo","val.2":"Responsabilidade","val.3":"Honestidade","val.4":"Integridade","val.5":"Gratidão","val.6":"Inovação","val.7":"Disciplina",
+      "sec.hist.eyebrow":"O nosso percurso","sec.hist.title":"Uma história de crescimento contínuo",
+      "hist.1.fase":"Criação","hist.1.meta":"Os primeiros passos","hist.1.d":"A Eureka nasce em Bissau com a missão de aproximar consultoria de qualidade das empresas locais.",
+      "hist.2.fase":"Crescimento","hist.2.meta":"Consolidação","hist.2.d":"Alargamento da carteira de serviços e da equipa multidisciplinar.",
+      "hist.3.fase":"Expansão Africana","hist.3.meta":"Para além das fronteiras","hist.3.d":"Projetos e parcerias em vários países da África Ocidental.",
+      "hist.4.fase":"Visão Futura","hist.4.meta":"O próximo capítulo","hist.4.d":"Aceleração de empresas, inovação e ligação a redes internacionais de investimento.",
+      "sec.boost.eyebrow":"Programa de aceleração",
+      "sec.boost.title":'<span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas',
+      "sec.boost.desc":"Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.",
+      "sec.boost.f1":"Diagnóstico e estruturação do negócio","sec.boost.f2":"Mentoria estratégica personalizada","sec.boost.f3":"Preparação para financiamento e investimento",
+      "sec.boost.cta1":"Conhecer o programa","sec.boost.cta2":"Candidatar-se","sec.boost.cta3":"Solicitar informações",
+      "sec.news.eyebrow":"Atualidade","sec.news.title":"Notícias e perspetivas de mercado","sec.news.desc":"Análises sobre economia, negócios e empreendedorismo na Guiné-Bissau e na região.",
+      "news.1.cat":"Economia","news.1.data":"12 Mai 2026","news.1.t":"Setor privado guineense regista crescimento no primeiro trimestre","news.1.r":"Dados recentes apontam para uma recuperação sustentada nos serviços e no comércio.",
+      "news.2.cat":"Empreendedorismo","news.2.data":"28 Abr 2026","news.2.t":"Como preparar a sua empresa para captar financiamento","news.2.r":"Um guia prático sobre os documentos e indicadores que os investidores valorizam.",
+      "news.3.cat":"BOOST_ME","news.3.data":"05 Abr 2026","news.3.t":"Programa BOOST_ME abre nova vaga de candidaturas","news.3.r":"Empreendedores podem submeter os seus projetos para a próxima edição do acelerador.",
+      "news.read":"Ler mais",
+      "cta.title":"Transforme os seus desafios em oportunidades de crescimento.","cta.btn":"Solicitar uma consultoria",
+      "sec.contact.eyebrow":"Vamos conversar","sec.contact.title":"Conte-nos o seu desafio","sec.contact.desc":"Respondemos em até 48 horas úteis. Prefere falar diretamente? Use os contactos abaixo.",
+      "ct.pin":"Endereço","ct.phone":"Telefones","ct.mail":"Email","ct.clock":"Horário","ct.clockV":"Seg – Sex · 08h00 às 17h30",
+      "f.nome":'Nome <span>*</span>',"f.empresa":"Empresa","f.email":'Email <span>*</span>',"f.tel":"Telefone","f.assunto":"Assunto","f.servico":"Serviço de interesse","f.servicoPh":"Selecione…","f.mensagem":'Mensagem <span>*</span>',"f.submit":"Enviar mensagem",
+      "f.errNome":"Indique o seu nome.","f.errEmail":"Indique o seu email.","f.errEmailInv":"Email inválido.","f.errMsg":"Escreva a sua mensagem.","f.errTop":"Verifique os campos assinalados.","f.ok":"Mensagem enviada com sucesso. Entraremos em contacto em breve.",
+      "footer.desc":"Consultoria empresarial de referência na Guiné-Bissau e na África Ocidental. Estratégia, finanças e crescimento — ao seu lado.",
+      "footer.nav":"Navegação","footer.svc":"Serviços","footer.contact":"Contacto","footer.rights":"Todos os direitos reservados.","footer.privacy":"Política de privacidade","footer.legal":"Aviso legal","footer.admin":"Admin",
+    },
+    fr: {
+      "nav.top":"Accueil","nav.servicos":"Services","nav.recrutamento":"Emplois & Formations","nav.recursos":"Ressources","nav.sobre":"À propos","nav.noticias":"Actualités","nav.contacto":"Contact","nav.cta":"Demander un conseil",
+      "hero.eyebrow":"Consulting d'entreprise · Bissau & Afrique de l'Ouest",
+      "hero.title":'Nous structurons des entreprises qui <span class="ink-accent">grandissent</span> sur le terrain africain.',
+      "hero.lede":"Nous accompagnons entreprises, institutions et entrepreneurs en stratégie, finance et gestion de projet — du diagnostic aux résultats mesurés.",
+      "hero.cta1":"Découvrir les services","hero.cta2":"Nous contacter",
+      "hero.stat1":"années d'expérience","hero.stat2":"clients accompagnés","hero.stat3":"services spécialisés",
+      "sec.servicos.eyebrow":"Ce que nous faisons","sec.servicos.title":"Des services spécialisés, du diagnostic à l'exécution","sec.servicos.desc":"Des compétences pluridisciplinaires pour chaque étape du parcours entrepreneurial, conçues pour le contexte local.",
+      "svc.more":"En savoir plus",
+      "svc.consultoria.t":"Conseil","svc.consultoria.d":"Conseil stratégique transversal pour des décisions d'entreprise plus sûres.",
+      "svc.gestao.t":"Gestion & Stratégie","svc.gestao.d":"Structuration, planification et optimisation d'opérations orientées résultats.",
+      "svc.marketing.t":"Marketing & Communication","svc.marketing.d":"Positionnement de marque, communication et conquête du marché.",
+      "svc.financas.t":"Finance, Comptabilité, Audit & Fiscalité","svc.financas.d":"Gestion financière, conformité et audit avec rigueur technique.",
+      "svc.microfin.t":"Microfinance","svc.microfin.d":"Solutions d'inclusion financière et appui aux institutions de microcrédit.",
+      "svc.estudos.t":"Études socioéconomiques","svc.estudos.d":"Diagnostics et analyses d'impact fondés sur les données du terrain.",
+      "svc.projetos.t":"Gestion de projets","svc.projetos.d":"Planification, exécution et contrôle de projets de bout en bout.",
+      "svc.monitoria.t":"Suivi & Évaluation","svc.monitoria.d":"Mesure de la performance et évaluation des résultats des programmes.",
+      "svc.invest.t":"Financement & Investissement","svc.invest.d":"Préparation de dossiers et mise en relation avec les sources de financement.",
+      "svc.traducao.t":"Traduction & Interprétation","svc.traducao.d":"Services linguistiques professionnels pour entreprises et institutions.",
+      "svc.rh.t":"Ressources humaines","svc.rh.d":"Recrutement, gestion des talents et développement des équipes.",
+      "svc.formacoes.t":"Formations","svc.formacoes.d":"Renforcement des capacités adapté aux besoins de chaque organisation.",
+      "svc.equipas.t":"Construction d'équipes","svc.equipas.d":"Programmes de cohésion et de performance collective.",
+      "svc.boost.t":"BOOST_ME — Accélérateur d'entreprises","svc.boost.d":"Notre programme d'accélération pour entrepreneurs et entreprises en croissance.",
+      "sec.rec.eyebrow":"Carrières & Formation","sec.rec.title":"Opportunités de recrutement et formations","sec.rec.desc":"Consultez les processus de sélection ouverts et l'agenda de nos formations.",
+      "sec.rec.searchPh":"Rechercher un poste, un département...","sec.rec.loadVagas":"Chargement des offres...","sec.rec.subtitle":"Formations & Ateliers","sec.rec.loadFormacoes":"Chargement des formations...",
+      "cand.title":"Postuler à une offre",
+      "cand.vaga":'Offre souhaitée <span>*</span>',"cand.vagaPh":"Sélectionnez l'offre...",
+      "cand.nome":'Nom complet <span>*</span>',"cand.nomePh":"Nom complet",
+      "cand.email":'Email <span>*</span>',"cand.emailPh":"exemple@email.com",
+      "cand.tel":'Téléphone <span>*</span>',"cand.telPh":"+245...",
+      "cand.prof":"Profession","cand.profPh":"Ex : Responsable RH",
+      "cand.nivel":"Niveau académique","cand.nivelPh":"Sélectionner...","cand.nivelSec":"Secondaire","cand.nivelLic":"Licence","cand.nivelMes":"Master","cand.nivelDoc":"Doctorat",
+      "cand.exp":"Années d'expérience","cand.expPh":"Ex : 3",
+      "cand.comp":"Compétences","cand.compPh":"Ex : Excel avancé, Laravel",
+      "cand.loc":"Localisation","cand.locPh":"Ex : Bissau",
+      "cand.cv":'CV (PDF ou DOCX) <span>*</span>',"cand.cvHint":"Taille maximale : 2 Mo",
+      "cand.cancel":"Annuler","cand.submit":"Envoyer la candidature","cand.sending":"Envoi en cours...",
+      "cand.errVaga":"Sélectionnez une offre pour postuler.","cand.errSend":"Impossible d'enregistrer la candidature.","cand.errGeneric":"Une erreur est survenue lors de l'envoi de la candidature.",
+      "vg.empty":"Aucun processus de recrutement ouvert actuellement.","vg.geral":"Général","vg.bissau":"Bissau","vg.recrutamento":"Recrutement","vg.prazo":"Date limite :","vg.cand":"Postuler",
+      "frm.empty":"Aucune formation planifiée pour le moment.","frm.horario":"Horaire","frm.entidade":"Organisme de formation","frm.inicio":"Début","frm.fim":"Fin","frm.carga":"Volume horaire","frm.inscrever":"S'inscrire","frm.inscricao":"Inscription à la formation : ",
+      "vg.errVagas":"Impossible de charger les offres.","frm.errFormacoes":"Impossible de charger les formations.",
+      "sec.diff.eyebrow":"Pourquoi la Eureka","sec.diff.title":"Nous connaissons le terrain où votre entreprise grandit","sec.diff.desc":"Rigueur technique et proximité réelle avec le marché africain. Nous travaillons main dans la main avec chaque client, du diagnostic aux résultats.","sec.diff.cta":"Parler à un consultant",
+      "diff.1.t":"Connaissance du contexte local","diff.1.d":"Nous maîtrisons les spécificités du marché de la Guinée-Bissau et de la région.",
+      "diff.2.t":"Expérience du marché africain","diff.2.d":"Plus d'une décennie d'accompagnement d'organisations dans plusieurs secteurs.",
+      "diff.3.t":"Solutions personnalisées","diff.3.d":"Chaque projet conçu sur mesure selon la réalité du client.",
+      "diff.4.t":"Équipe pluridisciplinaire","diff.4.d":"Experts en finance, stratégie, projets et capital humain.",
+      "diff.5.t":"Accompagnement stratégique","diff.5.d":"Présence de proximité du diagnostic à la mise en œuvre.",
+      "diff.6.t":"Engagement envers les résultats","diff.6.d":"Nous mesurons le succès à l'impact réel sur les entreprises.",
+      "sec.res.eyebrow":"Ressources pour entrepreneurs","sec.res.title":"Des institutions qui soutiennent ceux qui construisent","sec.res.desc":"Organisations de référence en matière de financement et d'appui à l'entrepreneuriat dans la sous-région.",
+      "res.1.d":"Appui au développement et au financement des jeunes entrepreneurs.",
+      "res.2.d":"Agence de développement et de structuration des PME.",
+      "res.3.d":"Fonds de garantie pour l'investissement prioritaire.",
+      "res.4.d":"Fonds souverain d'investissements stratégiques.",
+      "res.visit":"Visiter le site",
+      "sec.about.eyebrow":"À propos de la Eureka","sec.about.title":"Un partenaire qui comprend le contexte entrepreneurial africain",
+      "sec.about.p1":"Née à Bissau, Eureka Consulting a grandi au rythme des entreprises qu'elle accompagne. Nous aidons les organisations à se structurer, à mieux décider et à s'étendre avec confiance à travers l'Afrique de l'Ouest.",
+      "sec.about.p2":"Notre équipe pluridisciplinaire réunit des experts en stratégie, finance, gestion de projets et développement d'affaires, avec un engagement commun : des résultats réels et durables.",
+      "sec.about.missao":"Mission","sec.about.missaoD":"Renforcer les entreprises et les entrepreneurs avec des solutions stratégiques qui génèrent une croissance durable et un impact positif sur l'économie de la région.",
+      "sec.about.visao":"Vision","sec.about.visaoD":"Devenir le consultant de référence en Afrique de l'Ouest, reconnu pour sa proximité, sa compétence et les résultats qui transforment les entreprises.",
+      "sec.about.areas":"Domaines d'intervention",
+      "sec.about.area1":"Stratégie et gestion d'entreprise","sec.about.area2":"Finance, comptabilité et fiscalité","sec.about.area3":"Microfinance et inclusion financière","sec.about.area4":"Gestion et évaluation de projets","sec.about.area5":"Capital humain et formation","sec.about.area6":"Études socioéconomiques",
+      "sec.about.presence":"Présence régionale : Guinée-Bissau · Afrique de l'Ouest",
+      "sec.val.eyebrow":"Ce qui nous guide","sec.val.title":"Des valeurs qui soutiennent chaque projet",
+      "val.1":"Professionnalisme","val.2":"Responsabilité","val.3":"Honnêteté","val.4":"Intégrité","val.5":"Gratitude","val.6":"Innovation","val.7":"Discipline",
+      "sec.hist.eyebrow":"Notre parcours","sec.hist.title":"Une histoire de croissance continue",
+      "hist.1.fase":"Création","hist.1.meta":"Les premiers pas","hist.1.d":"Eureka naît à Bissau avec la mission de rapprocher un conseil de qualité des entreprises locales.",
+      "hist.2.fase":"Croissance","hist.2.meta":"Consolidation","hist.2.d":"Élargissement de la gamme de services et de l'équipe pluridisciplinaire.",
+      "hist.3.fase":"Expansion africaine","hist.3.meta":"Au-delà des frontières","hist.3.d":"Projets et partenariats dans plusieurs pays d'Afrique de l'Ouest.",
+      "hist.4.fase":"Vision future","hist.4.meta":"Le prochain chapitre","hist.4.d":"Accélération d'entreprises, innovation et connexion aux réseaux internationaux d'investissement.",
+      "sec.boost.eyebrow":"Programme d'accélération",
+      "sec.boost.title":'<span class="boost-name">BOOST_ME</span><br>Accélérateur d\'entreprises',
+      "sec.boost.desc":"Un programme conçu pour accompagner entrepreneurs et entreprises dans le développement, la structuration et la croissance de leurs activités. De l'idée à l'échelle, nous suivons chaque étape avec du mentorat, des outils et l'accès aux réseaux de financement.",
+      "sec.boost.f1":"Diagnostic et structuration du business","sec.boost.f2":"Mentorat stratégique personnalisé","sec.boost.f3":"Préparation au financement et à l'investissement",
+      "sec.boost.cta1":"Découvrir le programme","sec.boost.cta2":"Postuler","sec.boost.cta3":"Demander des informations",
+      "sec.news.eyebrow":"Actualité","sec.news.title":"Nouvelles et perspectives du marché","sec.news.desc":"Analyses sur l'économie, les affaires et l'entrepreneuriat en Guinée-Bissau et dans la région.",
+      "news.1.cat":"Économie","news.1.data":"12 mai 2026","news.1.t":"Le secteur privé guinéen enregistre une croissance au premier trimestre","news.1.r":"Les données récentes indiquent une reprise soutenue dans les services et le commerce.",
+      "news.2.cat":"Entrepreneuriat","news.2.data":"28 avril 2026","news.2.t":"Comment préparer votre entreprise à attirer des financements","news.2.r":"Un guide pratique sur les documents et indicateurs que les investisseurs valorisent.",
+      "news.3.cat":"BOOST_ME","news.3.data":"05 avril 2026","news.3.t":"Le programme BOOST_ME ouvre une nouvelle vague de candidatures","news.3.r":"Les entrepreneurs peuvent soumettre leurs projets pour la prochaine édition de l'accélérateur.",
+      "news.read":"Lire plus",
+      "cta.title":"Transformez vos défis en opportunités de croissance.","cta.btn":"Demander un conseil",
+      "sec.contact.eyebrow":"Parlons-en","sec.contact.title":"Racontez-nous votre défi","sec.contact.desc":"Nous répondons sous 48 heures ouvrables. Vous préférez parler directement ? Utilisez les coordonnées ci-dessous.",
+      "ct.pin":"Adresse","ct.phone":"Téléphones","ct.mail":"Email","ct.clock":"Horaires","ct.clockV":"Lun – Ven · 08h00 à 17h30",
+      "f.nome":'Nom <span>*</span>',"f.empresa":"Entreprise","f.email":'Email <span>*</span>',"f.tel":"Téléphone","f.assunto":"Sujet","f.servico":"Service d'intérêt","f.servicoPh":"Sélectionner…","f.mensagem":'Message <span>*</span>',"f.submit":"Envoyer le message",
+      "f.errNome":"Indiquez votre nom.","f.errEmail":"Indiquez votre email.","f.errEmailInv":"Email invalide.","f.errMsg":"Écrivez votre message.","f.errTop":"Vérifiez les champs signalés.","f.ok":"Message envoyé avec succès. Nous vous contacterons sous peu.",
+      "footer.desc":"Cabinet de conseil de référence en Guinée-Bissau et en Afrique de l'Ouest. Stratégie, finance et croissance — à vos côtés.",
+      "footer.nav":"Navigation","footer.svc":"Services","footer.contact":"Contact","footer.rights":"Tous droits réservés.","footer.privacy":"Politique de confidentialité","footer.legal":"Mentions légales","footer.admin":"Admin",
+    },
+    en: {
+      "nav.top":"Home","nav.servicos":"Services","nav.recrutamento":"Jobs & Training","nav.recursos":"Resources","nav.sobre":"About","nav.noticias":"News","nav.contacto":"Contact","nav.cta":"Request a consultation",
+      "hero.eyebrow":"Business consulting · Bissau & West Africa",
+      "hero.title":'We structure businesses that <span class="ink-accent">grow</span> on African ground.',
+      "hero.lede":"We support companies, institutions and entrepreneurs with strategy, finance and project management — from diagnosis to measurable results.",
+      "hero.cta1":"Explore our services","hero.cta2":"Get in touch",
+      "hero.stat1":"years of experience","hero.stat2":"clients supported","hero.stat3":"specialised services",
+      "sec.servicos.eyebrow":"What we do","sec.servicos.title":"Specialised services, from diagnosis to delivery","sec.servicos.desc":"Multidisciplinary expertise for every stage of the business journey, designed for the local context.",
+      "svc.more":"Learn more",
+      "svc.consultoria.t":"Consulting","svc.consultoria.d":"Cross-cutting strategic advice for safer business decisions.",
+      "svc.gestao.t":"Management & Strategy","svc.gestao.d":"Structuring, planning and optimising operations focused on results.",
+      "svc.marketing.t":"Marketing & Communications","svc.marketing.d":"Brand positioning, communications and market capture.",
+      "svc.financas.t":"Finance, Accounting, Audit & Tax","svc.financas.d":"Financial management, compliance and auditing with technical rigour.",
+      "svc.microfin.t":"Microfinance","svc.microfin.d":"Financial inclusion solutions and support for microcredit institutions.",
+      "svc.estudos.t":"Socioeconomic Studies","svc.estudos.d":"Diagnostics and impact analyses based on field data.",
+      "svc.projetos.t":"Project Management","svc.projetos.d":"Planning, execution and control of projects from start to finish.",
+      "svc.monitoria.t":"Monitoring & Evaluation","svc.monitoria.d":"Performance measurement and programme results evaluation.",
+      "svc.invest.t":"Financing & Investment","svc.invest.d":"Preparation of dossiers and connections to funding sources.",
+      "svc.traducao.t":"Translation & Interpretation","svc.traducao.d":"Professional language services for businesses and institutions.",
+      "svc.rh.t":"Human Resources","svc.rh.d":"Recruitment, talent management and team development.",
+      "svc.formacoes.t":"Training","svc.formacoes.d":"Hands-on capacity building tailored to each organisation's needs.",
+      "svc.equipas.t":"Team Building","svc.equipas.d":"Cohesion and collective performance programmes.",
+      "svc.boost.t":"BOOST_ME — Business Accelerator","svc.boost.d":"Our acceleration programme for entrepreneurs and growing businesses.",
+      "sec.rec.eyebrow":"Careers & Capacity Building","sec.rec.title":"Recruitment Opportunities and Training","sec.rec.desc":"Browse open selection processes and our training schedule.",
+      "sec.rec.searchPh":"Search by job, department...","sec.rec.loadVagas":"Loading jobs...","sec.rec.subtitle":"Training & Workshops","sec.rec.loadFormacoes":"Loading training...",
+      "cand.title":"Apply for a job",
+      "cand.vaga":'Desired position <span>*</span>',"cand.vagaPh":"Select a job...",
+      "cand.nome":'Full name <span>*</span>',"cand.nomePh":"Full name",
+      "cand.email":'Email <span>*</span>',"cand.emailPh":"example@email.com",
+      "cand.tel":'Phone <span>*</span>',"cand.telPh":"+245...",
+      "cand.prof":"Occupation","cand.profPh":"e.g. HR Manager",
+      "cand.nivel":"Academic level","cand.nivelPh":"Select...","cand.nivelSec":"Secondary","cand.nivelLic":"Bachelor's","cand.nivelMes":"Master's","cand.nivelDoc":"Doctorate",
+      "cand.exp":"Years of Experience","cand.expPh":"e.g. 3",
+      "cand.comp":"Skills","cand.compPh":"e.g. Advanced Excel, Laravel",
+      "cand.loc":"Location","cand.locPh":"e.g. Bissau",
+      "cand.cv":'CV (PDF or DOCX) <span>*</span>',"cand.cvHint":"Maximum size: 2MB",
+      "cand.cancel":"Cancel","cand.submit":"Submit Application","cand.sending":"Sending...",
+      "cand.errVaga":"Select a job to apply.","cand.errSend":"Unable to register the application.","cand.errGeneric":"An error occurred while sending the application.",
+      "vg.empty":"No open recruitment processes at the moment.","vg.geral":"General","vg.bissau":"Bissau","vg.recrutamento":"Recruitment","vg.prazo":"Deadline:","vg.cand":"Apply",
+      "frm.empty":"No training scheduled at the moment.","frm.horario":"Schedule","frm.entidade":"Training Provider","frm.inicio":"Start","frm.fim":"End","frm.carga":"Workload","frm.inscrever":"Enrol","frm.inscricao":"Enrolment in training: ",
+      "vg.errVagas":"Unable to load the job listings.","frm.errFormacoes":"Unable to load the training.",
+      "sec.diff.eyebrow":"Why Eureka","sec.diff.title":"We know the ground where your business grows","sec.diff.desc":"Technical rigour with real proximity to the African market. We work side by side with every client, from diagnosis to results.","sec.diff.cta":"Talk to a consultant",
+      "diff.1.t":"Knowledge of the local context","diff.1.d":"We master the specifics of the Guinea-Bissau market and the region.",
+      "diff.2.t":"Experience in the African market","diff.2.d":"Over a decade supporting organisations across several sectors.",
+      "diff.3.t":"Tailored solutions","diff.3.d":"Every project designed to fit the client's reality.",
+      "diff.4.t":"Multidisciplinary team","diff.4.d":"Experts in finance, strategy, projects and human capital.",
+      "diff.5.t":"Strategic support","diff.5.d":"Close presence from diagnosis to implementation.",
+      "diff.6.t":"Commitment to results","diff.6.d":"We measure success by real impact on businesses.",
+      "sec.res.eyebrow":"Resources for entrepreneurs","sec.res.title":"Institutions that support those who build","sec.res.desc":"Leading organisations in financing and entrepreneurship support in the sub-region.",
+      "res.1.d":"Support for the development and financing of young entrepreneurs.",
+      "res.2.d":"Agency for the development and structuring of SMEs.",
+      "res.3.d":"Guarantee fund for priority investment.",
+      "res.4.d":"Sovereign fund for strategic investments.",
+      "res.visit":"Visit website",
+      "sec.about.eyebrow":"About Eureka","sec.about.title":"A partner that understands the African business context",
+      "sec.about.p1":"Born in Bissau, Eureka Consulting grew alongside the businesses it supports. We help organisations structure themselves, decide better and expand with confidence across West Africa.",
+      "sec.about.p2":"Our multidisciplinary team brings together experts in strategy, finance, project management and business development, united by a common commitment: real, lasting results.",
+      "sec.about.missao":"Mission","sec.about.missaoD":"To empower businesses and entrepreneurs with strategic solutions that generate sustainable growth and positive impact on the region's economy.",
+      "sec.about.visao":"Vision","sec.about.visaoD":"To be the leading consulting firm in West Africa, recognised for proximity, competence and results that transform businesses.",
+      "sec.about.areas":"Areas of expertise",
+      "sec.about.area1":"Strategy and business management","sec.about.area2":"Finance, accounting and tax","sec.about.area3":"Microfinance and financial inclusion","sec.about.area4":"Project management and evaluation","sec.about.area5":"Human capital and training","sec.about.area6":"Socioeconomic studies",
+      "sec.about.presence":"Regional presence: Guinea-Bissau · West Africa",
+      "sec.val.eyebrow":"What guides us","sec.val.title":"Values behind every project",
+      "val.1":"Professionalism","val.2":"Responsibility","val.3":"Honesty","val.4":"Integrity","val.5":"Gratitude","val.6":"Innovation","val.7":"Discipline",
+      "sec.hist.eyebrow":"Our journey","sec.hist.title":"A story of continuous growth",
+      "hist.1.fase":"Creation","hist.1.meta":"The first steps","hist.1.d":"Eureka is born in Bissau with the mission of bringing quality consulting closer to local businesses.",
+      "hist.2.fase":"Growth","hist.2.meta":"Consolidation","hist.2.d":"Expansion of the service portfolio and the multidisciplinary team.",
+      "hist.3.fase":"African Expansion","hist.3.meta":"Beyond borders","hist.3.d":"Projects and partnerships across several West African countries.",
+      "hist.4.fase":"Future Vision","hist.4.meta":"The next chapter","hist.4.d":"Business acceleration, innovation and links to international investment networks.",
+      "sec.boost.eyebrow":"Acceleration programme",
+      "sec.boost.title":'<span class="boost-name">BOOST_ME</span><br>Business Accelerator',
+      "sec.boost.desc":"A programme designed to support entrepreneurs and businesses in developing, structuring and growing their ventures. From idea to scale, we accompany every stage with mentoring, tools and access to funding networks.",
+      "sec.boost.f1":"Business diagnosis and structuring","sec.boost.f2":"Personalised strategic mentoring","sec.boost.f3":"Preparation for financing and investment",
+      "sec.boost.cta1":"Learn about the programme","sec.boost.cta2":"Apply","sec.boost.cta3":"Request information",
+      "sec.news.eyebrow":"Latest","sec.news.title":"News and market perspectives","sec.news.desc":"Analysis on the economy, business and entrepreneurship in Guinea-Bissau and the region.",
+      "news.1.cat":"Economy","news.1.data":"12 May 2026","news.1.t":"Guinean private sector posts growth in the first quarter","news.1.r":"Recent data point to sustained recovery in services and trade.",
+      "news.2.cat":"Entrepreneurship","news.2.data":"28 Apr 2026","news.2.t":"How to prepare your company to attract funding","news.2.r":"A practical guide to the documents and indicators investors value.",
+      "news.3.cat":"BOOST_ME","news.3.data":"05 Apr 2026","news.3.t":"BOOST_ME programme opens new applications","news.3.r":"Entrepreneurs can submit their projects for the next edition of the accelerator.",
+      "news.read":"Read more",
+      "cta.title":"Turn your challenges into growth opportunities.","cta.btn":"Request a consultation",
+      "sec.contact.eyebrow":"Let's talk","sec.contact.title":"Tell us about your challenge","sec.contact.desc":"We respond within 48 business hours. Prefer to talk directly? Use the contacts below.",
+      "ct.pin":"Address","ct.phone":"Phones","ct.mail":"Email","ct.clock":"Hours","ct.clockV":"Mon – Fri · 8:00 AM to 5:30 PM",
+      "f.nome":'Name <span>*</span>',"f.empresa":"Company","f.email":'Email <span>*</span>',"f.tel":"Phone","f.assunto":"Subject","f.servico":"Service of interest","f.servicoPh":"Select…","f.mensagem":'Message <span>*</span>',"f.submit":"Send message",
+      "f.errNome":"Please enter your name.","f.errEmail":"Please enter your email.","f.errEmailInv":"Invalid email.","f.errMsg":"Please write your message.","f.errTop":"Please check the highlighted fields.","f.ok":"Message sent successfully. We'll be in touch soon.",
+      "footer.desc":"Leading business consulting firm in Guinea-Bissau and West Africa. Strategy, finance and growth — by your side.",
+      "footer.nav":"Navigation","footer.svc":"Services","footer.contact":"Contact","footer.rights":"All rights reserved.","footer.privacy":"Privacy policy","footer.legal":"Legal notice","footer.admin":"Admin",
+    },
+  };
+
+  let currentLang = "pt";
+  const _ = key => (I18N[currentLang] && I18N[currentLang][key]) || I18N.pt[key] || key;
+
   /* ---------- Serviços ---------- */
   const servicos = [
-    { ic:"compass", t:"Consultoria", d:"Aconselhamento estratégico transversal para decisões empresariais mais seguras." },
-    { ic:"chart", t:"Gestão e Estratégia", d:"Estruturação, planeamento e otimização de operações orientadas a resultados." },
-    { ic:"megaphone", t:"Marketing e Comunicação", d:"Posicionamento de marca, comunicação e captação de mercado." },
-    { ic:"coins", t:"Finanças, Contabilidade, Auditoria e Fiscalidade", d:"Gestão financeira, conformidade e auditoria com rigor técnico." },
-    { ic:"handshake", t:"Microfinanças", d:"Soluções de inclusão financeira e apoio a instituições de microcrédito." },
-    { ic:"research", t:"Estudos Socioeconómicos", d:"Diagnósticos e análises de impacto baseados em dados do terreno." },
-    { ic:"folder", t:"Gestão de Projetos", d:"Planeamento, execução e controlo de projetos do início ao fim." },
-    { ic:"target", t:"Monitorização e Avaliação", d:"Medição de desempenho e avaliação de resultados de programas." },
-    { ic:"invest", t:"Financiamento e Investimento", d:"Preparação de dossiês e ligação a fontes de financiamento." },
-    { ic:"globe", t:"Tradução e Interpretação", d:"Serviços linguísticos profissionais para negócios e instituições." },
-    { ic:"people", t:"Recursos Humanos", d:"Recrutamento, gestão de talento e desenvolvimento de equipas." },
-    { ic:"cap", t:"Formações", d:"Capacitação prática adaptada às necessidades de cada organização." },
-    { ic:"team", t:"Construção de Equipas", d:"Programas de coesão e desempenho coletivo." },
-    { ic:"rocket", t:"BOOST_ME — Acelerador de Empresas", d:"O nosso programa de aceleração para empreendedores e empresas em crescimento.", feat:true },
+    { ic:"compass", t:"svc.consultoria.t", d:"svc.consultoria.d" },
+    { ic:"chart", t:"svc.gestao.t", d:"svc.gestao.d" },
+    { ic:"megaphone", t:"svc.marketing.t", d:"svc.marketing.d" },
+    { ic:"coins", t:"svc.financas.t", d:"svc.financas.d" },
+    { ic:"handshake", t:"svc.microfin.t", d:"svc.microfin.d" },
+    { ic:"research", t:"svc.estudos.t", d:"svc.estudos.d" },
+    { ic:"folder", t:"svc.projetos.t", d:"svc.projetos.d" },
+    { ic:"target", t:"svc.monitoria.t", d:"svc.monitoria.d" },
+    { ic:"invest", t:"svc.invest.t", d:"svc.invest.d" },
+    { ic:"globe", t:"svc.traducao.t", d:"svc.traducao.d" },
+    { ic:"people", t:"svc.rh.t", d:"svc.rh.d" },
+    { ic:"cap", t:"svc.formacoes.t", d:"svc.formacoes.d" },
+    { ic:"team", t:"svc.equipas.t", d:"svc.equipas.d" },
+    { ic:"rocket", t:"svc.boost.t", d:"svc.boost.d", feat:true },
   ];
 
   const diferenciais = [
-    { t:"Conhecimento do contexto local", d:"Dominamos as especificidades do mercado da Guiné-Bissau e da região." },
-    { t:"Experiência no mercado africano", d:"Mais de uma década a apoiar organizações em vários setores." },
-    { t:"Soluções personalizadas", d:"Cada projeto desenhado à medida da realidade do cliente." },
-    { t:"Equipa multidisciplinar", d:"Especialistas em finanças, estratégia, projetos e capital humano." },
-    { t:"Acompanhamento estratégico", d:"Presença próxima do diagnóstico à implementação." },
-    { t:"Compromisso com resultados", d:"Medimos o sucesso pelo impacto real nos negócios." },
+    { t:"diff.1.t", d:"diff.1.d" },
+    { t:"diff.2.t", d:"diff.2.d" },
+    { t:"diff.3.t", d:"diff.3.d" },
+    { t:"diff.4.t", d:"diff.4.d" },
+    { t:"diff.5.t", d:"diff.5.d" },
+    { t:"diff.6.t", d:"diff.6.d" },
   ];
 
   const recursos = [
-    { sigla:"DER/FJ", nome:"DER/FJ", d:"Apoio ao desenvolvimento e financiamento de jovens empreendedores." },
-    { sigla:"ADEPME", nome:"ADEPME", d:"Agência de desenvolvimento e enquadramento das PME." },
-    { sigla:"FONGIP", nome:"FONGIP", d:"Fundo de garantia para o investimento prioritário." },
-    { sigla:"FONSIS", nome:"FONSIS", d:"Fundo soberano de investimentos estratégicos." },
+    { sigla:"DER/FJ", nome:"DER/FJ", d:"res.1.d" },
+    { sigla:"ADEPME", nome:"ADEPME", d:"res.2.d" },
+    { sigla:"FONGIP", nome:"FONGIP", d:"res.3.d" },
+    { sigla:"FONSIS", nome:"FONSIS", d:"res.4.d" },
   ];
 
-  const valores = ["Profissionalismo","Responsabilidade","Honestidade","Integridade","Gratidão","Inovação","Disciplina"];
+  const valores = ["val.1","val.2","val.3","val.4","val.5","val.6","val.7"];
 
   const historia = [
-    { fase:"Criação", meta:"Os primeiros passos", d:"A Eureka nasce em Bissau com a missão de aproximar consultoria de qualidade das empresas locais." },
-    { fase:"Crescimento", meta:"Consolidação", d:"Alargamento da carteira de serviços e da equipa multidisciplinar." },
-    { fase:"Expansão Africana", meta:"Para além das fronteiras", d:"Projetos e parcerias em vários países da África Ocidental." },
-    { fase:"Visão Futura", meta:"O próximo capítulo", d:"Aceleração de empresas, inovação e ligação a redes internacionais de investimento." },
+    { fase:"hist.1.fase", meta:"hist.1.meta", d:"hist.1.d" },
+    { fase:"hist.2.fase", meta:"hist.2.meta", d:"hist.2.d" },
+    { fase:"hist.3.fase", meta:"hist.3.meta", d:"hist.3.d" },
+    { fase:"hist.4.fase", meta:"hist.4.meta", d:"hist.4.d" },
   ];
 
   const noticias = [
-    { img:"assets/noticia-1.webp", cat:"Economia", data:"12 Mai 2026", t:"Setor privado guineense regista crescimento no primeiro trimestre", r:"Dados recentes apontam para uma recuperação sustentada nos serviços e no comércio." },
-    { img:"assets/noticia-2.webp", cat:"Empreendedorismo", data:"28 Abr 2026", t:"Como preparar a sua empresa para captar financiamento", r:"Um guia prático sobre os documentos e indicadores que os investidores valorizam." },
-    { img:"assets/noticia-3.webp", cat:"BOOST_ME", data:"05 Abr 2026", t:"Programa BOOST_ME abre nova vaga de candidaturas", r:"Empreendedores podem submeter os seus projetos para a próxima edição do acelerador." },
+    { img:"assets/noticia-1.webp", cat:"news.1.cat", data:"news.1.data", t:"news.1.t", r:"news.1.r" },
+    { img:"assets/noticia-2.webp", cat:"news.2.cat", data:"news.2.data", t:"news.2.t", r:"news.2.r" },
+    { img:"assets/noticia-3.webp", cat:"news.3.cat", data:"news.3.data", t:"news.3.t", r:"news.3.r" },
   ];
 
   const contactos = [
-    { ic:"pin", t:"Endereço", v:"Bissau, Av. Dr. Koumba Yalá — Antula" },
-    { ic:"phone", t:"Telefones", v:"+245 966 164 555 · +245 956 965 050" },
-    { ic:"mail", t:"Email", v:"eureka@eurekaconsulting.com" },
-    { ic:"clock", t:"Horário", v:"Seg – Sex · 08h00 às 17h30" },
+    { ic:"pin", t:"ct.pin", v:"Bissau, Av. Dr. Koumba Yalá — Antula" },
+    { ic:"phone", t:"ct.phone", v:"+245 966 164 555 · +245 956 965 050" },
+    { ic:"mail", t:"ct.mail", v:"eureka@eurekaconsulting.com" },
+    { ic:"clock", t:"ct.clock", v:"ct.clockV" },
   ];
 
   const el = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; };
 
-  /* Serviços */
   const sg = document.getElementById("servicesGrid");
-  servicos.forEach(s => sg.appendChild(el(`
-    <article class="service-card reveal${s.feat ? " feat" : ""}">
-      <div class="svc-icon">${ICON[s.ic]}</div>
-      <h3>${s.t}</h3>
-      <p>${s.d}</p>
-      <a href="#contacto" class="svc-more">Saber mais ${ICON.arrow}</a>
-    </article>`)));
-
-  /* Diferenciais */
   const dl = document.getElementById("diffList");
-  diferenciais.forEach((d,i) => dl.appendChild(el(`
-    <li class="diff-item reveal">
-      <span class="di-num">0${i+1}</span>
-      <h3>${d.t}</h3>
-      <p>${d.d}</p>
-    </li>`)));
-
-  /* Recursos */
   const rg = document.getElementById("resourcesGrid");
-  recursos.forEach(r => rg.appendChild(el(`
-    <article class="resource-card reveal">
-      <div class="res-logo"><span>${r.sigla}</span></div>
-      <h3>${r.nome}</h3>
-      <p>${r.d}</p>
-      <a href="#" class="res-link" target="_blank" rel="noopener">Visitar site ${ICON.ext}</a>
-    </article>`)));
-
-  /* Valores */
   const vl = document.getElementById("valuesList");
-  valores.forEach(v => vl.appendChild(el(`<li class="reveal">${v}</li>`)));
-
-  /* História */
   const tl = document.getElementById("timeline");
-  historia.forEach(h => tl.appendChild(el(`
-    <li class="tl-item reveal">
-      <span class="tl-dot"></span>
-      <p class="tl-meta">${h.meta}</p>
-      <h3 class="tl-phase">${h.fase}</h3>
-      <p>${h.d}</p>
-    </li>`)));
-
-  /* Notícias */
   const ng = document.getElementById("newsGrid");
-  noticias.forEach(n => ng.appendChild(el(`
-    <article class="news-card reveal">
-      <div class="news-thumb">
-        <span class="news-cat">${n.cat}</span>
-        <img src="${n.img}" alt="${n.t}" loading="lazy"
-             onerror="this.closest('.news-thumb').classList.add('no-img')">
-        <span class="nt-fallback"><span class="discs"><i></i><i></i><i></i></span><small>${n.img}</small></span>
-      </div>
-      <div class="news-body">
-        <span class="news-date">${n.data}</span>
-        <h3>${n.t}</h3>
-        <p>${n.r}</p>
-        <a href="#" class="news-read">Ler mais ${ICON.arrow}</a>
-      </div>
-    </article>`)));
-
-  /* Contactos */
   const cp = document.getElementById("contactPoints");
-  contactos.forEach(c => cp.appendChild(el(`
-    <li><span class="cp-ic">${ICON[c.ic]}</span><div><strong>${c.t}</strong><span class="cp-txt">${c.v}</span></div></li>`)));
-
-  /* Select de serviços */
   const sel = document.getElementById("f-servico");
-  servicos.forEach(s => {
-    const o = document.createElement("option");
-    o.value = s.t; o.textContent = s.t.replace(" — Acelerador de Empresas","");
-    sel.appendChild(o);
-  });
+
+  const renderServicos = () => {
+    sg.innerHTML = "";
+    servicos.forEach(s => sg.appendChild(el(`
+      <article class="service-card reveal${s.feat ? " feat" : ""}">
+        <div class="svc-icon">${ICON[s.ic]}</div>
+        <h3>${_(s.t)}</h3>
+        <p>${_(s.d)}</p>
+        <a href="#contacto" class="svc-more">${_("svc.more")} ${ICON.arrow}</a>
+      </article>`)));
+  };
+  const renderDiferenciais = () => {
+    dl.innerHTML = "";
+    diferenciais.forEach((d,i) => dl.appendChild(el(`
+      <li class="diff-item reveal">
+        <span class="di-num">0${i+1}</span>
+        <h3>${_(d.t)}</h3>
+        <p>${_(d.d)}</p>
+      </li>`)));
+  };
+  const renderRecursos = () => {
+    rg.innerHTML = "";
+    recursos.forEach(r => rg.appendChild(el(`
+      <article class="resource-card reveal">
+        <div class="res-logo"><span>${r.sigla}</span></div>
+        <h3>${r.nome}</h3>
+        <p>${_(r.d)}</p>
+        <a href="#" class="res-link" target="_blank" rel="noopener">${_("res.visit")} ${ICON.ext}</a>
+      </article>`)));
+  };
+  const renderValores = () => {
+    vl.innerHTML = "";
+    valores.forEach(v => vl.appendChild(el(`<li class="reveal">${_(v)}</li>`)));
+  };
+  const renderHistoria = () => {
+    tl.innerHTML = "";
+    historia.forEach(h => tl.appendChild(el(`
+      <li class="tl-item reveal">
+        <span class="tl-dot"></span>
+        <p class="tl-meta">${_(h.meta)}</p>
+        <h3 class="tl-phase">${_(h.fase)}</h3>
+        <p>${_(h.d)}</p>
+      </li>`)));
+  };
+  const renderNoticias = () => {
+    ng.innerHTML = "";
+    noticias.forEach(n => ng.appendChild(el(`
+      <article class="news-card reveal">
+        <div class="news-thumb">
+          <span class="news-cat">${_(n.cat)}</span>
+          <img src="${n.img}" alt="${_(n.t)}" loading="lazy"
+               onerror="this.closest('.news-thumb').classList.add('no-img')">
+          <span class="nt-fallback"><span class="discs"><i></i><i></i><i></i></span><small>${n.img}</small></span>
+        </div>
+        <div class="news-body">
+          <span class="news-date">${_(n.data)}</span>
+          <h3>${_(n.t)}</h3>
+          <p>${_(n.r)}</p>
+          <a href="#" class="news-read">${_("news.read")} ${ICON.arrow}</a>
+        </div>
+      </article>`)));
+  };
+  const renderContactos = () => {
+    cp.innerHTML = "";
+    contactos.forEach(c => cp.appendChild(el(`
+      <li><span class="cp-ic">${ICON[c.ic]}</span><div><strong>${_(c.t)}</strong><span class="cp-txt">${_(c.v)}</span></div></li>`)));
+  };
+  const fillServicoSelect = () => {
+    sel.innerHTML = `<option value="">${_("f.servicoPh")}</option>`;
+    servicos.forEach(s => {
+      const o = document.createElement("option");
+      o.value = I18N.pt[s.t] || s.t;
+      o.textContent = _(s.t).replace(/ — .*$/, "");
+      sel.appendChild(o);
+    });
+  };
 
   /* Cabeçalho scroll */
   const header = document.querySelector(".site-header");
   const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 16);
   window.addEventListener("scroll", onScroll, { passive:true }); onScroll();
 
-  /* Menu móvel */
+  /* Menu móvel (gaveta lateral por cima da página) */
   const toggle = document.getElementById("menuToggle");
   const nav = document.getElementById("mainNav");
-  const closeMenu = () => { nav.classList.remove("open"); toggle.classList.remove("open"); toggle.setAttribute("aria-expanded","false"); };
+  const scrim = document.createElement("div");
+  scrim.className = "nav-scrim";
+  header.appendChild(scrim);
+  const closeMenu = () => { nav.classList.remove("open"); toggle.classList.remove("open"); toggle.setAttribute("aria-expanded","false"); scrim.classList.remove("show"); };
   toggle.addEventListener("click", () => {
     const open = nav.classList.toggle("open");
     toggle.classList.toggle("open", open);
     toggle.setAttribute("aria-expanded", String(open));
+    scrim.classList.toggle("show", open);
   });
   nav.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+  scrim.addEventListener("click", closeMenu);
 
-  /* Idioma (estado visual) */
+  /* Tema claro/escuro (sol/lua) */
+  const themeBtns = document.querySelectorAll("[data-theme-toggle]");
+  const applyTheme = t => {
+    document.documentElement.dataset.theme = t;
+    themeBtns.forEach(b => b.setAttribute("aria-label", t === "dark" ? "Modo claro" : "Modo escuro"));
+    try { localStorage.setItem("eureka-theme", t); } catch (e) {}
+  };
+  const initTheme = () => {
+    let saved = null;
+    try { saved = localStorage.getItem("eureka-theme"); } catch (e) {}
+    if (saved !== "light" && saved !== "dark") {
+      saved = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+    }
+    applyTheme(saved);
+  };
+  themeBtns.forEach(b => b.addEventListener("click", () => {
+    applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+  }));
+  initTheme();
+
+  /* Idioma */
+  const applyLang = () => {
+    document.documentElement.setAttribute("lang", currentLang);
+    document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("is-active", b.dataset.lang === currentLang));
+    document.querySelectorAll("[data-i18n]").forEach(n => { n.textContent = _(n.dataset.i18n); });
+    document.querySelectorAll("[data-i18n-html]").forEach(n => { n.innerHTML = _(n.dataset.i18nHtml); });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(n => { n.placeholder = _(n.dataset.i18nPlaceholder); });
+    renderServicos(); renderDiferenciais(); renderRecursos(); renderValores(); renderHistoria(); renderNoticias(); renderContactos(); fillServicoSelect();
+    if (vagasLoaded) { renderVagas(allVagas); renderFormacoes(allFormacoes); fillVagaSelect(); }
+    if (typeof refreshReveals === "function") refreshReveals();
+  };
   document.querySelectorAll(".lang-switch").forEach(group => {
     group.querySelectorAll(".lang-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        const lang = btn.dataset.lang;
-        document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("is-active", b.dataset.lang === lang));
-        document.documentElement.setAttribute("lang", lang);
+        currentLang = btn.dataset.lang;
+        try { localStorage.setItem("eureka-lang", currentLang); } catch (e) {}
+        applyLang();
       });
     });
   });
+  try {
+    const saved = localStorage.getItem("eureka-lang");
+    if (saved && I18N[saved]) currentLang = saved;
+  } catch (e) {}
 
   /* Link ativo */
   const navLinks = [...nav.querySelectorAll('a[href^="#"]')];
@@ -1057,7 +1459,8 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   const rev = new IntersectionObserver((es,obs) => es.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add("in"); obs.unobserve(e.target); }
   }), { threshold:0.12 });
-  document.querySelectorAll(".reveal").forEach(n => rev.observe(n));
+  const refreshReveals = () => document.querySelectorAll(".reveal:not(.in)").forEach(n => rev.observe(n));
+  refreshReveals();
 
   /* Formulário */
   const form = document.getElementById("contactForm");
@@ -1069,12 +1472,12 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   };
   const validate = () => {
     let ok = true;
-    if (!form.nome.value.trim()) { setError(form.nome,"Indique o seu nome."); ok=false; } else setError(form.nome,"");
+    if (!form.nome.value.trim()) { setError(form.nome,_("f.errNome")); ok=false; } else setError(form.nome,"");
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!form.email.value.trim()) { setError(form.email,"Indique o seu email."); ok=false; }
-    else if (!re.test(form.email.value.trim())) { setError(form.email,"Email inválido."); ok=false; }
+    if (!form.email.value.trim()) { setError(form.email,_("f.errEmail")); ok=false; }
+    else if (!re.test(form.email.value.trim())) { setError(form.email,_("f.errEmailInv")); ok=false; }
     else setError(form.email,"");
-    if (!form.mensagem.value.trim()) { setError(form.mensagem,"Escreva a sua mensagem."); ok=false; } else setError(form.mensagem,"");
+    if (!form.mensagem.value.trim()) { setError(form.mensagem,_("f.errMsg")); ok=false; } else setError(form.mensagem,"");
     return ok;
   };
   ["nome","email","mensagem"].forEach(n => form[n].addEventListener("input", () => {
@@ -1083,24 +1486,179 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   form.addEventListener("submit", e => {
     e.preventDefault();
     feedback.textContent = ""; feedback.className = "form-feedback";
-    if (!validate()) { feedback.textContent = "Verifique os campos assinalados."; feedback.classList.add("bad"); return; }
+    if (!validate()) { feedback.textContent = _("f.errTop"); feedback.classList.add("bad"); return; }
     submitBtn.classList.add("loading"); submitBtn.disabled = true;
     // SIMULAÇÃO — substituir por fetch() para o backend
     setTimeout(() => {
       submitBtn.classList.remove("loading"); submitBtn.disabled = false; form.reset();
-      feedback.textContent = "Mensagem enviada com sucesso. Entraremos em contacto em breve.";
+      feedback.textContent = _("f.ok");
       feedback.classList.add("ok");
     }, 1300);
   });
 
+  /* ---------- Vagas & Formações (fetch ao backend) ---------- */
+  const listaVagas = document.getElementById("listaVagas");
+  const listaFormacoes = document.getElementById("listaFormacoes");
+  const searchVagas = document.getElementById("searchVagas");
+  const candPanel = document.getElementById("candidaturaPanel");
+  const candVagaSelect = document.getElementById("candidatarVaga");
+  let allVagas = [];
+  let allFormacoes = [];
+  let vagasLoaded = false;
+  let tokenValue = "";
+  const fmtData = d => {
+    const p = String(d || "").split("-");
+    return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : (d || "");
+  };
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  const renderVagas = items => {
+    if (!items.length) {
+      listaVagas.innerHTML = `<div class="empty-state"><i class="fa-solid fa-inbox"></i>${_("vg.empty")}</div>`;
+      return;
+    }
+    listaVagas.innerHTML = items.map(v => `
+      <article class="vaga-card">
+        <div class="vaga-card-body">
+          <h3>${esc(v.titulo_vaga)}</h3>
+          <div class="vaga-tags">
+            <span class="vaga-tag">${esc(v.departamento || _("vg.geral"))}</span>
+            <span class="vaga-tag">${esc(v.localizacao || _("vg.bissau"))}</span>
+            <span class="vaga-tag">${esc(v.tipo_contrato || _("vg.recrutamento"))}</span>
+          </div>
+          <p class="vaga-desc">${esc(String(v.descricao_vaga || "").slice(0, 140))}</p>
+          <div class="vaga-footer">
+            <span class="vaga-prazo"><i class="fa-regular fa-calendar"></i>${_("vg.prazo")} ${fmtData(v.data_limite)}</span>
+            <button type="button" class="btn-candidatar" data-vaga-id="${v.id}" data-vaga-titulo="${esc(v.titulo_vaga)}">
+              ${_("vg.cand")} <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </article>`).join("");
+  };
+  const fmtHora = h => { const p = String(h || "").split(":"); return p.length >= 2 ? `${p[0]}:${p[1]}` : ""; };
+  const renderFormacoes = items => {
+    if (!items.length) {
+      listaFormacoes.innerHTML = `<div class="empty-state"><i class="fa-solid fa-graduation-cap"></i>${_("frm.empty")}</div>`;
+      return;
+    }
+    listaFormacoes.innerHTML = items.map(f => {
+      const horario = (f.hora_inicio && f.hora_fim)
+        ? `<li><i class="fa-solid fa-hourglass-half"></i><span><small>${_("frm.horario")}</small>${fmtHora(f.hora_inicio)} a ${fmtHora(f.hora_fim)}</span></li>`
+        : "";
+      return `
+      <article class="formacao-card">
+        <div class="formacao-top">
+          <span class="formacao-icone"><i class="fa-solid fa-graduation-cap"></i></span>
+          <span class="badge-status ${String(f.status).toLowerCase().includes("curso") ? "badge-em-curso" : "badge-planejada"}">${esc(f.status)}</span>
+        </div>
+        <h3>${esc(f.tema)}</h3>
+        <ul class="formacao-info">
+          <li><i class="fa-solid fa-building-columns"></i><span><small>${_("frm.entidade")}</small>${esc(f.entidade)}</span></li>
+          <li><i class="fa-solid fa-calendar-days"></i><span><small>${_("frm.inicio")}</small>${fmtData(f.data_inicio)}</span></li>
+          <li><i class="fa-solid fa-calendar-check"></i><span><small>${_("frm.fim")}</small>${fmtData(f.data_fim)}</span></li>
+          ${horario}
+          <li><i class="fa-solid fa-clock"></i><span><small>${_("frm.carga")}</small>${f.carga_horaria}h</span></li>
+        </ul>
+        <button type="button" class="btn-inscrever" data-tema="${esc(f.tema)}">${_("frm.inscrever")} <i class="fa-solid fa-arrow-right"></i></button>
+      </article>`;
+    }).join("");
+  };
+  const fillVagaSelect = () => {
+    if (!candVagaSelect) return;
+    candVagaSelect.innerHTML = `<option value="" disabled selected>${_("cand.vagaPh")}</option>` + allVagas.map(v =>
+      `<option value="${v.id}">${esc(v.titulo_vaga)}</option>`).join("");
+  };
+  if (listaFormacoes) listaFormacoes.addEventListener("click", e => {
+    const b = e.target.closest(".btn-inscrever");
+    if (!b) return;
+    const assunto = document.getElementById("f-assunto");
+    if (assunto) assunto.value = _("frm.inscricao") + b.dataset.tema;
+    const contacto = document.getElementById("contacto");
+    if (contacto) contacto.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  const openPanel = vagaId => {
+    if (!candPanel || !candVagaSelect) return;
+    if (vagaId) candVagaSelect.value = String(vagaId);
+    candPanel.style.display = "block";
+    candPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const closePanel = () => { if (candPanel) candPanel.style.display = "none"; };
+
+  if (listaVagas) listaVagas.addEventListener("click", e => {
+    const b = e.target.closest(".btn-candidatar");
+    if (b) openPanel(b.dataset.vagaId);
+  });
+
+  if (searchVagas) searchVagas.addEventListener("input", () => {
+    const q = searchVagas.value.trim().toLowerCase();
+    const filt = allVagas.filter(v => (v.titulo_vaga || "").toLowerCase().includes(q) || (v.departamento || "").toLowerCase().includes(q));
+    renderVagas(filt);
+  });
+
+  const btnFechar = document.getElementById("btnFecharCandidatura");
+  const btnCancelar = document.getElementById("btnCancelarCandidatura");
+  if (btnFechar) btnFechar.addEventListener("click", closePanel);
+  if (btnCancelar) btnCancelar.addEventListener("click", closePanel);
+
+  fetch("/vagas-formacoes", { headers: { "Accept": "application/json" } })
+    .then(r => r.json())
+    .then(d => {
+      allVagas = d.recrutamentos || [];
+      allFormacoes = d.formacoes || [];
+      vagasLoaded = true;
+      renderVagas(allVagas);
+      renderFormacoes(allFormacoes);
+      const t = document.getElementById("candToken");
+      tokenValue = d._token || "";
+      if (t) t.value = tokenValue;
+      fillVagaSelect();
+    })
+    .catch(() => {
+      if (listaVagas) listaVagas.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${_("vg.errVagas")}</div>`;
+      if (listaFormacoes) listaFormacoes.innerHTML = `<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i>${_("frm.errFormacoes")}</div>`;
+    });
+
+  const formCand = document.getElementById("candidaturaForm");
+  const candFeedback = document.getElementById("candFeedback");
+  if (formCand) {
+    formCand.addEventListener("submit", e => {
+      e.preventDefault();
+      candFeedback.textContent = ""; candFeedback.className = "form-feedback";
+      if (!candVagaSelect.value) {
+        candFeedback.textContent = _("cand.errVaga");
+        candFeedback.classList.add("bad");
+        return;
+      }
+      const btn = formCand.querySelector("button[type='submit']");
+      const txt = btn.innerHTML;
+      btn.classList.add("loading"); btn.disabled = true;
+      btn.innerHTML = `<span class="btn-spinner"></span> ${_("cand.sending")}`;
+      fetch("/candidatar", { method: "POST", body: new FormData(formCand), headers: { "Accept": "application/json" } })
+        .then(r => r.json())
+        .then(res => {
+          if (res.success) {
+            candFeedback.textContent = res.message;
+            candFeedback.classList.add("ok");
+            formCand.reset();
+            document.getElementById("candToken").value = tokenValue;
+            closePanel();
+          } else {
+            candFeedback.textContent = res.message || _("cand.errSend");
+            candFeedback.classList.add("bad");
+          }
+        })
+        .catch(() => { candFeedback.textContent = _("cand.errGeneric"); candFeedback.classList.add("bad"); })
+        .finally(() => { btn.classList.remove("loading"); btn.disabled = false; btn.innerHTML = txt; });
+    });
+  }
+
   /* Ano */
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* Aplicar idioma (respeita o guardado em localStorage) */
+  applyLang();
 })();
 
-function selecionarVaga(id, titulo) {
-    document.getElementById('recrutamento_id').value = id;
-    document.getElementById('vaga_display').value = titulo;
-  }
 </script>
 </body>
 </html>

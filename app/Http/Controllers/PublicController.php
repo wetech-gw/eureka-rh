@@ -94,7 +94,7 @@ class PublicController extends Controller
             ]);
         }
 
-        return redirect()->route('public.index')
+        return redirect()->route('site.inicio')
             ->with('success', 'Candidatura registada com sucesso! Entraremos em contacto brevemente.');
     }
 }
