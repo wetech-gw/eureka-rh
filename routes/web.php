@@ -24,6 +24,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\HeroStatController;
+use App\Http\Controllers\BoostMeController;
 
 // 🟢 ADICIONA AS ROTAS DE RECUPERAÇÃO DE SENHA AQUI
 Route::get("/forgot-password", [AuthController::class, "showForgotForm"])
@@ -257,9 +259,11 @@ Route::get('/storage-file/{path}', function ($path) {
     return response()->file($disk->path($path));
 })->where('path', '.*')->name('storage.file');
 
-// Rotas CRUD para cada secção (Gestão CMS)
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+// Rotas CRUD para cada secção (Gestão CMS) — apenas a Responsável pode gerir o site público
+Route::middleware(['auth', 'responsavel'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('inicio', InicioController::class)->except(['show']); // Gestão da secção Início
+    Route::resource('estatisticas', HeroStatController::class)->except(['show']); // Estatísticas do Hero
+    Route::resource('boost', BoostMeController::class)->except(['show']); // Secção BOOST_ME
     Route::resource('servicos', ServiceController::class)->except(['show']);
     Route::resource('recursos', ResourceController::class)->except(['show']);
     Route::resource('sobre', AboutController::class)->except(['show']);

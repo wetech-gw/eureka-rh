@@ -28,7 +28,7 @@
         }
         .font-serif { font-family: 'DM Serif Display', serif; }
         .text-accent { color: var(--accent); }
-        .sidebar { width: 220px; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; background: var(--surface); }
+        .sidebar { width: 220px; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; background: var(--surface); overflow: hidden; }
         .main-content { margin-left: 220px; background-color: #fafafa; min-height: 100vh; }
 
         /* Links da Sidebar */

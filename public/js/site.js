@@ -325,17 +325,22 @@
     window.addEventListener("scroll", onScroll, { passive:true }); onScroll();
   }
 
-  /* Menu móvel */
+  /* Menu móvel (gaveta lateral por cima da página) */
   const toggle = document.getElementById("menuToggle");
   const nav = document.getElementById("mainNav");
   if (toggle && nav) {
-    const closeMenu = () => { nav.classList.remove("open"); toggle.classList.remove("open"); toggle.setAttribute("aria-expanded","false"); };
+    const scrim = document.createElement("div");
+    scrim.className = "nav-scrim";
+    (header || document.body).appendChild(scrim);
+    const closeMenu = () => { nav.classList.remove("open"); toggle.classList.remove("open"); toggle.setAttribute("aria-expanded","false"); scrim.classList.remove("show"); };
     toggle.addEventListener("click", () => {
       const open = nav.classList.toggle("open");
       toggle.classList.toggle("open", open);
       toggle.setAttribute("aria-expanded", String(open));
+      scrim.classList.toggle("show", open);
     });
     nav.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+    scrim.addEventListener("click", closeMenu);
   }
 
   /* Reveal */

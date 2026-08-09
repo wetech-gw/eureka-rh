@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\About;
+use App\Models\BoostMe;
 use App\Models\HeroSection;
+use App\Models\HeroStat;
 use App\Models\News;
 use App\Models\Resource;
 use App\Models\Service;
@@ -19,6 +21,33 @@ class SiteContentSeeder extends Seeder
                 'title'      => 'Estruturamos negócios que <span class="ink-accent">crescem</span> no terreno africano.',
                 'subtitle'   => 'Consultoria empresarial · Bissau & África Ocidental',
                 'image_path' => null,
+            ]
+        );
+
+        $stats = [
+            ['value' => '10', 'suffix' => '+', 'label' => 'anos de experiência', 'sort_order' => 1],
+            ['value' => '200', 'suffix' => '+', 'label' => 'clientes acompanhados', 'sort_order' => 2],
+            ['value' => '14', 'suffix' => '+', 'label' => 'serviços especializados', 'sort_order' => 3],
+        ];
+
+        foreach ($stats as $stat) {
+            HeroStat::updateOrCreate(
+                ['sort_order' => $stat['sort_order']],
+                $stat
+            );
+        }
+
+        BoostMe::updateOrCreate(
+            ['id' => 1],
+            [
+                'eyebrow'     => 'Programa de aceleração',
+                'title'       => '<span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas',
+                'description' => 'Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.',
+                'features'    => "Diagnóstico e estruturação do negócio\nMentoria estratégica personalizada\nPreparação para financiamento e investimento",
+                'cta1'        => 'Conhecer o programa',
+                'cta2'        => 'Candidatar-se',
+                'cta3'        => 'Solicitar informações',
+                'is_active'   => true,
             ]
         );
 

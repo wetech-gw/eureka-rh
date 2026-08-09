@@ -36,9 +36,13 @@
 
   <div class="container hero-stats-wrap">
     <ul class="hero-stats">
-      <li><strong>10<span>+</span></strong><span class="hs-label" data-i18n="hero.stat1">anos de experiência</span></li>
-      <li><strong>200<span>+</span></strong><span class="hs-label" data-i18n="hero.stat2">clientes acompanhados</span></li>
-      <li><strong>{{ $services->count() }}<span>+</span></strong><span class="hs-label" data-i18n="hero.stat3">serviços especializados</span></li>
+      @forelse($stats as $stat)
+        <li><strong>{{ $stat->value }}<span>{{ $stat->suffix }}</span></strong><span class="hs-label">{{ $stat->label }}</span></li>
+      @empty
+        <li><strong>10<span>+</span></strong><span class="hs-label" data-i18n="hero.stat1">anos de experiência</span></li>
+        <li><strong>200<span>+</span></strong><span class="hs-label" data-i18n="hero.stat2">clientes acompanhados</span></li>
+        <li><strong>{{ $services->count() }}<span>+</span></strong><span class="hs-label" data-i18n="hero.stat3">serviços especializados</span></li>
+      @endforelse
     </ul>
   </div>
 </section>
@@ -340,22 +344,47 @@
 
 <!-- ===== BOOST_ME ===== -->
 <section class="section boost" id="boost">
-  <div class="container boost-grid">
+  <div class="container boost-grid @if($boost && $boost->image_path) has-media @endif">
     <div class="boost-copy">
-      <span class="eyebrow eyebrow-light" data-i18n="sec.boost.eyebrow">Programa de aceleração</span>
-      <h2 data-i18n-html="sec.boost.title"><span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas</h2>
-      <p data-i18n="sec.boost.desc">Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.</p>
-      <ul class="boost-feats">
-        <li data-i18n="sec.boost.f1">Diagnóstico e estruturação do negócio</li>
-        <li data-i18n="sec.boost.f2">Mentoria estratégica personalizada</li>
-        <li data-i18n="sec.boost.f3">Preparação para financiamento e investimento</li>
-      </ul>
-      <div class="boost-cta">
-        <a href="#contacto" class="btn btn-accent" data-i18n="sec.boost.cta1">Conhecer o programa</a>
-        <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta2">Candidatar-se</a>
-        <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta3">Solicitar informações</a>
-      </div>
+      @if($boost)
+        <span class="eyebrow eyebrow-light">{{ $boost->eyebrow ?: 'Programa de aceleração' }}</span>
+        <h2>{!! $boost->title ?: '<span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas' !!}</h2>
+        <p>{{ $boost->description }}</p>
+        @if($boost->features)
+        <ul class="boost-feats">
+          @foreach(preg_split('/\R/', trim($boost->features)) as $feat)
+            @if(trim($feat) !== '')
+              <li>{{ trim($feat) }}</li>
+            @endif
+          @endforeach
+        </ul>
+        @endif
+        <div class="boost-cta">
+          @if($boost->cta1)<a href="#contacto" class="btn btn-accent">{{ $boost->cta1 }}</a>@endif
+          @if($boost->cta2)<a href="#contacto" class="btn btn-line-light">{{ $boost->cta2 }}</a>@endif
+          @if($boost->cta3)<a href="#contacto" class="btn btn-line-light">{{ $boost->cta3 }}</a>@endif
+        </div>
+      @else
+        <span class="eyebrow eyebrow-light" data-i18n="sec.boost.eyebrow">Programa de aceleração</span>
+        <h2 data-i18n-html="sec.boost.title"><span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas</h2>
+        <p data-i18n="sec.boost.desc">Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.</p>
+        <ul class="boost-feats">
+          <li data-i18n="sec.boost.f1">Diagnóstico e estruturação do negócio</li>
+          <li data-i18n="sec.boost.f2">Mentoria estratégica personalizada</li>
+          <li data-i18n="sec.boost.f3">Preparação para financiamento e investimento</li>
+        </ul>
+        <div class="boost-cta">
+          <a href="#contacto" class="btn btn-accent" data-i18n="sec.boost.cta1">Conhecer o programa</a>
+          <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta2">Candidatar-se</a>
+          <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta3">Solicitar informações</a>
+        </div>
+      @endif
     </div>
+    @if($boost && $boost->image_path)
+    <div class="boost-media reveal">
+      <img src="{{ asset('storage/' . $boost->image_path) }}" alt="BOOST_ME — Acelerador de Empresas" loading="lazy">
+    </div>
+    @endif
   </div>
 </section>
 
