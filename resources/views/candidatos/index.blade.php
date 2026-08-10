@@ -6,6 +6,7 @@
     <title>Eureka RH - Candidatos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root { --accent: #0d9488; }
         body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; min-height: 100vh; margin: 0; }
@@ -67,7 +68,7 @@
 
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
-            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
+            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
             <!--<span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>-->
         </div>
 
@@ -233,6 +234,17 @@
                 </span>
                 <input type="text" class="form-control modern-search-input" id="searchCandidato" placeholder="Pesquisar por nome, profissão, competências, localização...">
             </div>
+            <button type="button" onclick="exportarCandidatosPDF()" class="btn btn-light border btn-sm fw-semibold rounded-3 d-inline-flex align-items-center gap-2 shadow-sm text-dark px-3" style="height: 38px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="12" y2="18"></line>
+                        <line x1="15" y1="15" x2="12" y2="18"></line>
+                    </svg>
+                    Exportar PDF
+                </button>
+
             <button type="button" class="btn text-white fw-medium shadow-sm px-3" style="background-color: #0d9488; font-size: 14px; border: none; height: 38px;" data-bs-toggle="modal" data-bs-target="#createCandidatoModal">
                 <i class="fa-solid fa-user-plus me-1"></i> Adicionar Candidato
             </button>
@@ -317,10 +329,12 @@
                 <div class="col-md-2">
                     <select name="nivel_academico" class="form-select form-select-sm">
                         <option value="">Nível académico</option>
-                        <option value="Secundário" {{ request('nivel_academico') == 'Secundário' ? 'selected' : '' }}>Secundário</option>
-                        <option value="Licenciatura" {{ request('nivel_academico') == 'Licenciatura' ? 'selected' : '' }}>Licenciatura</option>
-                        <option value="Mestrado" {{ request('nivel_academico') == 'Mestrado' ? 'selected' : '' }}>Mestrado</option>
-                        <option value="Doutoramento" {{ request('nivel_academico') == 'Doutoramento' ? 'selected' : '' }}>Doutoramento</option>
+                        <option value="secundario" {{ request('nivel_academico') == 'secundario' ? 'selected' : '' }}>Ensino Secundário</option>
+                        <option value="bacharel" {{ request('nivel_academico') == 'bacharel' ? 'selected' : '' }}>Bacharelato / Bacharel</option>
+                        <option value="licenciatura" {{ request('nivel_academico') == 'licenciatura' ? 'selected' : '' }}>Licenciatura</option>
+                        <option value="mestrado" {{ request('nivel_academico') == 'mestrado' ? 'selected' : '' }}>Mestrado</option>
+                        <option value="doutoramento" {{ request('nivel_academico') == 'doutoramento' ? 'selected' : '' }}>Doutoramento</option>
+                        <option value="outro" {{ request('nivel_academico') == 'outro' ? 'selected' : '' }}>Outro</option>
                     </select>
                 </div>
                 <div class="col-md-2">
@@ -347,7 +361,8 @@
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
-                            <th>Candidato / Contacto</th>
+                            <th>Candidato</th>
+                            <th>Contacto</th>
                             <th>Vaga Pretendida</th>
                             <th>Data Submissão</th>
                             <th>Nível Académico</th>
@@ -359,13 +374,25 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $nivelLabels = [
+                                'secundario' => 'Ensino Secundário',
+                                'bacharel' => 'Bacharelato / Bacharel',
+                                'licenciatura' => 'Licenciatura',
+                                'mestrado' => 'Mestrado',
+                                'doutoramento' => 'Doutoramento',
+                                'outro' => 'Outro',
+                            ];
+                        @endphp
                         @forelse($candidaturas as $candidatura)
                             <tr>
                                 <td>
                                     <div class="fw-bold text-dark">{{ $candidatura->candidato_nome }}</div>
                                     <span class="text-muted small d-block"><i class="fa-solid fa-envelope me-1"></i>{{ $candidatura->candidato_email }}</span>
-                                    <span class="text-muted small d-block"><i class="fa-solid fa-phone me-1"></i>{{ $candidatura->candidato_telefone }}</span>
                                     <span class="text-muted small d-block"><i class="fa-solid fa-briefcase me-1"></i>{{ $candidatura->profissao ?? 'Profissão não informada' }}</span>
+                                </td>
+                                <td>
+                                    <span class="text-muted small d-block"><i class="fa-solid fa-phone me-1"></i>{{ $candidatura->candidato_telefone }}</span>
                                     <span class="text-muted small d-block"><i class="fa-solid fa-location-dot me-1"></i>{{ $candidatura->localizacao ?? 'Localização não informada' }}</span>
                                 </td>
                                 <td>
@@ -377,7 +404,7 @@
 
                                 <!-- Nível Académico -->
                                 <td>
-                                    <span class="fw-medium text-dark">{{ $candidatura->nivel_academico ?? 'Não informado' }}</span>
+                                    <span class="fw-medium text-dark">{{ $nivelLabels[$candidatura->nivel_academico] ?? $candidatura->nivel_academico ?? 'Não informado' }}</span>
                                 </td>
 
                                 <!-- Anos de Experiência -->
@@ -529,10 +556,12 @@
                             <label class="form-label small fw-bold text-secondary">Nível Académico</label>
                             <select name="nivel_academico" class="form-select border-secondary-subtle">
                                 <option value="">Selecionar...</option>
-                                <option value="Secundário">Secundário</option>
-                                <option value="Licenciatura">Licenciatura</option>
-                                <option value="Mestrado">Mestrado</option>
-                                <option value="Doutoramento">Doutoramento</option>
+                                <option value="secundario">Ensino Secundário</option>
+                                <option value="bacharel">Bacharelato / Bacharel</option>
+                                <option value="licenciatura">Licenciatura</option>
+                                <option value="mestrado">Mestrado</option>
+                                <option value="doutoramento">Doutoramento</option>
+                                <option value="outro">Outro</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -600,6 +629,252 @@
             });
         });
     });
+    function exportarCandidatosPDF() {
+        // 1. Extrair os dados da tabela de candidatos presente no Blade
+        const linhas = document.querySelectorAll(".table-scrollable-container table tbody tr");
+        let linhasHTML = "";
+        let totalCandidatos = 0;
+
+        linhas.forEach(linha => {
+            const colunas = linha.querySelectorAll("td");
+
+            // Ignorar a linha de "Nenhum registo" ou tabelas vazias
+            if (colunas.length >= 6 && !linha.innerText.includes("Nenhum registo")) {
+                totalCandidatos++;
+
+                const candidatoNome = colunas[0].querySelector('.fw-bold')?.innerText.trim() || colunas[0].innerText.trim();
+                const candidatoSub = colunas[0].querySelector('.text-muted')?.innerText.trim() || '';
+                const contacto = colunas[1]?.innerText.trim() || 'N/A';
+                const vaga = colunas[2]?.innerText.trim() || 'N/A';
+                const dataSubmissao = colunas[3]?.innerText.trim() || 'N/A';
+                const nivelAcademico = colunas[4]?.innerText.trim() || 'N/A';
+                const experiencia = colunas[5]?.innerText.trim() || 'N/A';
+                const competencias = colunas[6]?.innerText.trim() || 'N/A';
+                const estado = colunas[8]?.innerText.trim() || 'Pendente';
+
+                // Mapeamento de estilos dos badges de estado
+                const st = estado.toLowerCase();
+                let badgeClass = 'badge-pendente';
+                if (st.includes('aceito') || st.includes('aprovado')) badgeClass = 'badge-aceito';
+                else if (st.includes('espera')) badgeClass = 'badge-espera';
+                else if (st.includes('rejeitado') || st.includes('recusado')) badgeClass = 'badge-rejeitado';
+
+                linhasHTML += `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: #0f172a;">${candidatoNome}</div>
+                            <div style="font-size: 8pt; color: #64748b;">${candidatoSub}</div>
+                        </td>
+                        <td style="font-size: 7.5pt; color: #475569;">${contacto}</td>
+                        <td style="font-weight: 600;">${vaga}</td>
+                        <td style="text-align: center;">${dataSubmissao}</td>
+                        <td>${nivelAcademico}</td>
+                        <td style="text-align: center;">${experiencia}</td>
+                        <td style="font-size: 7.5pt; color: #475569;">${competencias}</td>
+                        <td style="text-align: center;">
+                            <span class="badge ${badgeClass}">${estado}</span>
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+
+        if (totalCandidatos === 0) {
+            alert("Nenhum registo de candidato encontrado para exportar.");
+            return;
+        }
+
+        // 2. Data atual para o relatório
+        const dataEmissao = new Date().toLocaleDateString('pt-PT');
+
+        // 3. Montar a estrutura HTML para renderização no PDF
+        const container = document.createElement('div');
+        container.innerHTML = `
+            <style>
+                .pdf-container {
+                    font-family: 'Segoe UI', Arial, sans-serif;
+                    padding: 15px;
+                    color: #1e293b;
+                    background-color: #ffffff;
+                }
+                .pdf-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: 2px solid #0d9488;
+                    padding-bottom: 12px;
+                    margin-bottom: 15px;
+                }
+                .logo-box {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                .logo-img {
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+                .company-title {
+                    font-size: 14px;
+                    font-weight: 800;
+                    color: #0f172a;
+                    text-transform: uppercase;
+                    margin: 0;
+                    line-height: 1.1;
+                }
+                .company-sub {
+                    font-size: 9px;
+                    color: #0d9488;
+                    font-weight: 700;
+                    letter-spacing: 0.8px;
+                    text-transform: uppercase;
+                    margin: 0;
+                }
+                .pdf-title-block {
+                    text-align: right;
+                }
+                .pdf-title-block h2 {
+                    margin: 0;
+                    color: #0d9488;
+                    font-size: 16px;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                }
+                .pdf-title-block p {
+                    margin: 2px 0 0 0;
+                    font-size: 9px;
+                    color: #64748b;
+                }
+                .kpi-cards {
+                    display: flex;
+                    gap: 10px;
+                    margin-bottom: 15px;
+                }
+                .kpi-card {
+                    flex: 1;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 6px;
+                    padding: 8px 10px;
+                }
+                .kpi-card-title {
+                    font-size: 8px;
+                    font-weight: 700;
+                    color: #64748b;
+                    text-transform: uppercase;
+                }
+                .kpi-card-value {
+                    font-size: 14px;
+                    font-weight: 800;
+                    margin-top: 2px;
+                    color: #0f172a;
+                }
+                .pdf-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 5px;
+                }
+                .pdf-table th {
+                    background-color: #0d9488;
+                    color: #ffffff;
+                    font-size: 8pt;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    padding: 6px 8px;
+                    text-align: left;
+                }
+                .pdf-table td {
+                    padding: 8px;
+                    font-size: 8pt;
+                    border-bottom: 1px solid #f1f5f9;
+                }
+                .pdf-table tr:nth-child(even) td {
+                    background-color: #f8fafc;
+                }
+                .badge {
+                    padding: 3px 8px;
+                    border-radius: 10px;
+                    font-size: 7.5pt;
+                    font-weight: 700;
+                    display: inline-block;
+                }
+                .badge-aceito { background-color: #d1fae5; color: #059669; }
+                .badge-pendente { background-color: #fef3c7; color: #d97706; }
+                .badge-espera { background-color: #f3e8ff; color: #6b21a8; }
+                .badge-rejeitado { background-color: #fee2e2; color: #dc2626; }
+                .footer-note {
+                    margin-top: 25px;
+                    padding-top: 10px;
+                    border-top: 1px dashed #cbd5e1;
+                    font-size: 7.5pt;
+                    color: #94a3b8;
+                    text-align: center;
+                }
+            </style>
+
+            <div class="pdf-container">
+                <!-- Cabeçalho -->
+                <div class="pdf-header">
+                    <div class="logo-box">
+                        <img src="{{ asset('eureka.jpeg') }}" class="logo-img" alt="Eureka Consulting">
+                        <div>
+                            <div class="company-title">Eureka Consulting</div>
+                            <div class="company-sub">Recursos Humanos</div>
+                        </div>
+                    </div>
+                    <div class="pdf-title-block">
+                        <h2>Banco de Candidatos</h2>
+                        <p>Triagem &amp; Candidaturas | Gerado em: ${dataEmissao}</p>
+                    </div>
+                </div>
+
+                <!-- Resumo KPI -->
+                <div class="kpi-cards">
+                    <div class="kpi-card">
+                        <div class="kpi-card-title">Total de Candidatos Listados</div>
+                        <div class="kpi-card-value" style="color: #0d9488;">${totalCandidatos} Registo(s)</div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Candidatos -->
+                <table class="pdf-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Candidato</th>
+                            <th style="width: 12%;">Contacto</th>
+                            <th style="width: 16%;">Vaga Pretendida</th>
+                            <th style="width: 11%; text-align: center;">Data Submissão</th>
+                            <th style="width: 15%;">Nível Académico</th>
+                            <th style="width: 8%; text-align: center;">Exp.</th>
+                            <th style="width: 9%;">Competências</th>
+                            <th style="width: 9%; text-align: center;">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${linhasHTML}
+                    </tbody>
+                </table>
+
+                <div class="footer-note">
+                    Este relatório de candidatos foi gerado automaticamente pelo Sistema Eureka RH.
+                </div>
+            </div>
+        `;
+
+        // 4. Configurações de exportação em orientação Landscape (Paisagem)
+        const opt = {
+            margin:       [8, 8, 8, 8],
+            filename:     `relatorio_candidatos_${new Date().toISOString().slice(0, 10)}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, logging: false, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        };
+
+        // 5. Executar a geração do PDF com html2pdf
+        html2pdf().set(opt).from(container).save();
+    }
 </script>
 </body>
 </html>

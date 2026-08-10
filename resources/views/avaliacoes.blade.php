@@ -80,7 +80,7 @@
     <!-- SIDEBAR FIXA -->
     <aside class="sidebar border-end p-3 d-flex flex-column">
         <div class="mb-4">
-            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
+            <img src="{{ asset('eureka.jpeg') }}" alt="EUREKA Consulting" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 1rem;">
             <!--<span class="text-uppercase text-muted fw-bold d-block mt-1" style="font-size: 10px; letter-spacing: 0.05em;">Recursos Humanos</span>-->
         </div>
 
