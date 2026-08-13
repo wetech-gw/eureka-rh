@@ -38,8 +38,8 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label fw-medium">Imagem</label>
-                <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png">
-                <small class="text-muted">Se não carregar imagem, é usada a imagem predefinida.</small>
+ <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png,image/webp,image/avif">
+ <small class="text-muted">JPG, PNG, WEBP ou AVIF (até 10 MB). Se não carregar imagem, é usada a imagem predefinida.</small>
             </div>
         </div>
 

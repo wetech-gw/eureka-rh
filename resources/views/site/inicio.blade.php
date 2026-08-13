@@ -66,7 +66,7 @@
           @endif
         </div>
         <h3>{{ $service->title }}</h3>
-        <p>{{ $service->description }}</p>
+        <p>{{ \Illuminate\Support\Str::limit(strip_tags($service->description), 120) }}</p>
         <a href="#contacto" class="svc-more"><span data-i18n="svc.more">Saber mais</span>
           <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
@@ -183,6 +183,11 @@
             <input type="file" name="cv_arquivo" accept=".pdf,.doc,.docx" required>
             <small style="color:var(--muted);font-size:.78rem;margin-top:4px;display:block" data-i18n="cand.cvHint">Tamanho máximo: 2MB</small>
           </div>
+          <div class="field">
+            <label data-i18n-html="cand.carta">Carta de Motivação (PDF ou DOCX)</label>
+            <input type="file" name="carta_motivacao_arquivo" accept=".pdf,.doc,.docx">
+            <small style="color:var(--muted);font-size:.78rem;margin-top:4px;display:block" data-i18n="cand.cartaHint">Opcional · Tamanho máximo: 2MB</small>
+          </div>
           <div class="candidatura-actions">
             <button type="button" class="btn btn-line" id="btnCancelarCandidatura" data-i18n="cand.cancel">Cancelar</button>
             <button type="submit" class="btn btn-accent">
@@ -228,22 +233,18 @@
       <article class="resource-card reveal">
         <div class="res-logo">
           @if($resource->logo_path)
-            <img src="{{ asset('storage/' . $resource->logo_path) }}" alt="{{ $resource->title }}" onerror="this.closest('.res-logo').innerHTML='<span>'+this.alt.slice(0,2).toUpperCase()+'</span>'">
+            <img src="{{ asset('storage/' . $resource->logo_path) }}" alt="Recurso" onerror="this.closest('.res-logo').innerHTML='<span>R</span>'">
           @else
-            <span>{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::limit($resource->title, 6, '')) }}</span>
+            <span>R</span>
           @endif
         </div>
-        <h3>{{ $resource->title }}</h3>
-        <p>{{ $resource->description }}</p>
         <a href="{{ $resource->link ?: '#' }}" class="res-link" target="_blank" rel="noopener"><span data-i18n="res.visit">Visitar site</span>
           <svg viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8M11 5H6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"/></svg>
         </a>
       </article>
       @empty
       <article class="resource-card reveal">
-        <div class="res-logo"><span>DER/FJ</span></div>
-        <h3>DER/FJ</h3>
-        <p data-i18n="res.1.d">Apoio ao desenvolvimento e financiamento de jovens empreendedores.</p>
+        <div class="res-logo"><span>R</span></div>
         <a href="#" class="res-link" target="_blank" rel="noopener"><span data-i18n="res.visit">Visitar site</span>
           <svg viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8M11 5H6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"/></svg>
         </a>
@@ -456,26 +457,26 @@
       <ul class="contact-points">
         <li>
           <span class="cp-ic"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 0 0-14 0c0 4.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
-          <div><strong data-i18n="ct.pin">Endereço</strong><span class="cp-txt">Bissau, Av. Dr. Koumba Yalá — Antula</span></div>
+          <div><strong data-i18n="ct.pin">Endereço</strong><span class="cp-txt">{{ $contact->address ?? 'Bissau, Av. Dr. Koumba Yalá — Antula' }}</span></div>
         </li>
         <li>
           <span class="cp-ic"><svg viewBox="0 0 24 24"><path d="M5 4h3l2 5-2 1a11 11 0 0 0 5 5l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg></span>
-          <div><strong data-i18n="ct.phone">Telefones</strong><span class="cp-txt">+245 966 164 555 · +245 956 965 050</span></div>
+          <div><strong data-i18n="ct.phone">Telefones</strong><span class="cp-txt">{{ $contact->phones ?? '+245 966 164 555 · +245 956 965 050' }}</span></div>
         </li>
         <li>
           <span class="cp-ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
-          <div><strong data-i18n="ct.mail">Email</strong><span class="cp-txt">eureka@eurekaconsulting.com</span></div>
+          <div><strong data-i18n="ct.mail">Email</strong><span class="cp-txt">{{ $contact->email ?? 'eureka@eurekaconsulting.com' }}</span></div>
         </li>
         <li>
           <span class="cp-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-          <div><strong data-i18n="ct.clock">Horário</strong><span class="cp-txt" data-i18n="ct.clockV">Seg – Sex · 08h00 às 17h30</span></div>
+          <div><strong data-i18n="ct.clock">Horário</strong><span class="cp-txt">{{ $contact->schedule ?? 'Seg – Sex · 08h00 às 17h30' }}</span></div>
         </li>
       </ul>
 
       <div class="contact-chips">
-        <a href="#" class="chip chip-wa">WhatsApp</a>
-        <a href="#" class="chip">LinkedIn</a>
-        <a href="#" class="chip">Facebook</a>
+        <a href="{{ $contact->whatsapp ?? '#' }}" class="chip chip-wa" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="{{ $contact->linkedin ?? '#' }}" class="chip" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="{{ $contact->facebook ?? '#' }}" class="chip" target="_blank" rel="noopener">Facebook</a>
       </div>
 
       <div class="map-slot" role="img" aria-label="Mapa — Antula, Bissau">
@@ -484,7 +485,8 @@
     </div>
 
     <div class="form-card">
-      <form class="contact-form" id="contactForm" novalidate>
+      <form class="contact-form" id="contactForm" action="mailto:sidiainquade@gmail.com" method="POST" enctype="text/plain" novalidate>
+
         <div class="field-row">
           <div class="field">
             <label for="f-nome" data-i18n-html="f.nome">Nome <span>*</span></label>
@@ -527,10 +529,11 @@
           <textarea id="f-mensagem" name="mensagem" rows="4" required></textarea>
           <small class="err" data-for="f-mensagem"></small>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
-          <span class="btn-label" data-i18n="f.submit">Enviar mensagem</span>
+        <input value="doule" type="submit">
+        <!--<button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
+          <span class="btn-label" data-i18n="f.submit">Envoyer ndem</span>
           <span class="btn-spinner" aria-hidden="true"></span>
-        </button>
+        </button>-->
         <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
       </form>
     </div>
@@ -702,7 +705,7 @@
     if (vagasLoaded) { renderVagas(allVagas); renderFormacoes(allFormacoes); fillVagaSelect(); }
   };
 
-  /* Formulário de contacto (simulação) */
+  /* Formulário de contacto (envio real) */
   const form = document.getElementById("contactForm");
   if (form) {
     const feedback = document.getElementById("formFeedback");
@@ -729,11 +732,24 @@
       feedback.textContent = ""; feedback.className = "form-feedback";
       if (!validate()) { feedback.textContent = _("f.errTop"); feedback.classList.add("bad"); return; }
       submitBtn.classList.add("loading"); submitBtn.disabled = true;
-      setTimeout(() => {
-        submitBtn.classList.remove("loading"); submitBtn.disabled = false; form.reset();
-        feedback.textContent = _("f.ok");
-        feedback.classList.add("ok");
-      }, 1300);
+      fetch("/contacto", {
+        method: "POST",
+        body: new FormData(form),
+        headers: { "Accept": "application/json" }
+      })
+        .then(r => r.json())
+        .then(res => {
+          if (res.success) {
+            form.reset();
+            feedback.textContent = res.message;
+            feedback.classList.add("ok");
+          } else {
+            feedback.textContent = res.message || _("f.errTop");
+            feedback.classList.add("bad");
+          }
+        })
+        .catch(() => { feedback.textContent = _("f.errTop"); feedback.classList.add("bad"); })
+        .finally(() => { submitBtn.classList.remove("loading"); submitBtn.disabled = false; });
     });
   }
 })();

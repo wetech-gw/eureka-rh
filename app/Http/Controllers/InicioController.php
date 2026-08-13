@@ -25,7 +25,7 @@ class InicioController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp,avif|max:10240',
         ]);
 
         if ($request->hasFile('image_path')) {
@@ -46,7 +46,7 @@ class InicioController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp,avif|max:10240',
         ]);
 
         if ($request->hasFile('image_path')) {

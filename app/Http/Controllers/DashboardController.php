@@ -16,6 +16,8 @@ class DashboardController extends Controller
         // ==========================================================
         $user = Auth::user(); // Pega no utilizador autenticado (Nhana ou Assistente)
 
+        $avisosFerias = app(FeriasController::class)->obterAvisosFerias();
+
         $hoje = Carbon::now()->toDateString();
 
         // 1. CARDS SUPERIORES (Cálculos Dinâmicos)
@@ -164,6 +166,7 @@ class DashboardController extends Controller
                 "diaSemanaInicio",
                 "diasComAusencia",
                 "presencasDetalhadasHoje",
+                "avisosFerias",
             ),
         );
     }

@@ -25,6 +25,8 @@ class FeriasController extends Controller
 
     public function index()
     {
+        $avisosFerias = $this->obterAvisosFerias();
+
         $pedidosAprovados = DB::table('ausencias')
             ->where('estado_pedido', 'Aprovado')
             ->count();
@@ -77,6 +79,7 @@ class FeriasController extends Controller
                 'pedidosRejeitados',
                 'funcionarios',
                 'registos',
+                'avisosFerias',
             ),
         );
     }
@@ -414,5 +417,93 @@ class FeriasController extends Controller
             'gozados' => max(0, $gozados),
             'disponiveis' => max(0, $total - $gozados),
         ];
+    }
+
+    /**
+     * Gera notificações de férias com contagem regressiva:
+     *  - entrada: ~1 mês (até 30 dias) antes da data anual de férias;
+     *  - fim: 5 dias antes do fim de férias aprovadas.
+     * Cada funcionário tem direito a 24 dias/ano (2 dias por mês de trabalho).
+     */
+    public function obterAvisosFerias(): array
+    {
+        $avisos = [];
+        $hoje = Carbon::today();
+
+        // ---- Aviso de entrada em férias (1 mês antes da data anual) ----
+        $funcionarios = DB::table('funcionarios')
+            ->where('estado', 'Activo')
+            ->orderBy('nome', 'asc')
+            ->get();
+
+        foreach ($funcionarios as $f) {
+            if (! $f->data_inicio_contrato) {
+                continue;
+            }
+
+            $inicio = Carbon::parse($f->data_inicio_contrato);
+
+            // Data anual de férias = aniversário do contrato (este ano; senão o próximo)
+            $dataAlvo = $inicio->copy()->year($hoje->year);
+            if ($dataAlvo->startOfDay()->lt($hoje->startOfDay())) {
+                $dataAlvo->addYear();
+            }
+
+            // Só alerta quando falta 1 mês ou menos para a data anual
+            $inicioJanela = $dataAlvo->copy()->subMonth()->startOfDay();
+            if ($inicioJanela->gt($hoje->startOfDay()) || $dataAlvo->startOfDay()->lt($hoje->startOfDay())) {
+                continue;
+            }
+
+            $saldo = $this->calcularSaldoFerias((int) $f->id, $f->data_inicio_contrato);
+            if ($saldo['disponiveis'] <= 0) {
+                continue;
+            }
+
+            $diasParaEntrar = (int) $hoje->startOfDay()->diffInDays($dataAlvo->startOfDay());
+
+            $avisos[] = [
+                'tipo' => 'entrada',
+                'funcionario_id' => $f->id,
+                'nome' => $f->nome,
+                'cargo' => $f->cargo,
+                'data_alvo' => $dataAlvo->toDateString(),
+                'dias' => $diasParaEntrar,
+                'dias_disponiveis' => $saldo['disponiveis'],
+            ];
+        }
+
+        // ---- Aviso de fim de férias (5 dias antes) ----
+        $fimFerias = DB::table('ausencias')
+            ->join('funcionarios', 'ausencias.funcionario_id', '=', 'funcionarios.id')
+            ->where('ausencias.tipo', 'Férias anuais')
+            ->where('ausencias.estado_pedido', 'Aprovado')
+            ->whereDate('ausencias.data_fim', '>=', $hoje->toDateString())
+            ->whereDate('ausencias.data_fim', '<=', $hoje->copy()->addDays(5)->toDateString())
+            ->select(
+                'ausencias.data_fim',
+                'ausencias.funcionario_id',
+                'funcionarios.nome',
+                'funcionarios.cargo'
+            )
+            ->orderBy('ausencias.data_fim', 'asc')
+            ->get();
+
+        foreach ($fimFerias as $a) {
+            $diasParaFim = (int) $hoje->startOfDay()->diffInDays(Carbon::parse($a->data_fim)->startOfDay());
+
+            $avisos[] = [
+                'tipo' => 'fim',
+                'funcionario_id' => $a->funcionario_id,
+                'nome' => $a->nome,
+                'cargo' => $a->cargo,
+                'data_alvo' => $a->data_fim,
+                'dias' => max(0, $diasParaFim),
+            ];
+        }
+
+        usort($avisos, fn ($a, $b) => $a['dias'] <=> $b['dias']);
+
+        return $avisos;
     }
 }

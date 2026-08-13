@@ -16,37 +16,25 @@
 </section>
 
 <!-- ===== RECURSOS ===== -->
-<section class="section section-tint" id="recursos">
+<section class="section section-tint resources-page" id="recursos">
   <div class="container">
     <div class="resources-grid">
       @forelse($resources as $resource)
       <article class="resource-card reveal">
         <div class="res-logo">
           @if($resource->logo_path)
-            <img src="{{ asset('storage/' . $resource->logo_path) }}" alt="{{ $resource->title }}" onerror="this.closest('.res-logo').innerHTML='<span>'+this.alt.slice(0,2).toUpperCase()+'</span>'">
+            <img src="{{ asset('storage/' . $resource->logo_path) }}" alt="Recurso" onerror="this.closest('.res-logo').innerHTML='<span>R</span>'">
           @else
-            <span>{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::limit($resource->title, 6, '')) }}</span>
+            <span>R</span>
           @endif
         </div>
-        <h3>{{ $resource->title }}</h3>
-        <p>{{ $resource->description }}</p>
         <a href="{{ $resource->link ?: '#' }}" class="res-link" target="_blank" rel="noopener"><span>Visitar site</span>
           <svg viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8M11 5H6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"/></svg>
         </a>
       </article>
       @empty
       <article class="resource-card reveal">
-        <div class="res-logo"><span>DER/FJ</span></div>
-        <h3>DER/FJ</h3>
-        <p data-i18n="res.1.d">Apoio ao desenvolvimento e financiamento de jovens empreendedores.</p>
-        <a href="#" class="res-link" target="_blank" rel="noopener"><span>Visitar site</span>
-          <svg viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8M11 5H6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"/></svg>
-        </a>
-      </article>
-      <article class="resource-card reveal">
-        <div class="res-logo"><span>BANC</span></div>
-        <h3>Banco Central</h3>
-        <p data-i18n="res.2.d">Regulação e políticas de financiamento à economia nacional.</p>
+        <div class="res-logo"><span>R</span></div>
         <a href="#" class="res-link" target="_blank" rel="noopener"><span>Visitar site</span>
           <svg viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8M11 5H6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"/></svg>
         </a>

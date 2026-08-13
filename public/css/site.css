@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    EUREKA CONSULTING
    Paleta derivada do logo: teal #186080 / #1B648B
    Acento terracota (personalidade local). Tipografia Archivo + Inter.
@@ -7,7 +7,7 @@
 
 :root{
   /* Tons do logo */
-  --teal:#186080;        /* círculos do logo */
+  --teal:#186080;        /* c�rculos do logo */
   --teal-text:#1B648B;   /* texto do logo */
   --teal-700:#155068;
   --teal-800:#103E50;
@@ -15,7 +15,7 @@
   --teal-050:#EAF1F4;    /* tinta clara de fundo */
   --teal-100:#D7E4EA;
 
-  /* Acento — terracota/ocre (terra africana), complementar do teal */
+  /* Acento � terracota/ocre (terra africana), complementar do teal */
   --clay:#C2683C;
   --clay-soft:#D98A5E;
   --clay-050:#F7ECE4;
@@ -62,7 +62,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .eyebrow-light::before{background:var(--clay-soft)}
 .ink-accent{color:var(--teal-text)}
 
-/* ---------- Botões ---------- */
+/* ---------- Bot�es ---------- */
 .btn{
   --pad:13px 24px;
   display:inline-flex;align-items:center;justify-content:center;gap:.5em;
@@ -83,8 +83,14 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .btn-line-light{background:transparent;border-color:rgba(255,255,255,.4);color:#fff}
 .btn-line-light:hover{background:rgba(255,255,255,.12);border-color:#fff}
 
-/* ---------- Cabeçalho ---------- */
-.site-header{position:fixed;inset:0 0 auto 0;z-index:100;background:var(--header-bg);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.25s}
+/* ---------- Cabe�alho ---------- */
+.top-contact{position:fixed;inset:0 0 auto 0;z-index:102;height:40px;background:var(--teal-900);color:rgba(255,255,255,.88);border-bottom:1px solid rgba(255,255,255,.08)}
+.top-contact-inner{display:flex;align-items:center;gap:28px;height:100%;font-size:.8rem;letter-spacing:.01em}
+.tc-item{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.tc-item svg{width:13px;height:13px;flex:none}
+.tc-item a{color:inherit;text-decoration:none}
+.tc-item a:hover{color:#fff}
+.site-header{position:fixed;inset:auto 0 auto 0;top:40px;z-index:100;background:var(--header-bg);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.25s}
 .site-header.scrolled{border-bottom-color:var(--line);box-shadow:0 6px 22px -22px rgba(11,46,59,.6)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;height:78px;gap:20px}
 .brand-logo{height:46px;width:auto;object-fit:contain}
@@ -101,7 +107,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .lang-btn{border:0;background:transparent;padding:7px 10px;font-family:var(--f-display);font-weight:600;font-size:.76rem;color:var(--muted);cursor:pointer;transition:.2s}
 .lang-btn.is-active{background:var(--teal);color:#fff}
 
-/* Scrim por cima da página quando o menu móvel está aberto */
+/* Scrim por cima da p�gina quando o menu m�vel est� aberto */
 .nav-scrim{position:fixed;inset:0;z-index:999;background:rgba(5,12,16,.55);opacity:0;pointer-events:none;transition:opacity .3s}
 
 .menu-toggle{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px}
@@ -121,7 +127,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 
 /* ---------- Hero ---------- */
 .hero{position:relative;padding:138px 0 0;overflow:hidden}
-.hero::before{ /* friso geométrico discreto inspirado em tecelagem */
+.hero::before{ /* friso geom�trico discreto inspirado em tecelagem */
   content:"";position:absolute;top:0;right:0;width:42%;height:100%;z-index:0;
   background-image:radial-gradient(circle at center,var(--teal-100) 1.4px,transparent 1.5px);
   background-size:22px 22px;opacity:.5;mask-image:linear-gradient(to left,#000,transparent);
@@ -154,13 +160,13 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .hero-stats strong span{color:var(--clay)}
 .hs-label{font-size:.9rem;color:var(--muted);margin-top:8px}
 
-/* ---------- Secções base ---------- */
+/* ---------- Sec��es base ---------- */
 .section{padding:90px 0}
 .section-tint{background:var(--teal-050)}
 .section-head{max-width:620px;margin:0 auto 52px;text-align:center}
 .section-head p{color:var(--muted);margin-top:14px;font-size:1.05rem}
 
-/* ---------- Serviços ---------- */
+/* ---------- Servi�os ---------- */
 .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .service-card{background:var(--white);padding:30px 26px;transition:background .2s;position:relative}
 .service-card:hover{background:var(--teal-050)}
@@ -188,16 +194,22 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .diff-item p{color:var(--muted);font-size:.9rem}
 
 /* ---------- Recursos ---------- */
-.resources-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.resource-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:26px;display:flex;flex-direction:column;transition:transform .22s,box-shadow .22s}
-.resource-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-sm)}
-.res-logo{height:48px;display:flex;align-items:center;margin-bottom:16px}
-.res-logo span{font-family:var(--f-display);font-weight:700;font-size:1.05rem;color:var(--teal);letter-spacing:.02em;padding:8px 12px;border:1.5px solid var(--teal-100);border-radius:8px}
-.resource-card h3{font-size:1.02rem;margin-bottom:8px}
-.resource-card p{color:var(--muted);font-size:.86rem;margin-bottom:16px;flex:1}
-.res-link{font-family:var(--f-display);font-weight:600;font-size:.83rem;color:var(--teal-text);display:inline-flex;gap:6px;align-items:center}
-.res-link svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none}
+.resources-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:16px}
+.resource-card{background:transparent;border:none;box-shadow:none;border-radius:var(--r);padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:transform .22s}
+.resource-card:hover{transform:translateY(-3px)}
+.res-logo{height:44px;display:flex;align-items:center;justify-content:center}
+.res-logo img{max-height:44px;max-width:100%;object-fit:contain}
+.res-logo span{font-family:var(--f-display);font-weight:700;font-size:.95rem;color:var(--teal);letter-spacing:.02em;padding:6px 10px;border:1.5px solid var(--teal-100);border-radius:8px}
+.res-link{font-family:var(--f-display);font-weight:600;font-size:.78rem;color:var(--teal-text);display:inline-flex;gap:6px;align-items:center}
+.res-link svg{width:12px;height:12px;stroke:currentColor;stroke-width:2;fill:none}
 .res-link:hover{color:var(--clay)}
+
+/* P�gina de Recursos: apenas imagem + link, sem borda do card */
+.resources-page .resource-card{background:transparent;border:none;box-shadow:none;padding:0;border-radius:0;align-items:center}
+.resources-page .resource-card:hover{transform:none;box-shadow:none}
+.resources-page .res-logo{margin-bottom:8px;justify-content:center;height:auto;min-height:48px}
+.resources-page .res-logo img{max-height:48px;max-width:100%;object-fit:contain}
+.resources-page .res-link{width:100%;justify-content:center;padding-top:10px;font-size:.8rem}
 
 /* ---------- Sobre (escuro) ---------- */
 .section-dark{background:var(--teal-900);color:rgba(255,255,255,.84)}
@@ -242,7 +254,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 
 /* ---------- BOOST_ME ---------- */
 .boost{background:var(--teal-800);color:#fff;position:relative;overflow:hidden}
-.boost::after{ /* discos do logo como marca de água */
+.boost::after{ /* discos do logo como marca de �gua */
   content:"";position:absolute;right:-90px;top:50%;transform:translateY(-50%);
   width:360px;height:360px;border-radius:50%;border:2px solid rgba(255,255,255,.08);
   box-shadow:0 0 0 60px rgba(255,255,255,.04), 0 0 0 130px rgba(255,255,255,.02);
@@ -260,7 +272,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .boost-feats li::before{content:"";width:7px;height:7px;margin-top:9px;border-radius:50%;background:var(--clay-soft);flex:none}
 .boost-cta{display:flex;gap:12px;flex-wrap:wrap}
 
-/* ---------- Notícias ---------- */
+/* ---------- Not�cias ---------- */
 .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .news-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:transform .22s,box-shadow .22s}
 .news-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
@@ -317,7 +329,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .form-feedback.ok{color:var(--teal-text)}
 .form-feedback.bad{color:#C0492F}
 
-/* ---------- Vagas & Formações ---------- */
+/* ---------- Vagas & Forma��es ---------- */
 .search-box{position:relative;max-width:420px;margin:0 auto 2rem}
 .search-box input{width:100%;padding:13px 16px 13px 44px;font-family:var(--f-body);font-size:.95rem;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--white);transition:.2s}
 .search-box input:focus{outline:none;border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(24,96,128,.13)}
@@ -361,7 +373,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .candidatura-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:8px;flex-wrap:wrap}
 @media(max-width:760px){.grid-vagas{grid-template-columns:1fr}}
 
-/* ---------- Rodapé ---------- */
+/* ---------- Rodap� ---------- */
 .site-footer{background:var(--teal-900);color:rgba(255,255,255,.7)}
 .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:40px;padding:60px 26px 42px}
 .footer-brand p{margin-top:16px;font-size:.92rem;max-width:34ch}
@@ -387,12 +399,14 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   .hero-grid,.diff-grid,.about-grid,.contact-grid{grid-template-columns:1fr}
   .hero-media{display:none}
   .services-grid,.news-grid{grid-template-columns:repeat(2,1fr)}
-  .resources-grid{grid-template-columns:repeat(2,1fr)}
+  .resources-grid{grid-template-columns:repeat(4,1fr);gap:10px}
   .footer-grid{grid-template-columns:1fr 1fr}
 }
 @media (max-width:760px){
   .header-actions .lang-switch,.header-actions .btn-primary{display:none}
   .site-header{backdrop-filter:none}
+  .tc-hours{display:none}
+  .top-contact-inner{gap:16px;justify-content:space-between}
   .menu-toggle{display:flex}
   .main-nav{position:fixed;top:0;right:0;bottom:0;height:100vh;height:100dvh;width:min(84vw,340px);background:var(--paper);flex-direction:column;align-items:stretch;gap:0;padding:96px 24px 24px;box-shadow:-20px 0 50px -30px rgba(0,0,0,.55);transform:translateX(110%);transition:transform .3s;overflow-y:auto;z-index:1000}
   .main-nav.open{transform:none}
@@ -410,9 +424,10 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
   .boost-media img{max-height:340px}
 }
 @media (max-width:520px){
-  .services-grid,.news-grid,.resources-grid,.footer-grid{grid-template-columns:1fr}
+  .services-grid,.news-grid,.footer-grid{grid-template-columns:1fr}
+  .resources-grid{grid-template-columns:repeat(4,1fr);gap:10px}
   .field-row{grid-template-columns:1fr}
-  .hero{padding:112px 0 0}
+  .hero{padding:140px 0 0}
   .hero-stats{grid-template-columns:1fr;}
   .hero-stats li{border-right:0;border-bottom:1px solid var(--line);padding:18px 8px}
   .hero-stats li:last-child{border-bottom:0}

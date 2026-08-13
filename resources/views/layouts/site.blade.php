@@ -14,6 +14,24 @@
 </head>
 <body>
 
+<!-- ===== BARRA DE CONTACTO (topo) ===== -->
+<div class="top-contact">
+  <div class="container top-contact-inner">
+    <span class="tc-item tc-phone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l2 5-2 1a11 11 0 0 0 5 5l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
+      <span>{{ $contact->phones ?? '+245 966 164 555 · +245 956 965 050' }}</span>
+    </span>
+    <span class="tc-item tc-mail">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      <a href="mailto:{{ $contact->email ?? 'eureka@eurekaconsulting.com' }}">{{ $contact->email ?? 'eureka@eurekaconsulting.com' }}</a>
+    </span>
+    <span class="tc-item tc-hours">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <span>{{ $contact->schedule ?? 'Seg – Sex · 08h00 às 17h30' }}</span>
+    </span>
+  </div>
+</div>
+
 <!-- ===== CABEÇALHO ===== -->
 <header class="site-header" id="topo">
   <div class="container header-inner">
@@ -80,10 +98,15 @@
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer.contact">Contacto</h4>
-      <p>Av. Dr. Koumba Yalá — Antula, Bissau</p>
-      <p>+245 966 164 555</p>
-      <p>+245 956 965 050</p>
-      <p>eureka@eurekaconsulting.com</p>
+      <p>{{ $contact->address ?? 'Av. Dr. Koumba Yalá — Antula, Bissau' }}</p>
+      @foreach(collect(explode('·', $contact->phones ?? ''))->filter() as $phone)
+        <p>{{ trim($phone) }}</p>
+      @endforeach
+      @if(empty($contact->phones))
+        <p>+245 966 164 555</p>
+        <p>+245 956 965 050</p>
+      @endif
+      <p>{{ $contact->email ?? 'eureka@eurekaconsulting.com' }}</p>
     </div>
   </div>
   <div class="footer-bar">

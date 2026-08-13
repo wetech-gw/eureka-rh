@@ -44,8 +44,8 @@
                         <img src="{{ asset('storage/' . $noticia->image_path) }}" alt="" style="max-width: 160px; border-radius: 8px;">
                     </div>
                 @endif
-                <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png">
-                <small class="text-muted">Deixe vazio para manter a imagem atual.</small>
+ <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png,image/webp,image/avif">
+ <small class="text-muted">JPG, PNG, WEBP ou AVIF (até 10 MB). Deixe vazio para manter a imagem atual.</small>
             </div>
         </div>
 

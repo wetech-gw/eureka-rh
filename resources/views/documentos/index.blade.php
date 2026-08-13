@@ -225,7 +225,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold m-0 text-dark">Arquivo de Documentos</h2>
-                <p class="text-accent">Gestão documental por categoria, versão e nível de acesso</p>
+                <p class="text-accent">Gestão documental por categoria, tipo e número de referência</p>
             </div>
             <button type="button" class="btn text-white fw-medium shadow-sm px-3" style="background-color: #0d9488; font-size: 14px;" data-bs-toggle="modal" data-bs-target="#createDocumentoModal">
                 <i class="fa-solid fa-file-circle-plus me-1"></i> Registar Documento
@@ -234,7 +234,7 @@
 
         <form method="GET" action="{{ route('documentos.index') }}" class="card-custom p-3 mb-3">
             <div class="row g-2">
-                <div class="col-md-5"><input type="text" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="Pesquisar por nome, categoria, departamento ou versão"></div>
+                <div class="col-md-5"><input type="text" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="Pesquisar por nome, n.º referência, categoria ou departamento"></div>
                 <div class="col-md-3">
                     <select name="categoria" class="form-select form-select-sm">
                         <option value="">Categoria</option>
@@ -243,16 +243,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <select name="nivel_acesso" class="form-select form-select-sm">
-                        <option value="">Nível de acesso</option>
-                        <option value="Interno" {{ request('nivel_acesso') == 'Interno' ? 'selected' : '' }}>Interno</option>
-                        <option value="RH" {{ request('nivel_acesso') == 'RH' ? 'selected' : '' }}>RH</option>
-                        <option value="Gestão" {{ request('nivel_acesso') == 'Gestão' ? 'selected' : '' }}>Gestão</option>
-                        <option value="Confidencial" {{ request('nivel_acesso') == 'Confidencial' ? 'selected' : '' }}>Confidencial</option>
-                    </select>
-                </div>
-                <div class="col-md-1 d-grid"><button class="btn btn-sm btn-outline-secondary">Filtrar</button></div>
+                <div class="col-md-3 d-grid"><button class="btn btn-sm btn-outline-secondary">Filtrar</button></div>
             </div>
         </form>
 
@@ -310,10 +301,9 @@
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
+                            <th>N.º Referência</th>
                             <th>Nome do Documento</th>
                             <th>Categoria</th>
-                            <!--<th>Versão</th>
-                            <th>Nível de Acesso</th>-->
                             <th>Tipo de Operação</th>
                             <th>Data de Operação</th>
                             <th>Departamento Relacionado</th>
@@ -323,10 +313,9 @@
                     <tbody>
                         @forelse($documentos as $doc)
                             <tr>
-                                <td class="fw-bold text-dark">{{ $doc->nome }}</td>
+                                <td class="fw-bold text-dark">{{ $doc->numero_referencia ?? '—' }}</td>
+                                <td>{{ $doc->nome }}</td>
                                 <td>{{ $doc->categoria }}</td>
-                                <!--<td>{{ $doc->versao }}</td>
-                                <td>{{ $doc->nivel_acesso }}</td>-->
                                 <td>{{ $doc->tipo }}</td>
                                 <td class="small text-muted">{{ date('d/m/Y', strtotime($doc->data_operacao)) }}</td>
                                 <td class="fw-semibold text-secondary">{{ $doc->departamento }}</td>
@@ -368,24 +357,13 @@
                         <input type="text" name="nome" class="form-control border-secondary-subtle" placeholder="Ex: Termo de Entrega de Portátil" required>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Número de Referência</label>
+                        <input type="text" name="numero_referencia" class="form-control border-secondary-subtle" placeholder="Ex: 65/2026" required>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Categoria</label>
                         <input type="text" name="categoria" class="form-control border-secondary-subtle" placeholder="Ex: Contrato, Política Interna, Declaração" required>
                     </div>
-                    <!--<div class="row g-2 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold text-secondary">Versão</label>
-                            <input type="text" name="versao" value="1.0" class="form-control border-secondary-subtle" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold text-secondary">Nível de Acesso</label>
-                            <select name="nivel_acesso" class="form-select border-secondary-subtle" required>
-                                <option value="Interno">Interno</option>
-                                <option value="RH">RH</option>
-                                <option value="Gestão">Gestão</option>
-                                <option value="Confidencial">Confidencial</option>
-                            </select>
-                        </div>
-                    </div>-->
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Tipo de Operação</label>
                         <select name="tipo" class="form-select border-secondary-subtle" required>

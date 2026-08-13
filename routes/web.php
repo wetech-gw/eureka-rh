@@ -26,6 +26,8 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HeroStatController;
 use App\Http\Controllers\BoostMeController;
+use App\Http\Controllers\ContactInfoController;
+use App\Http\Controllers\ContactController;
 
 // 🟢 ADICIONA AS ROTAS DE RECUPERAÇÃO DE SENHA AQUI
 Route::get("/forgot-password", [AuthController::class, "showForgotForm"])
@@ -52,6 +54,7 @@ Route::get("/servicos", [SiteController::class, "servicos"])->name("site.servico
 Route::get("/recursos", [SiteController::class, "recursos"])->name("site.recursos");
 Route::get("/sobre", [SiteController::class, "sobre"])->name("site.sobre");
 Route::get("/noticias", [SiteController::class, "noticias"])->name("site.noticias");
+Route::post("/contacto", [ContactController::class, "store"])->name("site.contacto");
 
 // 🆕 ROTA PÚBLICA PRINCIPAL (Vagas + Formações + Candidatura)
 Route::get("/vagas-formacoes", [PublicController::class, "vagasFormacoes"])->name("public.vagasFormacoes");
@@ -268,4 +271,5 @@ Route::middleware(['auth', 'responsavel'])->prefix('admin')->name('admin.')->gro
     Route::resource('recursos', ResourceController::class)->except(['show']);
     Route::resource('sobre', AboutController::class)->except(['show']);
     Route::resource('noticias', NewsController::class)->except(['show']);
+    Route::resource('contactos', ContactInfoController::class)->except(['show']); // Gestão dos contactos do site
 });

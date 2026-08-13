@@ -185,6 +185,10 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"></path></svg>
                 Notícias
             </a>
+            <a href="{{ route('admin.contactos.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.contactos*') ? 'active' : '' }}" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"></path></svg>
+                Contactos do Site
+            </a>
         @endif
         </nav>
         <div class="pt-2">
@@ -434,6 +438,11 @@
                                     @else
                                         <span class="text-muted small">Sem arquivo</span>
                                     @endif
+                                    @if($candidatura->carta_especifico)
+                                        <a href="{{ route('storage.file', ['path' => $candidatura->carta_especifico]) }}" target="_blank" class="btn btn-sm btn-light border text-dark fw-medium mt-1">
+                                            <i class="fa-solid fa-file-lines text-warning me-1"></i> Carta
+                                        </a>
+                                    @endif
                                 </td>
 
                                 <!-- Estado -->
@@ -586,6 +595,12 @@
                         <div class="form-text text-muted" style="font-size: 0.75rem;">Tamanho máximo permitido: 2MB.</div>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Carta de Motivação (PDF, DOCX)</label>
+                        <input type="file" name="carta_motivacao_arquivo" class="form-control border-secondary-subtle" accept=".pdf,.doc,.docx">
+                        <div class="form-text text-muted" style="font-size: 0.75rem;">Opcional · Tamanho máximo permitido: 2MB.</div>
+                    </div>
+
                 </div>
                 <div class="modal-footer bg-light border-top-0">
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -639,48 +654,52 @@
             const colunas = linha.querySelectorAll("td");
 
             // Ignorar a linha de "Nenhum registo" ou tabelas vazias
-            if (colunas.length >= 6 && !linha.innerText.includes("Nenhum registo")) {
-                totalCandidatos++;
+            if (colunas.length < 6 || linha.innerText.includes("Nenhum registo")) return;
 
-                const candidatoNome = colunas[0].querySelector('.fw-bold')?.innerText.trim() || colunas[0].innerText.trim();
-                const candidatoSub = colunas[0].querySelector('.text-muted')?.innerText.trim() || '';
-                const contacto = colunas[1]?.innerText.trim() || 'N/A';
-                const vaga = colunas[2]?.innerText.trim() || 'N/A';
-                const dataSubmissao = colunas[3]?.innerText.trim() || 'N/A';
-                const nivelAcademico = colunas[4]?.innerText.trim() || 'N/A';
-                const experiencia = colunas[5]?.innerText.trim() || 'N/A';
-                const competencias = colunas[6]?.innerText.trim() || 'N/A';
-                const estado = colunas[8]?.innerText.trim() || 'Pendente';
+            const estado = colunas[8]?.innerText.trim() || 'Pendente';
 
-                // Mapeamento de estilos dos badges de estado
-                const st = estado.toLowerCase();
-                let badgeClass = 'badge-pendente';
-                if (st.includes('aceito') || st.includes('aprovado')) badgeClass = 'badge-aceito';
-                else if (st.includes('espera')) badgeClass = 'badge-espera';
-                else if (st.includes('rejeitado') || st.includes('recusado')) badgeClass = 'badge-rejeitado';
+            // Só os candidatos Aceitos entram na triagem do PDF
+            if (!estado.toLowerCase().includes('aceito')) return;
 
-                linhasHTML += `
-                    <tr>
-                        <td>
-                            <div style="font-weight: 700; color: #0f172a;">${candidatoNome}</div>
-                            <div style="font-size: 8pt; color: #64748b;">${candidatoSub}</div>
-                        </td>
-                        <td style="font-size: 7.5pt; color: #475569;">${contacto}</td>
-                        <td style="font-weight: 600;">${vaga}</td>
-                        <td style="text-align: center;">${dataSubmissao}</td>
-                        <td>${nivelAcademico}</td>
-                        <td style="text-align: center;">${experiencia}</td>
-                        <td style="font-size: 7.5pt; color: #475569;">${competencias}</td>
-                        <td style="text-align: center;">
-                            <span class="badge ${badgeClass}">${estado}</span>
-                        </td>
-                    </tr>
-                `;
-            }
+            totalCandidatos++;
+
+            const candidatoNome = colunas[0].querySelector('.fw-bold')?.innerText.trim() || colunas[0].innerText.trim();
+            const candidatoSub = colunas[0].querySelector('.text-muted')?.innerText.trim() || '';
+            const contacto = colunas[1]?.innerText.trim() || 'N/A';
+            const vaga = colunas[2]?.innerText.trim() || 'N/A';
+            const dataSubmissao = colunas[3]?.innerText.trim() || 'N/A';
+            const nivelAcademico = colunas[4]?.innerText.trim() || 'N/A';
+            const experiencia = colunas[5]?.innerText.trim() || 'N/A';
+            const competencias = colunas[6]?.innerText.trim() || 'N/A';
+
+            // Mapeamento de estilos dos badges de estado
+            const st = estado.toLowerCase();
+            let badgeClass = 'badge-pendente';
+            if (st.includes('aceito') || st.includes('aprovado')) badgeClass = 'badge-aceito';
+            else if (st.includes('espera')) badgeClass = 'badge-espera';
+            else if (st.includes('rejeitado') || st.includes('recusado')) badgeClass = 'badge-rejeitado';
+
+            linhasHTML += `
+                <tr>
+                    <td>
+                        <div style="font-weight: 700; color: #0f172a;">${candidatoNome}</div>
+                        <div style="font-size: 8pt; color: #64748b;">${candidatoSub}</div>
+                    </td>
+                    <td style="font-size: 7.5pt; color: #475569;">${contacto}</td>
+                    <td style="font-weight: 600;">${vaga}</td>
+                    <td style="text-align: center;">${dataSubmissao}</td>
+                    <td>${nivelAcademico}</td>
+                    <td style="text-align: center;">${experiencia}</td>
+                    <td style="font-size: 7.5pt; color: #475569;">${competencias}</td>
+                    <td style="text-align: center;">
+                        <span class="badge ${badgeClass}">${estado}</span>
+                    </td>
+                </tr>
+            `;
         });
 
         if (totalCandidatos === 0) {
-            alert("Nenhum registo de candidato encontrado para exportar.");
+            alert("Nenhum candidato aceito encontrado para exportar.");
             return;
         }
 
@@ -826,14 +845,14 @@
                     </div>
                     <div class="pdf-title-block">
                         <h2>Banco de Candidatos</h2>
-                        <p>Triagem &amp; Candidaturas | Gerado em: ${dataEmissao}</p>
+                        <p>Triagem &amp; Candidaturas Aceitas | Gerado em: ${dataEmissao}</p>
                     </div>
                 </div>
 
                 <!-- Resumo KPI -->
                 <div class="kpi-cards">
                     <div class="kpi-card">
-                        <div class="kpi-card-title">Total de Candidatos Listados</div>
+                        <div class="kpi-card-title">Candidatos Aceitos</div>
                         <div class="kpi-card-value" style="color: #0d9488;">${totalCandidatos} Registo(s)</div>
                     </div>
                 </div>
@@ -858,7 +877,7 @@
                 </table>
 
                 <div class="footer-note">
-                    Este relatório de candidatos foi gerado automaticamente pelo Sistema Eureka RH.
+                    Este relatório inclui apenas candidaturas aceitas, para facilitar a triagem. Gerado automaticamente pelo Sistema Eureka RH.
                 </div>
             </div>
         `;

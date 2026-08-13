@@ -8,8 +8,23 @@ use Carbon\Carbon;
 
 class FormacaoController extends Controller
 {
+    // Finaliza automaticamente as formações cuja data_fim já passou
+    private function finalizarFormacoes(): void
+    {
+        DB::table('formacoes')
+            ->where('status', '!=', 'Concluída')
+            ->whereNotNull('data_fim')
+            ->where('data_fim', '<', Carbon::today()->toDateString())
+            ->update([
+                'status' => 'Concluída',
+                'updated_at' => Carbon::now(),
+            ]);
+    }
+
     public function index(Request $request)
     {
+        $this->finalizarFormacoes();
+
         $formacoes = DB::table('formacoes')
             ->orderBy('data_inicio', 'desc')
             ->get();
@@ -70,6 +85,8 @@ class FormacaoController extends Controller
 
     public function apiIndex()
 {
+    $this->finalizarFormacoes();
+
     // Faz a mesma busca da tua tabela de recrutamento
     $formacoes = DB::table('formacoes')
         ->orderBy('created_at', 'desc')

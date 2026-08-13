@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withSchedule(function (Illuminate\Console\Scheduling\Schedule $schedule): void {
+        $schedule->command('estados:atualizar')->dailyAt('00:05');
+    })
     ->withMiddleware(function (Middleware $middleware): void {
         
         // 🟢 CORREÇÃO: Passamos o caminho diretamente sem o parâmetro 'guest:'

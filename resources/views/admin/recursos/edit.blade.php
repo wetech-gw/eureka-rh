@@ -17,16 +17,6 @@
         @method('PUT')
 
         <div class="mb-3">
-            <label class="form-label fw-medium">Nome <span class="text-danger">*</span></label>
-            <input type="text" name="title" class="form-control" value="{{ old('title', $recurso->title) }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-medium">Descrição <span class="text-danger">*</span></label>
-            <textarea name="description" class="form-control" rows="3" required>{{ old('description', $recurso->description) }}</textarea>
-        </div>
-
-        <div class="mb-3">
             <label class="form-label fw-medium">Link (site)</label>
             <input type="url" name="link" class="form-control" value="{{ old('link', $recurso->link) }}" placeholder="https://...">
         </div>

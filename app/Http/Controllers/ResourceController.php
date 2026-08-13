@@ -23,8 +23,6 @@ class ResourceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
             'link' => 'nullable|url',
             'logo_path' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
@@ -45,8 +43,6 @@ class ResourceController extends Controller
     public function update(Request $request, Resource $recurso)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
             'link' => 'nullable|url',
             'logo_path' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);

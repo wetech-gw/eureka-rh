@@ -184,6 +184,9 @@ html[data-theme="dark"] .theme-toggle .icon-sun{display:block}
 .section-tint{background:var(--teal-050)}
 .section-head{max-width:620px;margin:0 auto 52px;text-align:center}
 .section-head p{color:var(--muted);margin-top:14px;font-size:1.05rem}
+.see-all-wrap{display:flex;justify-content:center;margin-top:30px}
+.see-all{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:600;font-size:.85rem;color:var(--teal-text);text-decoration:none;border-bottom:1.5px solid var(--teal-100);padding-bottom:2px;transition:color .2s,border-color .2s}
+.see-all:hover{color:var(--clay);border-color:var(--clay)}
 
 /* ---------- Serviços ---------- */
 .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
@@ -213,15 +216,14 @@ html[data-theme="dark"] .theme-toggle .icon-sun{display:block}
 .diff-item p{color:var(--muted);font-size:.9rem}
 
 /* ---------- Recursos ---------- */
-.resources-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.resource-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:26px;display:flex;flex-direction:column;transition:transform .22s,box-shadow .22s}
-.resource-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-sm)}
-.res-logo{height:48px;display:flex;align-items:center;margin-bottom:16px}
-.res-logo span{font-family:var(--f-display);font-weight:700;font-size:1.05rem;color:var(--teal);letter-spacing:.02em;padding:8px 12px;border:1.5px solid var(--teal-100);border-radius:8px}
-.resource-card h3{font-size:1.02rem;margin-bottom:8px}
-.resource-card p{color:var(--muted);font-size:.86rem;margin-bottom:16px;flex:1}
-.res-link{font-family:var(--f-display);font-weight:600;font-size:.83rem;color:var(--teal-text);display:inline-flex;gap:6px;align-items:center}
-.res-link svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none}
+.resources-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:16px}
+.resource-card{background:transparent;border:none;box-shadow:none;border-radius:var(--r);padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:transform .22s}
+.resource-card:hover{transform:translateY(-3px)}
+.res-logo{height:44px;display:flex;align-items:center;justify-content:center}
+.res-logo img{max-height:44px;max-width:100%;object-fit:contain}
+.res-logo span{font-family:var(--f-display);font-weight:700;font-size:.95rem;color:var(--teal);letter-spacing:.02em;padding:6px 10px;border:1.5px solid var(--teal-100);border-radius:8px}
+.res-link{font-family:var(--f-display);font-weight:600;font-size:.78rem;color:var(--teal-text);display:inline-flex;gap:6px;align-items:center}
+.res-link svg{width:12px;height:12px;stroke:currentColor;stroke-width:2;fill:none}
 .res-link:hover{color:var(--clay)}
 
 /* ---------- Sobre (escuro) ---------- */
@@ -409,7 +411,7 @@ html[data-theme="dark"] .theme-toggle .icon-sun{display:block}
   .hero-grid,.diff-grid,.about-grid,.contact-grid{grid-template-columns:1fr}
   .hero-media{display:none}
   .services-grid,.news-grid{grid-template-columns:repeat(2,1fr)}
-  .resources-grid{grid-template-columns:repeat(2,1fr)}
+  .resources-grid{grid-template-columns:repeat(4,1fr);gap:10px}
   .footer-grid{grid-template-columns:1fr 1fr}
 }
 @media (max-width:760px){
@@ -430,7 +432,8 @@ html[data-theme="dark"] .theme-toggle .icon-sun{display:block}
   .hero-stats strong{font-size:2.1rem}
 }
 @media (max-width:520px){
-  .services-grid,.news-grid,.resources-grid,.footer-grid{grid-template-columns:1fr}
+  .services-grid,.news-grid,.footer-grid{grid-template-columns:1fr}
+  .resources-grid{grid-template-columns:repeat(4,1fr);gap:10px}
   .field-row{grid-template-columns:1fr}
   .hero{padding:112px 0 0}
   .hero-stats{grid-template-columns:1fr;}
@@ -586,6 +589,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       <p data-i18n="sec.servicos.desc">Competências multidisciplinares para cada fase do percurso empresarial, desenhadas para o contexto local.</p>
     </header>
     <div class="services-grid" id="servicesGrid"></div>
+    <div class="see-all-wrap"><a href="/servicos" class="see-all" data-i18n="sec.all">Ver todos</a></div>
   </div>
 </section>
 
@@ -605,10 +609,12 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
 
     <!-- Vagas em cima -->
     <div class="grid-vagas" id="listaVagas"><p style="color: var(--muted);" data-i18n="sec.rec.loadVagas">A carregar vagas...</p></div>
+    <div class="see-all-wrap"><a href="/vagas-formacoes" class="see-all" data-i18n="sec.all">Ver todos</a></div>
 
     <!-- Formações por baixo -->
     <h3 class="sub-section-title" style="margin-top: 56px;"><i class="fa-solid fa-graduation-cap" style="color:var(--clay);margin-right:8px"></i><span data-i18n="sec.rec.subtitle">Formações & Workshops</span></h3>
     <div class="grid-formacoes" id="listaFormacoes" style="margin-top: 18px;"><p style="color: var(--muted);" data-i18n="sec.rec.loadFormacoes">A carregar formações...</p></div>
+    <div class="see-all-wrap"><a href="/vagas-formacoes" class="see-all" data-i18n="sec.all">Ver todos</a></div>
 
     <!-- Formulário de candidatura (oculto, abre ao clicar em Candidatar-se) -->
     <div class="candidatura-panel" id="candidaturaPanel" style="display:none; margin-top: 56px;">
@@ -713,6 +719,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       <p data-i18n="sec.res.desc">Organizações de referência no financiamento e no apoio ao empreendedorismo na sub-região.</p>
     </header>
     <div class="resources-grid" id="resourcesGrid"></div>
+    <div class="see-all-wrap"><a href="/recursos" class="see-all" data-i18n="sec.all">Ver todos</a></div>
   </div>
 </section>
 
@@ -809,6 +816,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       <p data-i18n="sec.news.desc">Análises sobre economia, negócios e empreendedorismo na Guiné-Bissau e na região.</p>
     </header>
     <div class="news-grid" id="newsGrid"></div>
+    <div class="see-all-wrap"><a href="/noticias" class="see-all" data-i18n="sec.all">Ver todos</a></div>
   </div>
 </section>
 
@@ -836,12 +844,10 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
         <a href="#" class="chip">Facebook</a>
       </div>
 
-      <div class="map-slot" role="img" aria-label="Mapa — Antula, Bissau">
-        <!-- Substituir por iframe do Google Maps -->
-        <span>assets · mapa Antula, Bissau</span>
+
       </div>
     </div>
-
+ <div>ajnfbash</div>
     <div class="form-card">
       <form class="contact-form" id="contactForm" novalidate>
         <div class="field-row">
@@ -881,8 +887,8 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
           <textarea id="f-mensagem" name="mensagem" rows="4" required></textarea>
           <small class="err" data-for="f-mensagem"></small>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
-          <span class="btn-label" data-i18n="f.submit">Enviar mensagem</span>
+        <button  type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
+          <span class="btn-label" data-i18n="f.submit">Enviar mensagem porra</span>
           <span class="btn-spinner" aria-hidden="true"></span>
         </button>
         <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
@@ -1048,7 +1054,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       "sec.boost.desc":"Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.",
       "sec.boost.f1":"Diagnóstico e estruturação do negócio","sec.boost.f2":"Mentoria estratégica personalizada","sec.boost.f3":"Preparação para financiamento e investimento",
       "sec.boost.cta1":"Conhecer o programa","sec.boost.cta2":"Candidatar-se","sec.boost.cta3":"Solicitar informações",
-      "sec.news.eyebrow":"Atualidade","sec.news.title":"Notícias e perspetivas de mercado","sec.news.desc":"Análises sobre economia, negócios e empreendedorismo na Guiné-Bissau e na região.",
+      "sec.news.eyebrow":"Atualidade","sec.news.title":"Notícias e perspetivas de mercado","sec.news.desc":"Análises sobre economia, negócios e empreendedorismo na Guiné-Bissau e na região.","sec.all":"Ver todos",
       "news.1.cat":"Economia","news.1.data":"12 Mai 2026","news.1.t":"Setor privado guineense regista crescimento no primeiro trimestre","news.1.r":"Dados recentes apontam para uma recuperação sustentada nos serviços e no comércio.",
       "news.2.cat":"Empreendedorismo","news.2.data":"28 Abr 2026","news.2.t":"Como preparar a sua empresa para captar financiamento","news.2.r":"Um guia prático sobre os documentos e indicadores que os investidores valorizam.",
       "news.3.cat":"BOOST_ME","news.3.data":"05 Abr 2026","news.3.t":"Programa BOOST_ME abre nova vaga de candidaturas","news.3.r":"Empreendedores podem submeter os seus projetos para a próxima edição do acelerador.",
@@ -1135,7 +1141,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       "sec.boost.desc":"Un programme conçu pour accompagner entrepreneurs et entreprises dans le développement, la structuration et la croissance de leurs activités. De l'idée à l'échelle, nous suivons chaque étape avec du mentorat, des outils et l'accès aux réseaux de financement.",
       "sec.boost.f1":"Diagnostic et structuration du business","sec.boost.f2":"Mentorat stratégique personnalisé","sec.boost.f3":"Préparation au financement et à l'investissement",
       "sec.boost.cta1":"Découvrir le programme","sec.boost.cta2":"Postuler","sec.boost.cta3":"Demander des informations",
-      "sec.news.eyebrow":"Actualité","sec.news.title":"Nouvelles et perspectives du marché","sec.news.desc":"Analyses sur l'économie, les affaires et l'entrepreneuriat en Guinée-Bissau et dans la région.",
+      "sec.news.eyebrow":"Actualité","sec.news.title":"Nouvelles et perspectives du marché","sec.news.desc":"Analyses sur l'économie, les affaires et l'entrepreneuriat en Guinée-Bissau et dans la région.","sec.all":"Voir tout",
       "news.1.cat":"Économie","news.1.data":"12 mai 2026","news.1.t":"Le secteur privé guinéen enregistre une croissance au premier trimestre","news.1.r":"Les données récentes indiquent une reprise soutenue dans les services et le commerce.",
       "news.2.cat":"Entrepreneuriat","news.2.data":"28 avril 2026","news.2.t":"Comment préparer votre entreprise à attirer des financements","news.2.r":"Un guide pratique sur les documents et indicateurs que les investisseurs valorisent.",
       "news.3.cat":"BOOST_ME","news.3.data":"05 avril 2026","news.3.t":"Le programme BOOST_ME ouvre une nouvelle vague de candidatures","news.3.r":"Les entrepreneurs peuvent soumettre leurs projets pour la prochaine édition de l'accélérateur.",
@@ -1222,7 +1228,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       "sec.boost.desc":"A programme designed to support entrepreneurs and businesses in developing, structuring and growing their ventures. From idea to scale, we accompany every stage with mentoring, tools and access to funding networks.",
       "sec.boost.f1":"Business diagnosis and structuring","sec.boost.f2":"Personalised strategic mentoring","sec.boost.f3":"Preparation for financing and investment",
       "sec.boost.cta1":"Learn about the programme","sec.boost.cta2":"Apply","sec.boost.cta3":"Request information",
-      "sec.news.eyebrow":"Latest","sec.news.title":"News and market perspectives","sec.news.desc":"Analysis on the economy, business and entrepreneurship in Guinea-Bissau and the region.",
+      "sec.news.eyebrow":"Latest","sec.news.title":"News and market perspectives","sec.news.desc":"Analysis on the economy, business and entrepreneurship in Guinea-Bissau and the region.","sec.all":"See all",
       "news.1.cat":"Economy","news.1.data":"12 May 2026","news.1.t":"Guinean private sector posts growth in the first quarter","news.1.r":"Recent data point to sustained recovery in services and trade.",
       "news.2.cat":"Entrepreneurship","news.2.data":"28 Apr 2026","news.2.t":"How to prepare your company to attract funding","news.2.r":"A practical guide to the documents and indicators investors value.",
       "news.3.cat":"BOOST_ME","news.3.data":"05 Apr 2026","news.3.t":"BOOST_ME programme opens new applications","news.3.r":"Entrepreneurs can submit their projects for the next edition of the accelerator.",
@@ -1297,6 +1303,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
   ];
 
   const el = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; };
+  const resumir = (s, n) => { const t = String(s ?? "").trim().replace(/\s+/g, " "); return t.length > n ? t.slice(0, n).trim() + "…" : t; };
 
   const sg = document.getElementById("servicesGrid");
   const dl = document.getElementById("diffList");
@@ -1309,11 +1316,11 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
 
   const renderServicos = () => {
     sg.innerHTML = "";
-    servicos.forEach(s => sg.appendChild(el(`
+    servicos.slice(0, 6).forEach(s => sg.appendChild(el(`
       <article class="service-card reveal${s.feat ? " feat" : ""}">
         <div class="svc-icon">${ICON[s.ic]}</div>
         <h3>${_(s.t)}</h3>
-        <p>${_(s.d)}</p>
+        <p>${resumir(_(s.d), 120)}</p>
         <a href="#contacto" class="svc-more">${_("svc.more")} ${ICON.arrow}</a>
       </article>`)));
   };
@@ -1328,11 +1335,9 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
   };
   const renderRecursos = () => {
     rg.innerHTML = "";
-    recursos.forEach(r => rg.appendChild(el(`
+    recursos.slice(0, 6).forEach(r => rg.appendChild(el(`
       <article class="resource-card reveal">
         <div class="res-logo"><span>${r.sigla}</span></div>
-        <h3>${r.nome}</h3>
-        <p>${_(r.d)}</p>
         <a href="#" class="res-link" target="_blank" rel="noopener">${_("res.visit")} ${ICON.ext}</a>
       </article>`)));
   };
@@ -1352,7 +1357,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
   };
   const renderNoticias = () => {
     ng.innerHTML = "";
-    noticias.forEach(n => ng.appendChild(el(`
+    noticias.slice(0, 6).forEach(n => ng.appendChild(el(`
       <article class="news-card reveal">
         <div class="news-thumb">
           <span class="news-cat">${_(n.cat)}</span>
@@ -1363,7 +1368,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
         <div class="news-body">
           <span class="news-date">${_(n.data)}</span>
           <h3>${_(n.t)}</h3>
-          <p>${_(n.r)}</p>
+          <p>${resumir(_(n.r), 150)}</p>
           <a href="#" class="news-read">${_("news.read")} ${ICON.arrow}</a>
         </div>
       </article>`)));
@@ -1391,16 +1396,27 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
   /* Menu móvel (gaveta lateral por cima da página) */
   const toggle = document.getElementById("menuToggle");
   const nav = document.getElementById("mainNav");
+  const brand = document.querySelector(".brand");
   const scrim = document.createElement("div");
   scrim.className = "nav-scrim";
   header.appendChild(scrim);
-  const closeMenu = () => { nav.classList.remove("open"); toggle.classList.remove("open"); toggle.setAttribute("aria-expanded","false"); scrim.classList.remove("show"); };
-  toggle.addEventListener("click", () => {
-    const open = nav.classList.toggle("open");
+  const setMenu = open => {
+    nav.classList.toggle("open", open);
     toggle.classList.toggle("open", open);
     toggle.setAttribute("aria-expanded", String(open));
     scrim.classList.toggle("show", open);
+  };
+  const toggleMenu = () => setMenu(!nav.classList.contains("open"));
+  const closeMenu = () => setMenu(false);
+  // O logo abre/fecha o menu apenas no mobile (≤760px); no desktop é o link normal para #topo
+  if (brand) brand.addEventListener("click", e => {
+    if (window.matchMedia("(max-width: 760px)").matches) {
+      e.preventDefault();
+      toggleMenu();
+    }
   });
+  toggle.addEventListener("click", toggleMenu);
+  // Clicar nos links da nav principal fecha o menu — nunca o abre
   nav.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
   scrim.addEventListener("click", closeMenu);
 
@@ -1518,7 +1534,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       listaVagas.innerHTML = `<div class="empty-state"><i class="fa-solid fa-inbox"></i>${_("vg.empty")}</div>`;
       return;
     }
-    listaVagas.innerHTML = items.map(v => `
+    listaVagas.innerHTML = items.slice(0, 6).map(v => `
       <article class="vaga-card">
         <div class="vaga-card-body">
           <h3>${esc(v.titulo_vaga)}</h3>
@@ -1527,7 +1543,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
             <span class="vaga-tag">${esc(v.localizacao || _("vg.bissau"))}</span>
             <span class="vaga-tag">${esc(v.tipo_contrato || _("vg.recrutamento"))}</span>
           </div>
-          <p class="vaga-desc">${esc(String(v.descricao_vaga || "").slice(0, 140))}</p>
+          <p class="vaga-desc">${resumir(v.descricao_vaga, 140)}</p>
           <div class="vaga-footer">
             <span class="vaga-prazo"><i class="fa-regular fa-calendar"></i>${_("vg.prazo")} ${fmtData(v.data_limite)}</span>
             <button type="button" class="btn-candidatar" data-vaga-id="${v.id}" data-vaga-titulo="${esc(v.titulo_vaga)}">
@@ -1543,7 +1559,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       listaFormacoes.innerHTML = `<div class="empty-state"><i class="fa-solid fa-graduation-cap"></i>${_("frm.empty")}</div>`;
       return;
     }
-    listaFormacoes.innerHTML = items.map(f => {
+    listaFormacoes.innerHTML = items.slice(0, 6).map(f => {
       const horario = (f.hora_inicio && f.hora_fim)
         ? `<li><i class="fa-solid fa-hourglass-half"></i><span><small>${_("frm.horario")}</small>${fmtHora(f.hora_inicio)} a ${fmtHora(f.hora_fim)}</span></li>`
         : "";

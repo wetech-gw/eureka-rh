@@ -28,8 +28,8 @@
 
         <div class="mb-3">
             <label class="form-label fw-medium">Imagem (hero)</label>
-            <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png,image/svg+xml">
-            <small class="text-muted">Se não carregar imagem, é usada a imagem predefinida do site.</small>
+            <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png,image/svg+xml,image/webp,image/avif">
+            <small class="text-muted">JPG, PNG, WEBP, AVIF ou SVG (até 10 MB). Se não carregar imagem, é usada a imagem predefinida do site.</small>
         </div>
 
         <div class="d-flex gap-2 justify-content-end">

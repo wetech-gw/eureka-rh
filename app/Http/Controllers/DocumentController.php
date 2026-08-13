@@ -15,19 +15,15 @@ class DocumentController extends Controller
             $q = trim($request->q);
             $query->where(function ($sub) use ($q) {
                 $sub->where('nome', 'like', "%{$q}%")
+                    ->orWhere('numero_referencia', 'like', "%{$q}%")
                     ->orWhere('categoria', 'like', "%{$q}%")
                     ->orWhere('departamento', 'like', "%{$q}%");
-                    // ->orWhere('versao', 'like', "%{$q}%");
             });
         }
 
         if ($request->filled('categoria')) {
             $query->where('categoria', $request->categoria);
         }
-
-        // if ($request->filled('nivel_acesso')) {
-        //     $query->where('nivel_acesso', $request->nivel_acesso);
-        // }
 
         $documentos = $query->get();
 
@@ -53,9 +49,8 @@ class DocumentController extends Controller
     {
         $request->validate([
             "nome" => "required|string|max:255",
+            "numero_referencia" => "required|string|max:50",
             "categoria" => "required|string|max:120",
-            // "versao" => "required|string|max:20",
-            // "nivel_acesso" => "required|in:Interno,RH,Gestão,Confidencial",
             "tipo" => "required|in:Entrada,Saída",
             "data_operacao" => "required|date",
             "departamento" => "required|string|max:255",
@@ -71,9 +66,8 @@ class DocumentController extends Controller
 
         DB::table("documentos")->insert([
             "nome" => $request->nome,
+            "numero_referencia" => $request->numero_referencia,
             "categoria" => $request->categoria,
-            // "versao" => $request->versao,
-            // "nivel_acesso" => $request->nivel_acesso,
             "tipo" => $request->tipo,
             "data_operacao" => $request->data_operacao,
             "departamento" => $request->departamento,

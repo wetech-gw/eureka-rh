@@ -25,7 +25,7 @@ class BoostMeController extends Controller
         $validated = $request->validate([
             'eyebrow' => 'nullable|string|max:255',
             'title' => 'nullable|string|max:255',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,webp,avif|max:10240',
             'description' => 'required|string',
             'features' => 'nullable|string',
             'cta1' => 'nullable|string|max:255',
@@ -53,7 +53,7 @@ class BoostMeController extends Controller
         $validated = $request->validate([
             'eyebrow' => 'nullable|string|max:255',
             'title' => 'nullable|string|max:255',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,webp,avif|max:10240',
             'description' => 'required|string',
             'features' => 'nullable|string',
             'cta1' => 'nullable|string|max:255',

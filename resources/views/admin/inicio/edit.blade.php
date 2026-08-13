@@ -34,8 +34,8 @@
                     <img src="{{ asset('storage/' . $inicio->image_path) }}" alt="" style="max-width: 200px; border-radius: 8px;">
                 </div>
             @endif
-            <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png,image/svg+xml">
-            <small class="text-muted">Deixe vazio para manter a imagem atual.</small>
+            <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png,image/svg+xml,image/webp,image/avif">
+            <small class="text-muted">JPG, PNG, WEBP, AVIF ou SVG (até 10 MB). Deixe vazio para manter a imagem atual.</small>
         </div>
 
         <div class="d-flex gap-2 justify-content-end">

@@ -34,8 +34,8 @@
                     <img src="{{ asset('storage/' . $boost->image_path) }}" alt="Imagem atual do BOOST_ME" style="max-height: 140px; border-radius: 10px; border: 1px solid #e9ecef;">
                 </div>
             @endif
-            <input type="file" name="image_path" class="form-control" accept="image/png,image/jpeg,image/webp">
-            <small class="text-muted">PNG, JPG ou WEBP (máx. 4 MB). Deixar vazio para manter a imagem atual.</small>
+            <input type="file" name="image_path" class="form-control" accept="image/png,image/jpeg,image/webp,image/avif">
+            <small class="text-muted">PNG, JPG, WEBP ou AVIF (até 10 MB). Deixar vazio para manter a imagem atual.</small>
         </div>
 
         <div class="mb-3">

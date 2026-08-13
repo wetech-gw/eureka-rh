@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\About;
 use App\Models\BoostMe;
+use App\Models\ContactInfo;
 use App\Models\HeroSection;
 use App\Models\HeroStat;
 use App\Models\News;
@@ -93,16 +94,16 @@ class SiteContentSeeder extends Seeder
         }
 
         $resources = [
-            ['DER/FJ', 'Apoio ao desenvolvimento e financiamento de jovens empreendedores.', null, '#'],
-            ['ADEPME', 'Agência de desenvolvimento e enquadramento das PME.', null, '#'],
-            ['FONGIP', 'Fundo de garantia para o investimento prioritário.', null, '#'],
-            ['FONSIS', 'Fundo soberano de investimentos estratégicos.', null, '#'],
+            ['#', null],
+            ['#', null],
+            ['#', null],
+            ['#', null],
         ];
 
-        foreach ($resources as [$title, $description, $logo, $link]) {
+        foreach ($resources as $i => [$link, $logo]) {
             Resource::updateOrCreate(
-                ['title' => $title],
-                ['description' => $description, 'logo_path' => $logo, 'link' => $link]
+                ['id' => $i + 1],
+                ['logo_path' => $logo, 'link' => $link]
             );
         }
 
@@ -114,6 +115,19 @@ class SiteContentSeeder extends Seeder
                 'mission'     => 'Capacitar empresas e empreendedores com soluções estratégicas que geram crescimento sustentável e impacto positivo na economia da região.',
                 'vision'      => 'Ser a consultora de referência na África Ocidental, reconhecida pela proximidade, competência e resultados que transformam negócios.',
                 'image_path'  => null,
+            ]
+        );
+
+        ContactInfo::updateOrCreate(
+            ['id' => 1],
+            [
+                'address'   => 'Bissau, Av. Dr. Koumba Yalá — Antula',
+                'phones'    => '+245 966 164 555 · +245 956 965 050',
+                'email'     => 'eureka@eurekaconsulting.com',
+                'schedule'  => 'Seg – Sex · 08h00 às 17h30',
+                'whatsapp'  => null,
+                'linkedin'  => null,
+                'facebook'  => null,
             ]
         );
 

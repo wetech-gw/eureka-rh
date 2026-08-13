@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Resource extends Model
 {
-    protected $fillable = ['title', 'description', 'logo_path', 'link'];
+    protected $fillable = ['logo_path', 'link'];
 }

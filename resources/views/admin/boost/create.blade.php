@@ -28,8 +28,8 @@
 
         <div class="mb-3">
             <label class="form-label fw-medium">Imagem</label>
-            <input type="file" name="image_path" class="form-control" accept="image/png,image/jpeg,image/webp">
-            <small class="text-muted">PNG, JPG ou WEBP (máx. 4 MB). Mostrada ao lado da secção no site.</small>
+            <input type="file" name="image_path" class="form-control" accept="image/png,image/jpeg,image/webp,image/avif">
+            <small class="text-muted">PNG, JPG, WEBP ou AVIF (até 10 MB). Mostrada ao lado da secção no site.</small>
         </div>
 
         <div class="mb-3">

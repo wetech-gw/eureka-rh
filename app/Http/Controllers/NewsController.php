@@ -27,7 +27,7 @@ class NewsController extends Controller
             'category' => 'required|string|max:100',
             'content' => 'required|string',
             'published_at' => 'required|date',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,webp,avif|max:10240',
         ]);
 
         if ($request->hasFile('image_path')) {
@@ -50,7 +50,7 @@ class NewsController extends Controller
             'category' => 'required|string|max:100',
             'content' => 'required|string',
             'published_at' => 'required|date',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,webp,avif|max:10240',
         ]);
 
         if ($request->hasFile('image_path')) {

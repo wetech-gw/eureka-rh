@@ -24,6 +24,8 @@
                 </div>
             </div>
 
+        @include('partials.avisos-ferias')
+
         <div class="row g-3 mb-4">
             <div class="col-md-3">
                 <div class="card-custom p-4 shadow-sm">
