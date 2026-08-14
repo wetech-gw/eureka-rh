@@ -485,8 +485,8 @@
     </div>
 
     <div class="form-card">
-      <form class="contact-form" id="contactForm" action="mailto:sidiainquade@gmail.com" method="POST" enctype="text/plain" novalidate>
-
+      <form class="contact-form" id="contactForm" action="{{route('send.email')}}" method="POST" novalidate>
+        @csrf
         <div class="field-row">
           <div class="field">
             <label for="f-nome" data-i18n-html="f.nome">Nome <span>*</span></label>
@@ -529,11 +529,10 @@
           <textarea id="f-mensagem" name="mensagem" rows="4" required></textarea>
           <small class="err" data-for="f-mensagem"></small>
         </div>
-        <input value="doule" type="submit">
-        <!--<button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
           <span class="btn-label" data-i18n="f.submit">Envoyer ndem</span>
           <span class="btn-spinner" aria-hidden="true"></span>
-        </button>-->
+        </button>
         <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
       </form>
     </div>

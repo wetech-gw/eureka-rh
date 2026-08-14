@@ -84,13 +84,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .btn-line-light:hover{background:rgba(255,255,255,.12);border-color:#fff}
 
 /* ---------- Cabe�alho ---------- */
-.top-contact{position:fixed;inset:0 0 auto 0;z-index:102;height:40px;background:var(--teal-900);color:rgba(255,255,255,.88);border-bottom:1px solid rgba(255,255,255,.08)}
-.top-contact-inner{display:flex;align-items:center;gap:28px;height:100%;font-size:.8rem;letter-spacing:.01em}
-.tc-item{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
-.tc-item svg{width:13px;height:13px;flex:none}
-.tc-item a{color:inherit;text-decoration:none}
-.tc-item a:hover{color:#fff}
-.site-header{position:fixed;inset:auto 0 auto 0;top:40px;z-index:100;background:var(--header-bg);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.25s}
+.site-header{position:fixed;inset:auto 0 auto 0;top:0;z-index:100;background:var(--header-bg);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.25s}
 .site-header.scrolled{border-bottom-color:var(--line);box-shadow:0 6px 22px -22px rgba(11,46,59,.6)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;height:78px;gap:20px}
 .brand-logo{height:46px;width:auto;object-fit:contain}
@@ -397,7 +391,7 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 /* ====================== RESPONSIVO ====================== */
 @media (max-width:980px){
   .hero-grid,.diff-grid,.about-grid,.contact-grid{grid-template-columns:1fr}
-  .hero-media{display:none}
+  .hero-media{max-width:460px;justify-self:center;width:100%}
   .services-grid,.news-grid{grid-template-columns:repeat(2,1fr)}
   .resources-grid{grid-template-columns:repeat(4,1fr);gap:10px}
   .footer-grid{grid-template-columns:1fr 1fr}
@@ -405,8 +399,6 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 @media (max-width:760px){
   .header-actions .lang-switch,.header-actions .btn-primary{display:none}
   .site-header{backdrop-filter:none}
-  .tc-hours{display:none}
-  .top-contact-inner{gap:16px;justify-content:space-between}
   .menu-toggle{display:flex}
   .main-nav{position:fixed;top:0;right:0;bottom:0;height:100vh;height:100dvh;width:min(84vw,340px);background:var(--paper);flex-direction:column;align-items:stretch;gap:0;padding:96px 24px 24px;box-shadow:-20px 0 50px -30px rgba(0,0,0,.55);transform:translateX(110%);transition:transform .3s;overflow-y:auto;z-index:1000}
   .main-nav.open{transform:none}

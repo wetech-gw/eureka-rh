@@ -23,6 +23,15 @@ class FeriasController extends Controller
 
     private const PAGAMENTO_PAGO = 'Pago';
 
+    /** Janela (em dias) para a contagem regressiva antes do início das férias. */
+    private const JANELA_INICIO_FERIAS_DIAS = 30;
+
+    /** Janela (em dias) para a contagem regressiva antes do fim das férias. */
+    private const JANELA_FIM_FERIAS_DIAS = 5;
+
+    /** Duração máxima da notificação de pedido aprovado. */
+    private const HORAS_VALIDADE_AVISO_APROVADO = 24;
+
     public function index()
     {
         $avisosFerias = $this->obterAvisosFerias();
@@ -105,7 +114,7 @@ class FeriasController extends Controller
 
         $dataInicio = Carbon::parse($data['data_inicio']);
         $dataFim = Carbon::parse($data['data_fim']);
-        $dias = $dataInicio->diffInDays($dataFim) + 1;
+        $dias = $this->contarDiasUteis($dataInicio, $dataFim);
 
         $funcionario = DB::table('funcionarios')
             ->where('id', $data['funcionario_id'])
@@ -191,7 +200,7 @@ class FeriasController extends Controller
 
         $dataInicio = Carbon::parse($data['data_inicio']);
         $dataFim = Carbon::parse($data['data_fim']);
-        $dias = $dataInicio->diffInDays($dataFim) + 1;
+        $dias = $this->contarDiasUteis($dataInicio, $dataFim);
 
         $funcionario = DB::table('funcionarios')->where('id', $registo->funcionario_id)->first();
 
@@ -396,6 +405,26 @@ class FeriasController extends Controller
         return max(0, $salarioBruto - $impostoProfissional - $impostoDemocracia - $impostoSelo - $inss);
     }
 
+    /**
+     * Conta apenas os dias úteis (segunda a sexta) de um intervalo de férias,
+     * sem considerar fins de semana como dias de gozo.
+     */
+    private function contarDiasUteis(Carbon $dataInicio, Carbon $dataFim): int
+    {
+        $inicio = $dataInicio->copy()->startOfDay();
+        $fim = $dataFim->copy()->startOfDay();
+
+        $dias = 0;
+        while ($inicio->lte($fim)) {
+            if ($inicio->isWeekday()) {
+                $dias++;
+            }
+            $inicio->addDay();
+        }
+
+        return $dias;
+    }
+
     private function calcularSaldoFerias(int $funcionarioId, string $dataInicioContrato, ?int $ignorarRegistoId = null): array
     {
         $mesesCompletos = Carbon::parse($dataInicioContrato)->diffInMonths(Carbon::today());
@@ -420,66 +449,83 @@ class FeriasController extends Controller
     }
 
     /**
-     * Gera notificações de férias com contagem regressiva:
-     *  - entrada: ~1 mês (até 30 dias) antes da data anual de férias;
-     *  - fim: 5 dias antes do fim de férias aprovadas.
-     * Cada funcionário tem direito a 24 dias/ano (2 dias por mês de trabalho).
+     * Gera notificações de férias:
+     *  - 'aprovado': pedido aprovado (visível no máximo 24 horas após a aprovação);
+     *  - 'entrada': contagem regressiva até ao início das férias (até 30 dias antes);
+     *  - 'fim': contagem regressiva até ao fim das férias (últimos 5 dias).
      */
     public function obterAvisosFerias(): array
     {
         $avisos = [];
         $hoje = Carbon::today();
 
-        // ---- Aviso de entrada em férias (1 mês antes da data anual) ----
-        $funcionarios = DB::table('funcionarios')
-            ->where('estado', 'Activo')
-            ->orderBy('nome', 'asc')
+        // ---- Aviso de aprovação (máximo 24 horas) ----
+        $aprovados = DB::table('ausencias')
+            ->join('funcionarios', 'ausencias.funcionario_id', '=', 'funcionarios.id')
+            ->where('ausencias.tipo', self::TIPO_FERIAS_ANUAIS)
+            ->where('ausencias.estado_pedido', self::ESTADO_APROVADO)
+            ->where('ausencias.updated_at', '>=', Carbon::now()->subHours(self::HORAS_VALIDADE_AVISO_APROVADO))
+            ->select(
+                'ausencias.id',
+                'ausencias.data_inicio',
+                'ausencias.data_fim',
+                'ausencias.dias',
+                'ausencias.funcionario_id',
+                'funcionarios.nome',
+                'funcionarios.cargo'
+            )
+            ->orderByDesc('ausencias.updated_at')
             ->get();
 
-        foreach ($funcionarios as $f) {
-            if (! $f->data_inicio_contrato) {
-                continue;
-            }
-
-            $inicio = Carbon::parse($f->data_inicio_contrato);
-
-            // Data anual de férias = aniversário do contrato (este ano; senão o próximo)
-            $dataAlvo = $inicio->copy()->year($hoje->year);
-            if ($dataAlvo->startOfDay()->lt($hoje->startOfDay())) {
-                $dataAlvo->addYear();
-            }
-
-            // Só alerta quando falta 1 mês ou menos para a data anual
-            $inicioJanela = $dataAlvo->copy()->subMonth()->startOfDay();
-            if ($inicioJanela->gt($hoje->startOfDay()) || $dataAlvo->startOfDay()->lt($hoje->startOfDay())) {
-                continue;
-            }
-
-            $saldo = $this->calcularSaldoFerias((int) $f->id, $f->data_inicio_contrato);
-            if ($saldo['disponiveis'] <= 0) {
-                continue;
-            }
-
-            $diasParaEntrar = (int) $hoje->startOfDay()->diffInDays($dataAlvo->startOfDay());
-
+        foreach ($aprovados as $a) {
             $avisos[] = [
-                'tipo' => 'entrada',
-                'funcionario_id' => $f->id,
-                'nome' => $f->nome,
-                'cargo' => $f->cargo,
-                'data_alvo' => $dataAlvo->toDateString(),
-                'dias' => $diasParaEntrar,
-                'dias_disponiveis' => $saldo['disponiveis'],
+                'tipo' => 'aprovado',
+                'ausencia_id' => $a->id,
+                'funcionario_id' => $a->funcionario_id,
+                'nome' => $a->nome,
+                'cargo' => $a->cargo,
+                'data_inicio' => $a->data_inicio,
+                'data_fim' => $a->data_fim,
+                'dias' => (int) $a->dias,
             ];
         }
 
-        // ---- Aviso de fim de férias (5 dias antes) ----
-        $fimFerias = DB::table('ausencias')
+        // ---- Contagem regressiva para o início das férias ----
+        $proximosInicios = DB::table('ausencias')
             ->join('funcionarios', 'ausencias.funcionario_id', '=', 'funcionarios.id')
-            ->where('ausencias.tipo', 'Férias anuais')
-            ->where('ausencias.estado_pedido', 'Aprovado')
+            ->where('ausencias.tipo', self::TIPO_FERIAS_ANUAIS)
+            ->where('ausencias.estado_pedido', self::ESTADO_APROVADO)
+            ->whereDate('ausencias.data_inicio', '>=', $hoje->toDateString())
+            ->whereDate('ausencias.data_inicio', '<=', $hoje->copy()->addDays(self::JANELA_INICIO_FERIAS_DIAS)->toDateString())
+            ->select(
+                'ausencias.data_inicio',
+                'ausencias.funcionario_id',
+                'funcionarios.nome',
+                'funcionarios.cargo'
+            )
+            ->orderBy('ausencias.data_inicio', 'asc')
+            ->get();
+
+        foreach ($proximosInicios as $a) {
+            $diasParaInicio = (int) $hoje->startOfDay()->diffInDays(Carbon::parse($a->data_inicio)->startOfDay());
+
+            $avisos[] = [
+                'tipo' => 'entrada',
+                'funcionario_id' => $a->funcionario_id,
+                'nome' => $a->nome,
+                'cargo' => $a->cargo,
+                'data_alvo' => $a->data_inicio,
+                'dias' => max(0, $diasParaInicio),
+            ];
+        }
+
+        // ---- Contagem regressiva para o fim das férias ----
+        $proximosFins = DB::table('ausencias')
+            ->join('funcionarios', 'ausencias.funcionario_id', '=', 'funcionarios.id')
+            ->where('ausencias.tipo', self::TIPO_FERIAS_ANUAIS)
+            ->where('ausencias.estado_pedido', self::ESTADO_APROVADO)
             ->whereDate('ausencias.data_fim', '>=', $hoje->toDateString())
-            ->whereDate('ausencias.data_fim', '<=', $hoje->copy()->addDays(5)->toDateString())
+            ->whereDate('ausencias.data_fim', '<=', $hoje->copy()->addDays(self::JANELA_FIM_FERIAS_DIAS)->toDateString())
             ->select(
                 'ausencias.data_fim',
                 'ausencias.funcionario_id',
@@ -489,7 +535,7 @@ class FeriasController extends Controller
             ->orderBy('ausencias.data_fim', 'asc')
             ->get();
 
-        foreach ($fimFerias as $a) {
+        foreach ($proximosFins as $a) {
             $diasParaFim = (int) $hoje->startOfDay()->diffInDays(Carbon::parse($a->data_fim)->startOfDay());
 
             $avisos[] = [
@@ -502,7 +548,17 @@ class FeriasController extends Controller
             ];
         }
 
-        usort($avisos, fn ($a, $b) => $a['dias'] <=> $b['dias']);
+        // Aprovações primeiro, depois contagens regressivas por proximidade
+        usort($avisos, function ($a, $b) {
+            if ($a['tipo'] === 'aprovado') {
+                return -1;
+            }
+            if ($b['tipo'] === 'aprovado') {
+                return 1;
+            }
+
+            return $a['dias'] <=> $b['dias'];
+        });
 
         return $avisos;
     }

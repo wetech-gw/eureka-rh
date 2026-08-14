@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FuncionarioController;
@@ -47,6 +48,8 @@ Route::post("/reset-password", [AuthController::class, "reset"])
     ->middleware("guest");
 
 use App\Http\Middleware\CheckResponsavel;
+
+Route::post('/send-email', [MailController::class, 'sendMail'])->name('send.email');
 
 // 🆕 PÁGINAS PÚBLICAS DO SITE (Blade)
 Route::get("/", [SiteController::class, "inicio"])->name("site.inicio");
