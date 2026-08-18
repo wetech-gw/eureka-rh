@@ -478,6 +478,190 @@ html[data-theme="dark"] .values-list li{color:var(--teal-text)}
 html[data-theme="dark"] .candidatura-panel-head h3{color:var(--teal-text)}
 html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
 
+/* =========================================================
+   NOVAS SECÇÕES ADICIONADAS
+   ========================================================= */
+
+/* --- 1. O Nosso Treino (Semicírculo Arco) --- */
+.treino-arc-container {
+  position: relative;
+  max-width: 900px;
+  margin: 40px auto 0;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.treino-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.treino-node {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--teal);
+  border-radius: var(--r-sm);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: transform .2s, box-shadow .2s;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.treino-node:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.treino-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.treino-node h3 {
+  font-size: .98rem;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+/* --- 2. Team Building (Diagrama Circular / Processo) --- */
+.tb-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.tb-image-wrap {
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  max-height: 420px;
+}
+
+.tb-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tb-quad-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  position: relative;
+}
+
+.tb-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: border-color .2s, transform .2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+}
+
+.tb-card:hover {
+  border-color: var(--teal);
+  transform: translateY(-2px);
+}
+
+.tb-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--teal-050);
+  color: var(--teal-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.tb-card h3 {
+  font-size: .92rem;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+
+/* --- 3. Evento Principal (Pirâmide / Níveis Estruturados) --- */
+.piramide-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.piramide-level {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--teal);
+  border-radius: var(--r-sm);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: transform .2s, background .2s;
+}
+
+.piramide-level:hover {
+  transform: translateX(4px);
+  background: var(--teal-050);
+}
+
+.piramide-num {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--clay);
+  min-width: 32px;
+}
+
+.piramide-txt {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--ink);
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: .01em;
+}
+
+/* Ajustes de Responsividade */
+@media (max-width: 860px) {
+  .tb-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .tb-quad-grid {
+    grid-template-columns: 1fr;
+  }
+  .piramide-level {
+    padding: 14px 16px;
+  }
+  .piramide-txt {
+    font-size: .85rem;
+  }
+}
+
 </style>
 <script>try{var t=localStorage.getItem("eureka-theme");if(t!=="dark"&&t!=="light"){t=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";}document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
@@ -580,12 +764,171 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
   </div>
 </section>
 
+<!-- ===== BOOST_ME ===== -->
+<section class="section boost" id="boost">
+  <div class="container boost-grid">
+    <div class="boost-copy">
+      <span class="eyebrow eyebrow-light" data-i18n="sec.boost.eyebrow">Programa de aceleração</span>
+      <h2 data-i18n-html="sec.boost.title"><span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas</h2>
+      <p data-i18n="sec.boost.desc">Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.</p>
+      <ul class="boost-feats">
+        <li data-i18n="sec.boost.f1">Diagnóstico e estruturação do negócio</li>
+        <li data-i18n="sec.boost.f2">Mentoria estratégica personalizada</li>
+        <li data-i18n="sec.boost.f3">Preparação para financiamento e investimento</li>
+      </ul>
+      <div class="boost-cta">
+        <a href="/boost-m" class="btn btn-accent" data-i18n="sec.boost.cta1">Conhecer o programa</a>
+        <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta2">Candidatar-se</a>
+        <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta3">Solicitar informações</a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- =========================================================
+     SECÇÃO 1: O NOSSO TREINO
+     ========================================================= -->
+<section class="section section-tint" id="treino">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Capacitação & Desenvolvimento</span>
+      <h2>O Nosso Treino</h2>
+      <p>Programas de formação contínua desenhados para elevar competências pessoais e profissionais na sua organização.</p>
+    </div>
+
+    <div class="treino-arc-container reveal">
+      <div class="treino-grid">
+        <div class="treino-node">
+          <div class="treino-dot" style="background: #29B6F6;"></div>
+          <h3>Liderança & Gestão</h3>
+        </div>
+
+        <div class="treino-node">
+          <div class="treino-dot" style="background: #4E4E4E;"></div>
+          <h3>Contabilidade & Finanças, Controlo de Gestão e Controlo Interno</h3>
+        </div>
+
+        <div class="treino-node">
+          <div class="treino-dot" style="background: #8E54FF;"></div>
+          <h3>Autoconfiança e Desenvolvimento Pessoal</h3>
+        </div>
+
+        <div class="treino-node">
+          <div class="treino-dot" style="background: #0097A7;"></div>
+          <h3>Produtividade no Local de Trabalho</h3>
+        </div>
+
+        <div class="treino-node">
+          <div class="treino-dot" style="background: #1A00A0;"></div>
+          <h3>Gestão de Recursos Humanos</h3>
+        </div>
+
+        <div class="treino-node">
+          <div class="treino-dot" style="background: #19647E;"></div>
+          <h3>Marketing & Comunicação</h3>
+        </div>
+
+        <div class="treino-node">
+          <div class="treino-dot" style="background: #6200EE;"></div>
+          <h3>Gestão de Projetos, Monitorização e Avaliação</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SECÇÃO 2: TEAM BUILDING
+     ========================================================= -->
+<section class="section" id="team-building">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Dinâmicas de Grupo</span>
+      <h2>Team Building</h2>
+      <p>Atividades focadas no fortalecimento de relações, coesão de equipa e resolução colaborativa de problemas.</p>
+    </div>
+
+    <div class="tb-container reveal">
+      <div class="tb-image-wrap">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Equipa colaborando em atividade de Team Building">
+      </div>
+
+      <div class="tb-quad-grid">
+        <div class="tb-card">
+          <div class="tb-card-icon"><i class="fa-solid fa-people-group"></i></div>
+          <h3>Construção da Equipa e Coesão da Equipa</h3>
+        </div>
+
+        <div class="tb-card">
+          <div class="tb-card-icon"><i class="fa-solid fa-comments"></i></div>
+          <h3>Quebra-Gelo em Equipa</h3>
+        </div>
+
+        <div class="tb-card">
+          <div class="tb-card-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+          <h3>Resolução de Problemas</h3>
+        </div>
+
+        <div class="tb-card">
+          <div class="tb-card-icon"><i class="fa-solid fa-handshake"></i></div>
+          <h3>Coesão da Equipa (Interior, Online, Exterior)</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SECÇÃO 3: EVENTO PRINCIPAL (GUINÉE BISSAU TALENTS)
+     ========================================================= -->
+<section class="section section-tint" id="evento-principal">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Iniciativa de Impacto</span>
+      <h2>O Nosso Evento Principal</h2>
+      <p class="ink-accent" style="font-weight: 700; font-size: 1.2rem; margin-top: 6px;">Guinée Bissau Talents</p>
+    </div>
+
+    <div class="piramide-stack reveal">
+      <div class="piramide-level" style="border-left-color: #103E50;">
+        <span class="piramide-num">01</span>
+        <div class="piramide-txt">Estabelecimento dos dias anuais de talento e oportunidade com parceiros estratégicos</div>
+      </div>
+
+      <div class="piramide-level" style="border-left-color: #155068;">
+        <span class="piramide-num">02</span>
+        <div class="piramide-txt">Fórum de Emprego: Ponto de encontro entre potenciais empregadores e os melhores candidatos em formação de competências e conhecimentos ambientais da Guiné-Bissau</div>
+      </div>
+
+      <div class="piramide-level" style="border-left-color: #186080;">
+        <span class="piramide-num">03</span>
+        <div class="piramide-txt">Reunião entre líderes de projeto e detentores de capitais, como bancos e outros investidores potencial</div>
+      </div>
+
+      <div class="piramide-level" style="border-left-color: #1B648B;">
+        <span class="piramide-num">04</span>
+        <div class="piramide-txt">Bancas de informação de pequenas e médias empresas e outras organizações nacionais e internacionais</div>
+      </div>
+
+      <div class="piramide-level" style="border-left-color: #C2683C;">
+        <span class="piramide-num">05</span>
+        <div class="piramide-txt">Debates e mesas-redondas sobre temas relacionados com o desenvolvimento da Guiné-Bissau, orientações económicas, formação de jovens e sua integração profissional, criação e gestão de empresas, procura de financiamento junto dos bancos e papel dos operadores económicos</div>
+      </div>
+
+      <div class="piramide-level" style="border-left-color: #D98A5E;">
+        <span class="piramide-num">06</span>
+        <div class="piramide-txt">Reconhecimentos e prémios para estudantes, inventores, empreendedores e líderes empresariais</div>
+      </div>
+    </div>
+  </div>
+</section>
 <!-- ===== SERVIÇOS ===== -->
 <section class="section" id="servicos">
   <div class="container">
     <header class="section-head">
       <span class="eyebrow" data-i18n="sec.servicos.eyebrow">O que fazemos</span>
-      <h2 data-i18n="sec.servicos.title">Serviços especializados, do diagnóstico à execução</h2>
+      <h2 data-i18n="sec.servicos.title">As nossas àreas de intervenção</h2>
       <p data-i18n="sec.servicos.desc">Competências multidisciplinares para cada fase do percurso empresarial, desenhadas para o contexto local.</p>
     </header>
     <div class="services-grid" id="servicesGrid"></div>
@@ -786,27 +1129,6 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
   </div>
 </section>
 
-<!-- ===== BOOST_ME ===== -->
-<section class="section boost" id="boost">
-  <div class="container boost-grid">
-    <div class="boost-copy">
-      <span class="eyebrow eyebrow-light" data-i18n="sec.boost.eyebrow">Programa de aceleração</span>
-      <h2 data-i18n-html="sec.boost.title"><span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas</h2>
-      <p data-i18n="sec.boost.desc">Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.</p>
-      <ul class="boost-feats">
-        <li data-i18n="sec.boost.f1">Diagnóstico e estruturação do negócio</li>
-        <li data-i18n="sec.boost.f2">Mentoria estratégica personalizada</li>
-        <li data-i18n="sec.boost.f3">Preparação para financiamento e investimento</li>
-      </ul>
-      <div class="boost-cta">
-        <a href="#contacto" class="btn btn-accent" data-i18n="sec.boost.cta1">Conhecer o programa</a>
-        <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta2">Candidatar-se</a>
-        <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta3">Solicitar informações</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ===== NOTÍCIAS ===== -->
 <section class="section" id="noticias">
   <div class="container">
@@ -824,7 +1146,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
 <section class="cta-band">
   <div class="container cta-inner">
     <h2 data-i18n="cta.title">Transforme os seus desafios em oportunidades de crescimento.</h2>
-    <a href="#contacto" class="btn btn-accent btn-lg" data-i18n="cta.btn">Solicitar uma consultoria</a>
+    <a href="/catalogo-formacao" class="btn btn-accent btn-lg" data-i18n="cta.btn">Solicitar uma consultoria</a>
   </div>
 </section>
 

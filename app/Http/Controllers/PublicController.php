@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Support\RequisitoVaga;
+use App\Services\SmsService;
 
 class PublicController extends Controller
 {
@@ -81,8 +82,8 @@ class PublicController extends Controller
             'anos_experiencia' => 'nullable|integer|min:0|max:80',
             'competencias' => 'nullable|string',
             'localizacao' => 'nullable|string|max:255',
-            'cv_arquivo' => 'required|file|mimes:pdf,doc,docx|max:2048',
-            'carta_motivacao_arquivo' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'cv_arquivo' => 'required|file|mimes:pdf,doc,docx|max:10240',
+            'carta_motivacao_arquivo' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
         ]);
 
         $caminhoArquivo = null;
@@ -132,6 +133,13 @@ class PublicController extends Controller
             'updated_at' => now(),
         ]);
 
+        // Enviar SMS de confirmação
+        $numero = preg_replace('/[^0-9+]/', '', $request->telefone);
+        SmsService::enviar(
+            $numero,
+            'Eureka Consulting: A sua candidatura para a vaga "' . ($vaga->titulo_vaga ?? '') . '" foi registada com sucesso. Entraremos em contacto brevemente.'
+        );
+
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
@@ -141,5 +149,63 @@ class PublicController extends Controller
 
         return redirect()->route('site.inicio')
             ->with('success', 'Candidatura registada com sucesso! Entraremos em contacto brevemente.');
+    }
+
+    public function candidaturaEspontanea(Request $request)
+    {
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'telefone' => 'required|string|max:50',
+            'profissao' => 'nullable|string|max:255',
+            'nivel_academico' => 'nullable|string|max:120',
+            'anos_experiencia' => 'nullable|integer|min:0|max:80',
+            'competencias' => 'nullable|string',
+            'localizacao' => 'nullable|string|max:255',
+            'cv_arquivo' => 'required|file|mimes:pdf,doc,docx|max:10240',
+            'carta_motivacao_arquivo' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+        ]);
+
+        $caminhoArquivo = null;
+        if ($request->hasFile('cv_arquivo')) {
+            $caminhoArquivo = $request->file('cv_arquivo')->store('cvs', 'public');
+        }
+
+        $caminhoCarta = null;
+        if ($request->hasFile('carta_motivacao_arquivo')) {
+            $caminhoCarta = $request->file('carta_motivacao_arquivo')->store('cartas-motivacao', 'public');
+        }
+
+        DB::table('candidaturas_espontaneas')->insert([
+            'nome' => $request->nome,
+            'email' => $request->email,
+            'telefone' => $request->telefone,
+            'profissao' => $request->profissao,
+            'nivel_academico' => $request->nivel_academico,
+            'anos_experiencia' => $request->anos_experiencia,
+            'competencias' => $request->competencias,
+            'localizacao' => $request->localizacao,
+            'cv_arquivo' => $caminhoArquivo,
+            'carta_motivacao_arquivo' => $caminhoCarta,
+            'status' => 'Pendente',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $numero = preg_replace('/[^0-9+]/', '', $request->telefone);
+        SmsService::enviar(
+            $numero,
+            'Eureka Consulting: A sua candidatura espontânea foi registada com sucesso. Entraremos em contacto quando surgir uma oportunidade compatível com o seu perfil.'
+        );
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Candidatura espontânea registada com sucesso! Entraremos em contacto brevemente.',
+            ]);
+        }
+
+        return redirect()->route('site.inicio')
+            ->with('success', 'Candidatura espontânea registada com sucesso! Entraremos em contacto brevemente.');
     }
 }

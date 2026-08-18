@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Support\RequisitoVaga;
+use App\Services\SmsService;
 
 class RecrutamentoController extends Controller
 {
@@ -84,8 +85,8 @@ class RecrutamentoController extends Controller
             'anos_experiencia' => 'nullable|integer|min:0|max:80',
             'competencias' => 'nullable|string',
             'localizacao' => 'nullable|string|max:255',
-            'cv_arquivo' => 'required|file|mimes:pdf,doc,docx|max:2048',
-            'carta_motivacao_arquivo' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'cv_arquivo' => 'required|file|mimes:pdf,doc,docx|max:10240',
+            'carta_motivacao_arquivo' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
         ]);
 
         $caminhoArquivo = null;
@@ -134,6 +135,13 @@ class RecrutamentoController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        // Enviar SMS de confirmação
+        $numero = preg_replace('/[^0-9+]/', '', $request->telefone);
+        SmsService::enviar(
+            $numero,
+            'Eureka Consulting: A sua candidatura para a vaga "' . ($vaga->titulo_vaga ?? '') . '" foi registada com sucesso. Entraremos em contacto brevemente.'
+        );
 
         return redirect()->back()->with('success', 'Candidatura registada com sucesso! A sua candidatura está em análise.');
     }

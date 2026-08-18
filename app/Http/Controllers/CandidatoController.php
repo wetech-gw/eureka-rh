@@ -98,8 +98,8 @@ class CandidatoController extends Controller
             "anos_experiencia" => "nullable|integer|min:0|max:80",
             "competencias" => "nullable|string",
             "localizacao" => "nullable|string|max:255",
-            "cv_arquivo" => "required|file|mimes:pdf,doc,docx|max:2048",
-            "carta_motivacao_arquivo" => "nullable|file|mimes:pdf,doc,docx|max:2048",
+            "cv_arquivo" => "required|file|mimes:pdf,doc,docx|max:10240",
+            "carta_motivacao_arquivo" => "nullable|file|mimes:pdf,doc,docx|max:10240",
         ]);
 
         $caminhoArquivo = null;

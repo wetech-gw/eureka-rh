@@ -14,6 +14,18 @@
                 </div>
                 <div class="d-flex gap-2 align-items-center">
 
+                    <a href="{{ route('contact-messages.index') }}" class="btn btn-light bg-white px-3 py-2 text-secondary fw-medium rounded-3 position-relative" style="font-size: 13px; text-decoration: none; height: 38px; display: flex; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="Mensagens de contacto">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        @if(($mensagensNaoLidas ?? 0) > 0)
+                            <span class="badge rounded-pill text-white position-absolute" style="background-color: #dc3545; font-size: 10px; top: -8px; right: -8px; min-width: 20px;">{{ $mensagensNaoLidas }}</span>
+                        @endif
+                    </a>
+
+                    <button type="button" class="theme-toggle btn btn-light bg-white px-3 py-2 text-secondary fw-medium rounded-3" style="font-size: 13px; height: 38px; display: flex; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                        <svg class="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                        <span class="theme-label">Escuro</span>
+                    </button>
+
                     <a href="{{ route('documentos.index') }}" class="btn btn-light bg-white border px-3 py-2 text-secondary fw-medium rounded-3" style="font-size: 13px; text-decoration: none; height: 38px; display: flex; align-items: center;">
                         Registo de Documentos
                     </a>

@@ -63,4 +63,18 @@ class SiteController extends Controller
 
         return view('site.noticias', compact('news', 'contact'));
     }
+
+    public function catalogoFormacao()
+    {
+        $contact = $this->contactos();
+
+        return view('site.catalogo-formacao', compact('contact'));
+    }
+
+    public function boostMe()
+    {
+        $contact = $this->contactos();
+
+        return view('site.boost-me', compact('contact'));
+    }
 }

@@ -24,6 +24,7 @@
     <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
       <a href="{{ route('site.inicio') }}" data-i18n="nav.top" class="{{ request()->routeIs('site.inicio') ? 'active' : '' }}">Início</a>
       <a href="{{ route('site.servicos') }}" data-i18n="nav.servicos" class="{{ request()->routeIs('site.servicos') ? 'active' : '' }}">Serviços</a>
+      <a href="{{ route('site.catalogo') }}" class="{{ request()->routeIs('site.catalogo') ? 'active' : '' }}">Catálogo de Formação</a>
       <a href="{{ route('site.inicio') }}#recrutamento" data-i18n="nav.recrutamento">Vagas & Formações</a>
       <a href="{{ route('site.recursos') }}" data-i18n="nav.recursos" class="{{ request()->routeIs('site.recursos') ? 'active' : '' }}">Recursos</a>
       <a href="{{ route('site.sobre') }}" data-i18n="nav.sobre" class="{{ request()->routeIs('site.sobre') ? 'active' : '' }}">Sobre</a>

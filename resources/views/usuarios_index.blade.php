@@ -61,6 +61,7 @@
             letter-spacing: 0.05em;
         }
     </style>
+@include('partials.theme-head')
 </head>
 <body>
 
@@ -125,7 +126,16 @@
                 </svg>
                 Candidatos
             </a>
-
+            <a href="{{ route('candidaturas-espontaneas.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('candidaturas-espontaneas*') ? 'active' : '' }}" style="text-decoration: none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="12" y2="18"></line>
+                    <line x1="15" y1="15" x2="12" y2="18"></line>
+                </svg>
+                CV Espontâneos
+            </a>
             <a href="{{ route('documentos.colaboradores.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('documentos.colaboradores.index') ? 'active' : '' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
@@ -144,7 +154,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
             </a>
-            @if(Auth::user()->role === 'Responsável')
+            @if(in_array(Auth::user()->role, ['Responsável', 'CEO']))
             <div class="text-uppercase text-muted fw-bold mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.05em;">Site Público</div>
 
             <a href="{{ route('admin.inicio.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}">
@@ -200,6 +210,7 @@
                 </button>
             </form>
         </div>
+        @include('partials.theme-toggle')
         <div class="pt-3 border-top d-flex align-items-center gap-2 mt-auto">
             <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold text-uppercase"
                 style="width:36px; height:36px; background-color: #00796b; font-size:11px; letter-spacing: 0.05em;">
@@ -279,7 +290,7 @@
                                 </td>
                                 <td class="text-secondary" style="font-size: 13px;">{{ $user->email }}</td>
                                 <td>
-                                    <span class="badge {{ $user->role == 'Responsável' ? 'badge-responsavel' : 'badge-assistente' }} px-2.5 py-1 rounded-3">
+                                    <span class="badge {{ in_array($user->role, ['Responsável', 'CEO']) ? 'badge-responsavel' : 'badge-assistente' }} px-2.5 py-1 rounded-3">
                                         {{ $user->role }}
                                     </span>
                                 </td>
@@ -337,6 +348,7 @@
                         <div class="col-6">
                             <label class="form-label small fw-bold text-muted text-uppercase">Nivel de Acesso</label>
                             <select name="role" class="form-select rounded-3" required>
+                                <option value="CEO">CEO (Acesso Total)</option>
                                 <option value="Responsável">Responsável (Acesso Total)</option>
                                 <option value="Assistente">Assistente (Operacional)</option>
                             </select>
@@ -388,6 +400,7 @@
                         <div class="col-6">
                             <label class="form-label small fw-bold text-muted text-uppercase">Função / Nivel</label>
                             <select name="role" id="edit_role" class="form-select rounded-3" required>
+                                <option value="CEO">CEO (Acesso Total)</option>
                                 <option value="Responsável">Responsável (Acesso Total)</option>
                                 <option value="Assistente">Assistente (Operacional)</option>
                             </select>
@@ -452,5 +465,6 @@
             });
         });
     </script>
+@include('partials.theme-script')
 </body>
 </html>

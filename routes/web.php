@@ -29,6 +29,7 @@ use App\Http\Controllers\HeroStatController;
 use App\Http\Controllers\BoostMeController;
 use App\Http\Controllers\ContactInfoController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContactMessageController;
 
 // 🟢 ADICIONA AS ROTAS DE RECUPERAÇÃO DE SENHA AQUI
 Route::get("/forgot-password", [AuthController::class, "showForgotForm"])
@@ -57,11 +58,14 @@ Route::get("/servicos", [SiteController::class, "servicos"])->name("site.servico
 Route::get("/recursos", [SiteController::class, "recursos"])->name("site.recursos");
 Route::get("/sobre", [SiteController::class, "sobre"])->name("site.sobre");
 Route::get("/noticias", [SiteController::class, "noticias"])->name("site.noticias");
+Route::get("/catalogo-formacao", [SiteController::class, "catalogoFormacao"])->name("site.catalogo");
+Route::get("/boost-me", [SiteController::class, "boostMe"])->name("site.boost");
 Route::post("/contacto", [ContactController::class, "store"])->name("site.contacto");
 
 // 🆕 ROTA PÚBLICA PRINCIPAL (Vagas + Formações + Candidatura)
 Route::get("/vagas-formacoes", [PublicController::class, "vagasFormacoes"])->name("public.vagasFormacoes");
 Route::post("/candidatar", [PublicController::class, "candidatar"])->name("public.candidatar");
+Route::post("/candidatura-espontanea", [PublicController::class, "candidaturaEspontanea"])->name("public.candidatura-espontanea");
 
 Route::get("/dashboard", [AuthController::class, "dashboard"])
     ->middleware("auth") // Se tiver proteção de login
@@ -168,6 +172,17 @@ Route::post("/candidatos/store", [CandidatoController::class, "store"])->name(
     "candidatos.store",
 );
 
+// Rotas de Candidaturas Espontâneas
+Route::get("/candidaturas-espontaneas", [
+    \App\Http\Controllers\CandidaturaEspontaneaController::class, "index",
+])->name("candidaturas-espontaneas.index");
+Route::put("/candidaturas-espontaneas/{id}/status", [
+    \App\Http\Controllers\CandidaturaEspontaneaController::class, "alterarStatus",
+])->name("candidaturas-espontaneas.status");
+Route::delete("/candidaturas-espontaneas/{id}", [
+    \App\Http\Controllers\CandidaturaEspontaneaController::class, "destroy",
+])->name("candidaturas-espontaneas.destroy");
+
 
 
 // Rota de listagem de Formações
@@ -250,6 +265,16 @@ Route::middleware(["auth"])->group(function () {
     );
     Route::put("/estagiarios/{id}", [EstagiarioController::class, "update"])->name(
         "estagiarios.update",
+    );
+
+    Route::get("/contact-messages", [ContactMessageController::class, "index"])->name(
+        "contact-messages.index",
+    );
+    Route::post("/contact-messages/{mensagem}/ler", [ContactMessageController::class, "marcarLida"])->name(
+        "contact-messages.ler",
+    );
+    Route::delete("/contact-messages/{mensagem}", [ContactMessageController::class, "destroy"])->name(
+        "contact-messages.destroy",
     );
 });
 

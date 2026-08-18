@@ -7,14 +7,16 @@
 <!-- ===== HERO ===== -->
 <section class="hero">
   <div class="container hero-grid">
-    <div class="hero-copy">
+    <div class="hero-copy" style="text-align: justify;">
       @if($hero)
-        <span class="eyebrow">{{ $hero->subtitle ?? 'Consultoria empresarial · Bissau & África Ocidental' }}</span>
-        <h1>{!! $hero->title !!}</h1>
-        <p class="lede">{{ $hero->description ?? ($hero->subtitle ?? 'Acompanhamos empresas, instituições e empreendedores com estratégia, finanças e gestão de projetos — do diagnóstico aos resultados medidos.') }}</p>
+        <h1 style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">{!! $hero->title !!}</h1>
+        @if($hero->subtitle)
+          <p class="lede">{{ $hero->subtitle }}</p>
+        @endif
+        <!--<p class="lede">{{ $hero->description ?? 'Acompanhamos empresas, instituições e empreendedores com estratégia, finanças e gestão de projetos — do diagnóstico aos resultados medidos.' }}</p>-->
       @else
-        <span class="eyebrow" data-i18n="hero.eyebrow">Consultoria empresarial · Bissau & África Ocidental</span>
-        <h1 data-i18n-html="hero.title">Estruturamos negócios que <span class="ink-accent">crescem</span> no terreno africano.</h1>
+        <h1 style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);" data-i18n-html="hero.title">Estruturamos negócios que <span class="ink-accent">crescem</span> no terreno africano.</h1>
+        <p class="lede" data-i18n="hero.subtitle">Consultoria empresarial especializada na Guiné-Bissau e África Ocidental, com foco em estratégia e gestão.</p>
         <p class="lede" data-i18n="hero.lede">Acompanhamos empresas, instituições e empreendedores com estratégia, finanças e gestão de projetos — do diagnóstico aos resultados medidos.</p>
       @endif
       <div class="hero-cta">
@@ -47,12 +49,172 @@
   </div>
 </section>
 
+<!-- ===== BOOST_ME ===== -->
+<section class="section boost" id="boost">
+  <div class="container boost-grid @if($boost && $boost->image_path) has-media @endif">
+    <div class="boost-copy">
+      @if($boost)
+        <span class="eyebrow eyebrow-light">{{ $boost->eyebrow ?: 'Programa de aceleração' }}</span>
+        <h2>{!! $boost->title ?: '<span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas' !!}</h2>
+        <p>{{ $boost->description }}</p>
+        @if($boost->features)
+        <ul class="boost-feats">
+          @foreach(preg_split('/\R/', trim($boost->features)) as $feat)
+            @if(trim($feat) !== '')
+              <li>{{ trim($feat) }}</li>
+            @endif
+          @endforeach
+        </ul>
+        @endif
+        <div class="boost-cta">
+          @if($boost->cta1)<a href="{{ route('site.boost') }}" class="btn btn-accent">{{ $boost->cta1 }}</a>@endif
+          @if($boost->cta2)<a href="#contacto" class="btn btn-line-light">{{ $boost->cta2 }}</a>@endif
+          @if($boost->cta3)<a href="#contacto" class="btn btn-line-light">{{ $boost->cta3 }}</a>@endif
+        </div>
+      @else
+        <span class="eyebrow eyebrow-light" data-i18n="sec.boost.eyebrow">Programa de aceleração</span>
+        <h2 data-i18n-html="sec.boost.title"><span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas</h2>
+        <p data-i18n="sec.boost.desc">Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.</p>
+        <ul class="boost-feats">
+          <li data-i18n="sec.boost.f1">Diagnóstico e estruturação do negócio</li>
+          <li data-i18n="sec.boost.f2">Mentoria estratégica personalizada</li>
+          <li data-i18n="sec.boost.f3">Preparação para financiamento e investimento</li>
+        </ul>
+        <div class="boost-cta">
+          <a href="{{ route('site.boost') }}" class="btn btn-accent" data-i18n="sec.boost.cta1">Conhecer o programa</a>
+          <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta2">Candidatar-se</a>
+          <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta3">Solicitar informações</a>
+        </div>
+      @endif
+    </div>
+    @if($boost && $boost->image_path)
+    <div class="boost-media reveal">
+      <img src="{{ asset('storage/' . $boost->image_path) }}" alt="BOOST_ME — Acelerador de Empresas" loading="lazy">
+    </div>
+    @endif
+  </div>
+</section>
+
+<!-- ===== TREINO / CAPACITAÇÃO ===== -->
+<section class="section section-tint" id="treino">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="sec.treino.eyebrow">Capacitação & Desenvolvimento</span>
+      <h2 data-i18n="sec.treino.title">O Nosso Treino</h2>
+      <p data-i18n="sec.treino.desc">Programas de formação contínua desenhados para elevar competências pessoais e profissionais na sua organização.</p>
+    </div>
+    <div class="treino-arc-container reveal">
+      <div class="treino-grid">
+        <div class="treino-node">
+          <div class="treino-dot" style="background:#29B6F6;"></div>
+          <h3 data-i18n="sec.treino.n1">Liderança & Gestão</h3>
+        </div>
+        <div class="treino-node">
+          <div class="treino-dot" style="background:#4E4E4E;"></div>
+          <h3 data-i18n="sec.treino.n2">Contabilidade & Finanças, Controlo de Gestão e Controlo Interno</h3>
+        </div>
+        <div class="treino-node">
+          <div class="treino-dot" style="background:#8E54FF;"></div>
+          <h3 data-i18n="sec.treino.n3">Autoconfiança e Desenvolvimento Pessoal</h3>
+        </div>
+        <div class="treino-node">
+          <div class="treino-dot" style="background:#0097A7;"></div>
+          <h3 data-i18n="sec.treino.n4">Produtividade no Local de Trabalho</h3>
+        </div>
+        <div class="treino-node">
+          <div class="treino-dot" style="background:#1A00A0;"></div>
+          <h3 data-i18n="sec.treino.n5">Gestão de Recursos Humanos</h3>
+        </div>
+        <div class="treino-node">
+          <div class="treino-dot" style="background:#19647E;"></div>
+          <h3 data-i18n="sec.treino.n6">Marketing & Comunicação</h3>
+        </div>
+        <div class="treino-node">
+          <div class="treino-dot" style="background:#6200EE;"></div>
+          <h3 data-i18n="sec.treino.n7">Gestão de Projetos, Monitorização e Avaliação</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TEAM BUILDING ===== -->
+<section class="section" id="team-building">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="sec.tb.eyebrow">Dinâmicas de Grupo</span>
+      <h2 data-i18n="sec.tb.title">Team Building</h2>
+      <p data-i18n="sec.tb.desc">Atividades focadas no fortalecimento de relações, coesão de equipa e resolução colaborativa de problemas.</p>
+    </div>
+    <div class="tb-container reveal">
+      <div class="tb-image-wrap">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Equipa colaborando em atividade de Team Building">
+      </div>
+      <div class="tb-quad-grid">
+        <div class="tb-card">
+          <div class="tb-card-icon"><i class="fa-solid fa-people-group"></i></div>
+          <h3 data-i18n="sec.tb.c1">Construção da Equipa e Coesão da Equipa</h3>
+        </div>
+        <div class="tb-card">
+          <div class="tb-card-icon"><i class="fa-solid fa-comments"></i></div>
+          <h3 data-i18n="sec.tb.c2">Quebra-Gelo em Equipa</h3>
+        </div>
+        <div class="tb-card">
+          <div class="tb-card-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+          <h3 data-i18n="sec.tb.c3">Resolução de Problemas</h3>
+        </div>
+        <div class="tb-card">
+          <div class="tb-card-icon"><i class="fa-solid fa-handshake"></i></div>
+          <h3 data-i18n="sec.tb.c4">Coesão da Equipa (Interior, Online, Exterior)</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EVENTO PRINCIPAL — GUINÉE BISSAU TALENTS ===== -->
+<section class="section section-tint" id="evento-principal">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="sec.ev.eyebrow">Iniciativa de Impacto</span>
+      <h2 data-i18n="sec.ev.title">O Nosso Evento Principal</h2>
+      <p class="ink-accent" style="font-weight:700;font-size:1.2rem;margin-top:6px;" data-i18n="sec.ev.subtitle">Guinée Bissau Talents</p>
+    </div>
+    <div class="piramide-stack reveal">
+      <div class="piramide-level" style="border-left-color:#103E50;">
+        <span class="piramide-num">01</span>
+        <div class="piramide-txt" data-i18n="sec.ev.p1">Estabelecimento dos dias anuais de talento e oportunidade com parceiros estratégicos</div>
+      </div>
+      <div class="piramide-level" style="border-left-color:#155068;">
+        <span class="piramide-num">02</span>
+        <div class="piramide-txt" data-i18n="sec.ev.p2">Fórum de Emprego: Ponto de encontro entre potenciais empregadores e os melhores candidatos em formação de competências e conhecimentos ambientais da Guiné-Bissau</div>
+      </div>
+      <div class="piramide-level" style="border-left-color:#186080;">
+        <span class="piramide-num">03</span>
+        <div class="piramide-txt" data-i18n="sec.ev.p3">Reunião entre líderes de projeto e detentores de capitais, como bancos e outros investidores potencial</div>
+      </div>
+      <div class="piramide-level" style="border-left-color:#1B648B;">
+        <span class="piramide-num">04</span>
+        <div class="piramide-txt" data-i18n="sec.ev.p4">Bancas de informação de pequenas e médias empresas e outras organizações nacionais e internacionais</div>
+      </div>
+      <div class="piramide-level" style="border-left-color:#C2683C;">
+        <span class="piramide-num">05</span>
+        <div class="piramide-txt" data-i18n="sec.ev.p5">Debates e mesas-redondas sobre temas relacionados com o desenvolvimento da Guiné-Bissau, orientações económicas, formação de jovens e sua integração profissional, criação e gestão de empresas, procura de financiamento junto dos bancos e papel dos operadores económicos</div>
+      </div>
+      <div class="piramide-level" style="border-left-color:#D98A5E;">
+        <span class="piramide-num">06</span>
+        <div class="piramide-txt" data-i18n="sec.ev.p6">Reconhecimentos e prémios para estudantes, inventores, empreendedores e líderes empresariais</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== SERVIÇOS ===== -->
-<section class="section" id="servicos">
+<!--<section class="section" id="servicos">
   <div class="container">
     <header class="section-head">
       <span class="eyebrow" data-i18n="sec.servicos.eyebrow">O que fazemos</span>
-      <h2 data-i18n="sec.servicos.title">Serviços especializados, do diagnóstico à execução</h2>
+      <h2 data-i18n="sec.servicos.title">As nossas àreas de intervenção</h2>
       <p data-i18n="sec.servicos.desc">Competências multidisciplinares para cada fase do percurso empresarial, desenhadas para o contexto local.</p>
     </header>
     <div class="services-grid">
@@ -91,7 +253,7 @@
       @endforelse
     </div>
   </div>
-</section>
+</section>-->
 
 <!-- ===== RECRUTAMENTO E FORMAÇÕES ===== -->
 <section class="section section-tint" id="recrutamento">
@@ -181,12 +343,12 @@
           <div class="field">
             <label data-i18n-html="cand.cv">Currículo (PDF ou DOCX) <span>*</span></label>
             <input type="file" name="cv_arquivo" accept=".pdf,.doc,.docx" required>
-            <small style="color:var(--muted);font-size:.78rem;margin-top:4px;display:block" data-i18n="cand.cvHint">Tamanho máximo: 2MB</small>
+            <small style="color:var(--muted);font-size:.78rem;margin-top:4px;display:block" data-i18n="cand.cvHint">Tamanho máximo: 10MB</small>
           </div>
           <div class="field">
             <label data-i18n-html="cand.carta">Carta de Motivação (PDF ou DOCX)</label>
             <input type="file" name="carta_motivacao_arquivo" accept=".pdf,.doc,.docx">
-            <small style="color:var(--muted);font-size:.78rem;margin-top:4px;display:block" data-i18n="cand.cartaHint">Opcional · Tamanho máximo: 2MB</small>
+            <small style="color:var(--muted);font-size:.78rem;margin-top:4px;display:block" data-i18n="cand.cartaHint">Opcional · Tamanho máximo: 10MB</small>
           </div>
           <div class="candidatura-actions">
             <button type="button" class="btn btn-line" id="btnCancelarCandidatura" data-i18n="cand.cancel">Cancelar</button>
@@ -194,6 +356,88 @@
               <i class="fa-solid fa-paper-plane"></i> <span data-i18n="cand.submit">Enviar Candidatura</span>
             </button>
           </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CANDIDATURA ESPONTÂNEA ===== -->
+<section class="section section-tint" id="candidatura-espontanea">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Candidatura Espontânea</span>
+      <h2>Deposite o seu Currículo</h2>
+      <p>Envi-nos o seu CV e entraremos em contacto sempre que surgir uma oportunidade compatível com o seu perfil. A nossa equipa analisa cada candidatura e procura a melhor colocação para si.</p>
+    </div>
+
+    <div style="max-width:560px;margin:0 auto;">
+      <form action="{{ route('public.candidatura-espontanea') }}" method="POST" enctype="multipart/form-data" id="candidaturaEspontaneaForm" style="background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:32px;box-shadow:var(--shadow-sm);">
+        @csrf
+        <div class="form-feedback" id="ceFeedback"></div>
+        <div class="field-row">
+          <div class="field">
+            <label>Nome Completo <span style="color:var(--clay)">*</span></label>
+            <input type="text" name="nome" placeholder="Nome completo" required>
+          </div>
+          <div class="field">
+            <label>Email <span style="color:var(--clay)">*</span></label>
+            <input type="email" name="email" placeholder="exemplo@email.com" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Telefone <span style="color:var(--clay)">*</span></label>
+            <input type="text" name="telefone" placeholder="+245..." required>
+          </div>
+          <div class="field">
+            <label>Profissão</label>
+            <input type="text" name="profissao" placeholder="Ex: Gestor de RH">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Nível Académico</label>
+            <select name="nivel_academico">
+              <option value="">Selecionar...</option>
+              <option value="secundario">Ensino Secundário</option>
+              <option value="bacharel">Bacharelato</option>
+              <option value="licenciatura">Licenciatura</option>
+              <option value="mestrado">Mestrado</option>
+              <option value="doutoramento">Doutoramento</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Anos de Experiência</label>
+            <input type="number" min="0" name="anos_experiencia" placeholder="Ex: 3">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Competências</label>
+            <input type="text" name="competencias" placeholder="Ex: Excel avançado, Laravel">
+          </div>
+          <div class="field">
+            <label>Localização</label>
+            <input type="text" name="localizacao" placeholder="Ex: Bissau">
+          </div>
+        </div>
+        <div class="field">
+          <label>Currículo (PDF ou DOCX) <span style="color:var(--clay)">*</span></label>
+          <input type="file" name="cv_arquivo" accept=".pdf,.doc,.docx" required>
+          <small style="color:var(--muted);font-size:.78rem;margin-top:4px;display:block">Tamanho máximo: 10MB</small>
+        </div>
+        <div class="field">
+          <label>Carta de Motivação (PDF ou DOCX)</label>
+          <input type="file" name="carta_motivacao_arquivo" accept=".pdf,.doc,.docx">
+          <small style="color:var(--muted);font-size:.78rem;margin-top:4px;display:block">Opcional · Tamanho máximo: 10MB</small>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px;">
+          <button type="reset" class="btn btn-line">Limpar</button>
+          <button type="submit" class="btn btn-accent">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Depositar CV
+          </button>
         </div>
       </form>
     </div>
@@ -221,7 +465,7 @@
 </section>
 
 <!-- ===== RECURSOS ===== -->
-<section class="section section-tint" id="recursos">
+<!--<section class="section section-tint" id="recursos">
   <div class="container">
     <header class="section-head">
       <span class="eyebrow" data-i18n="sec.res.eyebrow">Recursos para empreendedores</span>
@@ -252,7 +496,7 @@
       @endforelse
     </div>
   </div>
-</section>
+</section>-->
 
 <!-- ===== SOBRE ===== -->
 <section class="section section-dark" id="sobre">
@@ -345,54 +589,10 @@
   </div>
 </section>
 
-<!-- ===== BOOST_ME ===== -->
-<section class="section boost" id="boost">
-  <div class="container boost-grid @if($boost && $boost->image_path) has-media @endif">
-    <div class="boost-copy">
-      @if($boost)
-        <span class="eyebrow eyebrow-light">{{ $boost->eyebrow ?: 'Programa de aceleração' }}</span>
-        <h2>{!! $boost->title ?: '<span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas' !!}</h2>
-        <p>{{ $boost->description }}</p>
-        @if($boost->features)
-        <ul class="boost-feats">
-          @foreach(preg_split('/\R/', trim($boost->features)) as $feat)
-            @if(trim($feat) !== '')
-              <li>{{ trim($feat) }}</li>
-            @endif
-          @endforeach
-        </ul>
-        @endif
-        <div class="boost-cta">
-          @if($boost->cta1)<a href="#contacto" class="btn btn-accent">{{ $boost->cta1 }}</a>@endif
-          @if($boost->cta2)<a href="#contacto" class="btn btn-line-light">{{ $boost->cta2 }}</a>@endif
-          @if($boost->cta3)<a href="#contacto" class="btn btn-line-light">{{ $boost->cta3 }}</a>@endif
-        </div>
-      @else
-        <span class="eyebrow eyebrow-light" data-i18n="sec.boost.eyebrow">Programa de aceleração</span>
-        <h2 data-i18n-html="sec.boost.title"><span class="boost-name">BOOST_ME</span><br>Acelerador de Empresas</h2>
-        <p data-i18n="sec.boost.desc">Um programa desenhado para apoiar empreendedores e empresas no desenvolvimento, estruturação e crescimento dos seus negócios. Da ideia à escala, acompanhamos cada etapa com mentoria, ferramentas e acesso a redes de financiamento.</p>
-        <ul class="boost-feats">
-          <li data-i18n="sec.boost.f1">Diagnóstico e estruturação do negócio</li>
-          <li data-i18n="sec.boost.f2">Mentoria estratégica personalizada</li>
-          <li data-i18n="sec.boost.f3">Preparação para financiamento e investimento</li>
-        </ul>
-        <div class="boost-cta">
-          <a href="#contacto" class="btn btn-accent" data-i18n="sec.boost.cta1">Conhecer o programa</a>
-          <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta2">Candidatar-se</a>
-          <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta3">Solicitar informações</a>
-        </div>
-      @endif
-    </div>
-    @if($boost && $boost->image_path)
-    <div class="boost-media reveal">
-      <img src="{{ asset('storage/' . $boost->image_path) }}" alt="BOOST_ME — Acelerador de Empresas" loading="lazy">
-    </div>
-    @endif
-  </div>
-</section>
+
 
 <!-- ===== NOTÍCIAS ===== -->
-<section class="section" id="noticias">
+<!--<section class="section" id="noticias">
   <div class="container">
     <header class="section-head">
       <span class="eyebrow" data-i18n="sec.news.eyebrow">Atualidade</span>
@@ -436,13 +636,13 @@
       @endforelse
     </div>
   </div>
-</section>
+</section>-->
 
 <!-- ===== CTA ===== -->
 <section class="cta-band">
   <div class="container cta-inner">
     <h2 data-i18n="cta.title">Transforme os seus desafios em oportunidades de crescimento.</h2>
-    <a href="#contacto" class="btn btn-accent btn-lg" data-i18n="cta.btn">Solicitar uma consultoria</a>
+    <a href="{{ route('site.catalogo') }}" class="btn btn-accent btn-lg" data-i18n="cta.btn">Solicitar uma consultoria</a>
   </div>
 </section>
 
@@ -479,8 +679,17 @@
         <a href="{{ $contact->facebook ?? '#' }}" class="chip" target="_blank" rel="noopener">Facebook</a>
       </div>
 
-      <div class="map-slot" role="img" aria-label="Mapa — Antula, Bissau">
-        <span>assets · mapa Antula, Bissau</span>
+      <div class="map-embed-container">
+        <iframe
+          title="Mapa de Antula, Bissau"
+          src="https://maps.google.com/maps?q=Antula,%20Bissau,%20Guinea-Bissau&t=&z=14&ie=UTF8&iwloc=&output=embed"
+          width="100%"
+          height="350"
+          style="border:0; border-radius: var(--r, 12px);"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
       </div>
     </div>
 
@@ -703,6 +912,34 @@
   window.afterLangChange = () => {
     if (vagasLoaded) { renderVagas(allVagas); renderFormacoes(allFormacoes); fillVagaSelect(); }
   };
+
+  /* Candidatura espontânea */
+  const formCE = document.getElementById("candidaturaEspontaneaForm");
+  const ceFeedback = document.getElementById("ceFeedback");
+  if (formCE) {
+    formCE.addEventListener("submit", e => {
+      e.preventDefault();
+      ceFeedback.textContent = ""; ceFeedback.className = "form-feedback";
+      const btn = formCE.querySelector("button[type='submit']");
+      const txt = btn.innerHTML;
+      btn.classList.add("loading"); btn.disabled = true;
+      btn.innerHTML = `<span class="btn-spinner"></span> A enviar...`;
+      fetch("/candidatura-espontanea", { method: "POST", body: new FormData(formCE), headers: { "Accept": "application/json" } })
+        .then(r => r.json())
+        .then(res => {
+          if (res.success) {
+            ceFeedback.textContent = res.message;
+            ceFeedback.classList.add("ok");
+            formCE.reset();
+          } else {
+            ceFeedback.textContent = res.message || "Não foi possível registar a candidatura.";
+            ceFeedback.classList.add("bad");
+          }
+        })
+        .catch(() => { ceFeedback.textContent = "Ocorreu um erro ao enviar a candidatura."; ceFeedback.classList.add("bad"); })
+        .finally(() => { btn.classList.remove("loading"); btn.disabled = false; btn.innerHTML = txt; });
+    });
+  }
 
   /* Formulário de contacto (envio real) */
   const form = document.getElementById("contactForm");

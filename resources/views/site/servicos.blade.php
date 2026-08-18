@@ -9,7 +9,7 @@
   <div class="container">
     <header class="section-head" style="margin-bottom:0">
       <span class="eyebrow">O que fazemos</span>
-      <h1>Serviços especializados, do diagnóstico à execução</h1>
+      <h1>As nossas àreas de intervenção</h1>
       <p>Competências multidisciplinares para cada fase do percurso empresarial, desenhadas para o contexto da Guiné-Bissau e da África Ocidental.</p>
     </header>
   </div>
