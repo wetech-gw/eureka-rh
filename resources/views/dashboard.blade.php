@@ -50,7 +50,7 @@
         @include('partials.avisos-ferias')
 
         <div class="row g-3 mb-4">
-            <div class="col-md-3">
+            <div class="col-sm-6 col-md-3">
                 <div class="card-custom p-4 shadow-sm">
                     <span class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.02em;">Total Funcionario</span>
 
@@ -63,7 +63,7 @@
                     @endif
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-sm-6 col-md-3">
                 <div class="card-custom p-4 shadow-sm">
                     <span class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.02em;">Presença Hoje</span>
                     <div class="stat-number">
@@ -72,7 +72,7 @@
                     <span class="text-secondary small d-block mt-2">{{ $ausentesHoje }} ausentes</span>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-sm-6 col-md-3">
                 <div class="card-custom p-4 shadow-sm">
                     <span class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.02em;">Contratos a Expirar</span>
 
@@ -93,7 +93,7 @@
                     @endif
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-sm-6 col-md-3">
                 <div class="card-custom p-4 shadow-sm">
                     <span class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.02em;">
                         Total Candidatos

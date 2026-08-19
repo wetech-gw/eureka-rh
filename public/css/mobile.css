@@ -1,0 +1,172 @@
+/* =========================================================
+   EUREKA RH — MOBILE & TABLET RESPONSIVENESS
+   Breakpoints: tablet ≤991px, mobile ≤767px
+   ========================================================= */
+
+/* === HAMBURGER BUTTON === */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 200;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 10px;
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--border, #f1f1f0);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+}
+.mobile-menu-toggle svg { width: 22px; height: 22px; color: var(--text-primary, #111); }
+.mobile-menu-toggle:active { transform: scale(0.92); }
+
+/* === OVERLAY === */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+/* === TABLET (≤ 991px) === */
+@media (max-width: 991px) {
+
+    /* Layout-based views (.d-flex > aside.sidebar + main.main-content) */
+    .main-content {
+        margin-left: 0 !important;
+        padding-top: 60px !important;
+    }
+    .main-content > .d-flex {
+        padding-top: 0;
+    }
+
+    /* Standalone views (.wrapper > aside.sidebar + div.main-content) */
+    .wrapper {
+        position: relative;
+    }
+    .wrapper > .main-content {
+        padding-top: 60px !important;
+    }
+}
+
+/* === MOBILE (≤ 767px) === */
+@media (max-width: 767px) {
+
+    /* Show hamburger */
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    /* Hide sidebar off-screen */
+    .sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 260px !important;
+        height: 100vh;
+        z-index: 101;
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+        overflow-y: auto;
+        box-shadow: none;
+    }
+
+    /* When open */
+    body.sidebar-open .sidebar {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.18);
+    }
+    body.sidebar-open .sidebar-overlay {
+        display: block;
+    }
+
+    /* Main content full width */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 14px !important;
+        padding-top: 62px !important;
+    }
+
+    /* Tables horizontal scroll */
+    .table-scrollable-container {
+        max-height: none !important;
+    }
+    .table-scrollable-container table {
+        min-width: 600px;
+    }
+
+    /* Stats grid → 2 columns */
+    .row.g-3 > [class*="col-"] {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    /* Cards / sections stack */
+    .card-custom {
+        margin-bottom: 12px;
+    }
+
+    /* Forms: field-row becomes stack */
+    .field-row {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    /* Buttons row wraps */
+    .d-flex.justify-content-between {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Search input full width */
+    .modern-search-group {
+        width: 100% !important;
+    }
+
+    /* Header items wrap */
+    .d-flex.gap-2.align-items-center {
+        flex-wrap: wrap;
+    }
+
+    /* Section titles smaller */
+    h1.display-5 {
+        font-size: 1.5rem !important;
+    }
+
+    /* Filter forms stack */
+    .row.g-2 > [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* === VERY SMALL (≤ 480px) === */
+@media (max-width: 480px) {
+    .row.g-3 > [class*="col-"] {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+    .main-content {
+        padding: 10px !important;
+        padding-top: 58px !important;
+    }
+    h1.display-5 {
+        font-size: 1.25rem !important;
+    }
+}
+
+/* === DARK MODE OVERRIDES === */
+html[data-theme="dark"] .mobile-menu-toggle {
+    background: #171a21;
+    border-color: #262b34;
+}
+html[data-theme="dark"] .mobile-menu-toggle svg { color: #e6e6e4; }
+html[data-theme="dark"] .sidebar-overlay { background: rgba(0,0,0,0.6); }

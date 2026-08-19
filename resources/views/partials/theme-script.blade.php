@@ -29,3 +29,4 @@
     });
 })();
 </script>
+<script src="{{ asset('js/mobile.js') }}"></script>
