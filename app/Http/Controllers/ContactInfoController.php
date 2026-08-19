@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\ContactInfo;
 use Illuminate\Http\Request;
+use App\Traits\LogsActivity;
 
 class ContactInfoController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         $contact = ContactInfo::first();
@@ -25,6 +27,7 @@ class ContactInfoController extends Controller
         $validated = $this->validateData($request);
 
         ContactInfo::create($validated);
+        $this->logActivity('create', 'Contactos do Site', null, 'Criou contactos do site');
 
         return redirect()->route('admin.contactos.index')->with('success', 'Contactos criados com sucesso!');
     }
@@ -39,6 +42,7 @@ class ContactInfoController extends Controller
         $validated = $this->validateData($request);
 
         $contacto->update($validated);
+        $this->logActivity('update', 'Contactos do Site', $contacto->id, 'Atualizou contactos do site');
 
         return redirect()->route('admin.contactos.index')->with('success', 'Contactos atualizados com sucesso!');
     }
@@ -46,6 +50,7 @@ class ContactInfoController extends Controller
     public function destroy(ContactInfo $contacto)
     {
         $contacto->delete();
+        $this->logActivity('delete', 'Contactos do Site', $contacto->id, 'Eliminou contactos do site');
 
         return redirect()->route('admin.contactos.index')->with('success', 'Contactos eliminados!');
     }

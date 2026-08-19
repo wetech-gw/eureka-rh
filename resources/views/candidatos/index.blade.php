@@ -159,7 +159,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
             </a>
-            @if(in_array(Auth::user()->role, ['Responsável', 'CEO']))
+            @if(in_array(Auth::user()->role, ['Responsável', 'CEO', 'Assistente']))
             <div class="text-uppercase text-muted fw-bold mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.05em;">Site Público</div>
 
             <a href="{{ route('admin.inicio.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}">
@@ -261,9 +261,11 @@
                     Exportar PDF
                 </button>
 
+            @if(Auth::user()->role !== 'CEO')
             <button type="button" class="btn text-white fw-medium shadow-sm px-3" style="background-color: #0d9488; font-size: 14px; border: none; height: 38px;" data-bs-toggle="modal" data-bs-target="#createCandidatoModal">
                 <i class="fa-solid fa-user-plus me-1"></i> Adicionar Candidato
             </button>
+            @endif
         </div>
 
     <div class="row g-2 mb-4 row-cols-2 row-cols-md-4 row-cols-lg-5">
@@ -473,6 +475,7 @@
                                 <!-- Ações -->
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1 flex-wrap">
+                                        @if(Auth::user()->role !== 'CEO')
                                         @if(strtolower($candidatura->status) != 'aceito')
                                             <form action="{{ route('candidatos.alterarStatus', $candidatura->candidatura_id) }}" method="POST" class="d-inline">
                                                 @csrf
@@ -515,6 +518,7 @@
                                                     <i class="fa-solid fa-rotate-left"></i>
                                                 </button>
                                             </form>
+                                        @endif
                                         @endif
                                     </div>
                                 </td>

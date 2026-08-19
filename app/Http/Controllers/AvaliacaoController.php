@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Traits\LogsActivity;
 
 class AvaliacaoController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         $hoje = Carbon::today()->toDateString();
@@ -70,6 +72,9 @@ class AvaliacaoController extends Controller
             "updated_at" => Carbon::now(),
         ]);
 
+        $func = DB::table('funcionarios')->where('id', $request->funcionario_id)->first();
+        $this->logActivity('create', 'Avaliação', null, 'Agendou avaliação para ' . ($func->nome ?? 'desconhecido'));
+
         return redirect()
             ->back()
             ->with("success", "Avaliação agendada com sucesso!");
@@ -89,6 +94,8 @@ class AvaliacaoController extends Controller
                 "comentarios" => $request->comentarios,
                 "updated_at" => Carbon::now(),
             ]);
+
+        $this->logActivity('update', 'Avaliação', $id, 'Atualizou avaliação #' . $id . ($request->nota ? ' (Nota: ' . $request->nota . ')' : ''));
 
         return redirect()
             ->back()

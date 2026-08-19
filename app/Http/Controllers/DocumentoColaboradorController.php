@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Traits\LogsActivity;
 
 class DocumentoColaboradorController extends Controller
 {
+    use LogsActivity;
     public function index(Request $request)
     {
         $query = DB::table('documentos_colaboradores')
@@ -84,6 +86,9 @@ class DocumentoColaboradorController extends Controller
                 'updated_at' => now(),
             ], $paths));
         }
+
+        $func = DB::table('funcionarios')->where('id', $data['funcionario_id'])->first();
+        $this->logActivity('create', 'Dossiê Colaborador', null, 'Registou dossiê documental de ' . ($func->nome ?? 'desconhecido'));
 
         return redirect()
             ->route('documentos.colaboradores.index')

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use App\Traits\LogsActivity;
 
 class ServiceController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         $services = Service::all();
@@ -31,6 +33,7 @@ class ServiceController extends Controller
         $validated['is_featured'] = $request->has('is_featured');
 
         Service::create($validated);
+        $this->logActivity('create', 'Serviço', null, 'Criou serviço: ' . $request->title);
         return redirect()->route('admin.servicos.index')->with('success', 'Serviço adicionado com sucesso!');
     }
 
@@ -51,12 +54,14 @@ class ServiceController extends Controller
         $validated['is_featured'] = $request->has('is_featured');
 
         $servico->update($validated);
+        $this->logActivity('update', 'Serviço', $servico->id, 'Atualizou serviço: ' . $request->title);
         return redirect()->route('admin.servicos.index')->with('success', 'Serviço atualizado com sucesso!');
     }
 
     public function destroy(Service $servico)
     {
         $servico->delete();
+        $this->logActivity('delete', 'Serviço', $servico->id, 'Eliminou serviço');
         return redirect()->route('admin.servicos.index')->with('success', 'Serviço eliminado!');
     }
 }

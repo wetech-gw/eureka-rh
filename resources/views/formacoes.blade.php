@@ -145,7 +145,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
             </a>
-            @if(in_array(Auth::user()->role, ['Responsável', 'CEO']))
+            @if(in_array(Auth::user()->role, ['Responsável', 'CEO', 'Assistente']))
             <div class="text-uppercase text-muted fw-bold mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.05em;">Site Público</div>
 
             <a href="{{ route('admin.inicio.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}">
@@ -243,9 +243,11 @@
                     </span>
                     <input type="text" class="form-control modern-search-input" id="searchFormacao" placeholder="Pesquisar por tema ou entidade...">
                 </div>
+                @if(Auth::user()->role !== 'CEO')
                 <button type="button" class="btn text-white px-3 btn-sm fw-medium rounded-3" style="background-color: var(--accent);" data-bs-toggle="modal" data-bs-target="#modalAddFormacao">
                     ➕ Nova Formação
                 </button>
+                @endif
             </div>
         </div>
 
@@ -305,34 +307,36 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex gap-1 justify-content-center">
-                                        @if($f->status !== 'Em Curso' && $f->status !== 'Concluída')
-                                            <form action="{{ route('formacoes.alterarEstado', $f->id) }}" method="POST" class="m-0">
-                                                @csrf @method('PATCH')
-                                                <input type="hidden" name="status" value="Em Curso">
-                                                <button type="submit" class="btn btn-sm py-1 px-2 rounded-3 fw-medium" style="background-color: #e6fdfa; color: var(--accent); border: 1px solid #b2f5ea; font-size: 11px;" title="Iniciar Formação">
-                                                    ▶ Iniciar
-                                                </button>
-                                            </form>
-                                        @endif
+                                        @if(Auth::user()->role !== 'CEO')
+                                            @if($f->status !== 'Em Curso' && $f->status !== 'Concluída')
+                                                <form action="{{ route('formacoes.alterarEstado', $f->id) }}" method="POST" class="m-0">
+                                                    @csrf @method('PATCH')
+                                                    <input type="hidden" name="status" value="Em Curso">
+                                                    <button type="submit" class="btn btn-sm py-1 px-2 rounded-3 fw-medium" style="background-color: #e6fdfa; color: var(--accent); border: 1px solid #b2f5ea; font-size: 11px;" title="Iniciar Formação">
+                                                        ▶ Iniciar
+                                                    </button>
+                                                </form>
+                                            @endif
 
-                                        @if($f->status !== 'Concluída')
-                                            <form action="{{ route('formacoes.alterarEstado', $f->id) }}" method="POST" class="m-0">
-                                                @csrf @method('PATCH')
-                                                <input type="hidden" name="status" value="Concluída">
-                                                <button type="submit" class="btn btn-sm py-1 px-2 rounded-3 fw-medium" style="background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; font-size: 11px;" title="Concluir Formação">
-                                                    ✓ Concluir
-                                                </button>
-                                            </form>
-                                        @endif
+                                            @if($f->status !== 'Concluída')
+                                                <form action="{{ route('formacoes.alterarEstado', $f->id) }}" method="POST" class="m-0">
+                                                    @csrf @method('PATCH')
+                                                    <input type="hidden" name="status" value="Concluída">
+                                                    <button type="submit" class="btn btn-sm py-1 px-2 rounded-3 fw-medium" style="background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; font-size: 11px;" title="Concluir Formação">
+                                                        ✓ Concluir
+                                                    </button>
+                                                </form>
+                                            @endif
 
-                                        @if($f->status === 'Em Curso')
-                                            <form action="{{ route('formacoes.alterarEstado', $f->id) }}" method="POST" class="m-0">
-                                                @csrf @method('PATCH')
-                                                <input type="hidden" name="status" value="Planeada">
-                                                <button type="submit" class="btn btn-sm btn-light border py-1 px-2 rounded-3 text-muted" style="font-size: 11px;" title="Mudar para Planeada">
-                                                    ↩ Pausar
-                                                </button>
-                                            </form>
+                                            @if($f->status === 'Em Curso')
+                                                <form action="{{ route('formacoes.alterarEstado', $f->id) }}" method="POST" class="m-0">
+                                                    @csrf @method('PATCH')
+                                                    <input type="hidden" name="status" value="Planeada">
+                                                    <button type="submit" class="btn btn-sm btn-light border py-1 px-2 rounded-3 text-muted" style="font-size: 11px;" title="Mudar para Planeada">
+                                                        ↩ Pausar
+                                                    </button>
+                                                </form>
+                                            @endif
                                         @endif
 
                                         @if($f->status === 'Concluída')

@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Support\RequisitoVaga;
 use App\Services\SmsService;
+use App\Traits\LogsActivity;
 
 class RecrutamentoController extends Controller
 {
+    use LogsActivity;
     // Expira automaticamente as vagas cuja data_limite já passou
     private function expirarVagas(): void
     {
@@ -42,6 +44,9 @@ class RecrutamentoController extends Controller
             ->where('id', $id)
             ->update(['status' => $request->status]);
 
+        $vaga = DB::table('recrutamentos')->where('id', $id)->first();
+        $this->logActivity('status', 'Recrutamento', $id, 'Mudou estado da vaga ' . ($vaga->titulo_vaga ?? '#'.$id) . ' para ' . $request->status);
+
         return redirect()->back()->with('success', 'Estado da vaga atualizado com sucesso!');
     }
 
@@ -69,6 +74,8 @@ class RecrutamentoController extends Controller
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
+
+        $this->logActivity('create', 'Recrutamento', null, 'Criou vaga: ' . $request->titulo_vaga);
 
         return redirect()->back()->with('success', 'Vaga de recrutamento publicada com sucesso!');
     }

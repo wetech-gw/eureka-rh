@@ -7,9 +7,11 @@
         <p class="text-accent fw-normal mb-0" style="font-size: 15px;">Eureka Consulting — gestão de notícias e perspetivas de mercado</p>
     </div>
     <div class="d-flex gap-2 align-items-center">
+        @if(Auth::user()->role !== 'CEO')
         <a href="{{ route('admin.noticias.create') }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none; height: 38px;">
             + Nova Notícia
         </a>
+        @endif
     </div>
 </div>
 
@@ -43,6 +45,7 @@
                         </td>
                         <td class="py-3 text-secondary">{{ $noticia->published_at ? $noticia->published_at->format('d M Y') : '—' }}</td>
                         <td class="py-3 text-end">
+                            @if(Auth::user()->role !== 'CEO')
                             <a href="{{ route('admin.noticias.edit', $noticia) }}" class="btn btn-sm btn-outline-secondary rounded-3">Editar</a>
                             <form action="{{ route('admin.noticias.destroy', $noticia) }}" method="POST" class="d-inline"
                                   onsubmit="return confirm('Eliminar esta notícia?');">
@@ -50,6 +53,7 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded-3">Eliminar</button>
                             </form>
+                            @endif
                         </td>
                     </tr>
                 @empty

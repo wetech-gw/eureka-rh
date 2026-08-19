@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\LogsActivity;
 
 class NewsController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         $noticias = News::orderBy('published_at', 'desc')->get();
@@ -35,6 +37,7 @@ class NewsController extends Controller
         }
 
         News::create($validated);
+        $this->logActivity('create', 'Notícia', null, 'Publicou notícia: ' . $request->title);
         return redirect()->route('admin.noticias.index')->with('success', 'Notícia publicada com sucesso!');
     }
 
@@ -61,6 +64,7 @@ class NewsController extends Controller
         }
 
         $noticia->update($validated);
+        $this->logActivity('update', 'Notícia', $noticia->id, 'Atualizou notícia: ' . $request->title);
         return redirect()->route('admin.noticias.index')->with('success', 'Notícia atualizada com sucesso!');
     }
 
@@ -70,6 +74,7 @@ class NewsController extends Controller
             Storage::disk('public')->delete($noticia->image_path);
         }
         $noticia->delete();
+        $this->logActivity('delete', 'Notícia', $noticia->id, 'Eliminou notícia');
         return redirect()->route('admin.noticias.index')->with('success', 'Notícia eliminada!');
     }
 }

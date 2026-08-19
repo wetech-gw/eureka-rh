@@ -30,6 +30,7 @@ use App\Http\Controllers\BoostMeController;
 use App\Http\Controllers\ContactInfoController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactMessageController;
+use App\Http\Controllers\ActivityLogController;
 
 // 🟢 ADICIONA AS ROTAS DE RECUPERAÇÃO DE SENHA AQUI
 Route::get("/forgot-password", [AuthController::class, "showForgotForm"])
@@ -68,149 +69,145 @@ Route::post("/candidatar", [PublicController::class, "candidatar"])->name("publi
 Route::post("/candidatura-espontanea", [PublicController::class, "candidaturaEspontanea"])->name("public.candidatura-espontanea");
 
 Route::get("/dashboard", [AuthController::class, "dashboard"])
-    ->middleware("auth") // Se tiver proteção de login
+    ->middleware("auth")
     ->name("dashboard");
-// Se preferires aceder pelo link /dashboard, podes descomentar a linha abaixo:
-// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Rotas de Funcionários
-Route::get("/funcionarios", [FuncionarioController::class, "index"])->name(
-    "funcionarios.index",
-);
-Route::post("/funcionarios", [FuncionarioController::class, "store"])->name(
-    "funcionarios.store",
-);
-Route::put("/funcionarios/{funcionario}", [
-    FuncionarioController::class,
-    "update",
-])->name("funcionarios.update");
+// Rotas de gestão HR — acesso total para Responsável e Assistente; CEO apenas leitura
+Route::group([], function () {
 
-// Rotas de Férias e Ausências
-Route::get("/ferias-ausencias", [FeriasController::class, "index"])->name(
-    "ferias.index",
-);
-Route::post("/ferias-ausencias", [FeriasController::class, "store"])->name(
-    "ferias.store",
-);
-Route::put("/ferias-ausencias/{id}", [FeriasController::class, "update"])->name(
-    "ferias.update",
-);
+    // Rotas de Funcionários
+    Route::get("/funcionarios", [FuncionarioController::class, "index"])->name(
+        "funcionarios.index",
+    );
+    Route::post("/funcionarios", [FuncionarioController::class, "store"])->name(
+        "funcionarios.store",
+    );
+    Route::put("/funcionarios/{funcionario}", [
+        FuncionarioController::class,
+        "update",
+    ])->name("funcionarios.update");
 
-// Rotas de Avaliações
-Route::get("/avaliacoes", [AvaliacaoController::class, "index"])->name(
-    "avaliacoes.index",
-);
-Route::post("/avaliacoes", [AvaliacaoController::class, "store"])->name(
-    "avaliacoes.store",
-);
-Route::put("/avaliacoes/{id}", [AvaliacaoController::class, "update"])->name(
-    "avaliacoes.update",
-);
+    // Rotas de Férias e Ausências
+    Route::get("/ferias-ausencias", [FeriasController::class, "index"])->name(
+        "ferias.index",
+    );
+    Route::post("/ferias-ausencias", [FeriasController::class, "store"])->name(
+        "ferias.store",
+    );
+    Route::put("/ferias-ausencias/{id}", [FeriasController::class, "update"])->name(
+        "ferias.update",
+    );
 
-// Rota que já tens para listar as presenças
+    // Rotas de Avaliações
+    Route::get("/avaliacoes", [AvaliacaoController::class, "index"])->name(
+        "avaliacoes.index",
+    );
+    Route::post("/avaliacoes", [AvaliacaoController::class, "store"])->name(
+        "avaliacoes.store",
+    );
+    Route::put("/avaliacoes/{id}", [AvaliacaoController::class, "update"])->name(
+        "avaliacoes.update",
+    );
 
-// Rotas de Presenças
-Route::get("/presencas", [PresencaController::class, "index"])->name(
-    "presencas.index",
-);
-Route::post("/presencas", [PresencaController::class, "store"])->name(
-    "presencas.store",
-);
-Route::put("/presencas/{id}", [PresencaController::class, "update"])->name(
-    "presencas.update",
-);
-Route::delete("/presencas/{id}", [PresencaController::class, "destroy"])->name(
-    "presencas.destroy",
-);
+    // Rotas de Presenças
+    Route::get("/presencas", [PresencaController::class, "index"])->name(
+        "presencas.index",
+    );
+    Route::post("/presencas", [PresencaController::class, "store"])->name(
+        "presencas.store",
+    );
+    Route::put("/presencas/{id}", [PresencaController::class, "update"])->name(
+        "presencas.update",
+    );
+    Route::delete("/presencas/{id}", [PresencaController::class, "destroy"])->name(
+        "presencas.destroy",
+    );
 
-// ROTAS DA FOLHA SALARIAL (EUREKA RH)
-// 1. Rota para abrir a página e listar a folha
-Route::get("/folha-salarial", [FolhaSalarialController::class, "index"])->name(
-    "folhas.index",
-);
-// 2. Rota que envia o formulário para rodar o mês inteiro (A que enviaste)
-Route::post("/folha-salarial/gerar", [
-    FolhaSalarialController::class,
-    "gerarMesInteiro",
-])->name("folhas.gerar");
-// 3. Rota para o botão de alternar entre "Pendente" e "Pago"
-Route::patch("/folha-salarial/{id}/status", [
-    FolhaSalarialController::class,
-    "alterarStatus",
-])->name("folhas.status");
-Route::get("/folhas-salariais/exportar", [
-    FolhaSalarialController::class,
-    "exportar",
-])->name("folhas.exportar");
+    // ROTAS DA FOLHA SALARIAL (EUREKA RH)
+    Route::get("/folha-salarial", [FolhaSalarialController::class, "index"])->name(
+        "folhas.index",
+    );
+    Route::post("/folha-salarial/gerar", [
+        FolhaSalarialController::class,
+        "gerarMesInteiro",
+    ])->name("folhas.gerar");
+    Route::patch("/folha-salarial/{id}/status", [
+        FolhaSalarialController::class,
+        "alterarStatus",
+    ])->name("folhas.status");
+    Route::get("/folhas-salariais/exportar", [
+        FolhaSalarialController::class,
+        "exportar",
+    ])->name("folhas.exportar");
 
-// Rotas do Recrutamento
-Route::get("/recrutamento", [RecrutamentoController::class, "index"])->name(
-    "recrutamento.index",
-);
-Route::post("/recrutamento/salvar", [
-    RecrutamentoController::class,
-    "store",
-])->name("recrutamento.store");
-Route::put("/recrutamento/{id}/alterar-estado", [
-    RecrutamentoController::class,
-    "alterarEstado",
-])->name("recrutamento.alterarEstado");
+    // Rotas do Recrutamento
+    Route::get("/recrutamento", [RecrutamentoController::class, "index"])->name(
+        "recrutamento.index",
+    );
+    Route::post("/recrutamento/salvar", [
+        RecrutamentoController::class,
+        "store",
+    ])->name("recrutamento.store");
+    Route::put("/recrutamento/{id}/alterar-estado", [
+        RecrutamentoController::class,
+        "alterarEstado",
+    ])->name("recrutamento.alterarEstado");
 
-// Rotas do Candidato
-Route::get("/candidatos", [CandidatoController::class, "index"])->name(
-    "candidatos.index",
-);
-Route::put("/candidatos/{id}/status", [
-    CandidatoController::class,
-    "alterarStatus",
-])->name("candidatos.alterarStatus");
-Route::put("/candidatos/{id}/editar", [
-    CandidatoController::class,
-    "update",
-])->name("candidatos.update");
-Route::post("/candidatos/store", [CandidatoController::class, "store"])->name(
-    "candidatos.store",
-);
+    // Rotas do Candidato
+    Route::get("/candidatos", [CandidatoController::class, "index"])->name(
+        "candidatos.index",
+    );
+    Route::put("/candidatos/{id}/status", [
+        CandidatoController::class,
+        "alterarStatus",
+    ])->name("candidatos.alterarStatus");
+    Route::put("/candidatos/{id}/editar", [
+        CandidatoController::class,
+        "update",
+    ])->name("candidatos.update");
+    Route::post("/candidatos/store", [CandidatoController::class, "store"])->name(
+        "candidatos.store",
+    );
 
-// Rotas de Candidaturas Espontâneas
-Route::get("/candidaturas-espontaneas", [
-    \App\Http\Controllers\CandidaturaEspontaneaController::class, "index",
-])->name("candidaturas-espontaneas.index");
-Route::put("/candidaturas-espontaneas/{id}/status", [
-    \App\Http\Controllers\CandidaturaEspontaneaController::class, "alterarStatus",
-])->name("candidaturas-espontaneas.status");
-Route::delete("/candidaturas-espontaneas/{id}", [
-    \App\Http\Controllers\CandidaturaEspontaneaController::class, "destroy",
-])->name("candidaturas-espontaneas.destroy");
+    // Rotas de Candidaturas Espontâneas
+    Route::get("/candidaturas-espontaneas", [
+        \App\Http\Controllers\CandidaturaEspontaneaController::class, "index",
+    ])->name("candidaturas-espontaneas.index");
+    Route::put("/candidaturas-espontaneas/{id}/status", [
+        \App\Http\Controllers\CandidaturaEspontaneaController::class, "alterarStatus",
+    ])->name("candidaturas-espontaneas.status");
+    Route::delete("/candidaturas-espontaneas/{id}", [
+        \App\Http\Controllers\CandidaturaEspontaneaController::class, "destroy",
+    ])->name("candidaturas-espontaneas.destroy");
 
+    // Rota de listagem de Formações
+    Route::get("/formacoes", [FormacaoController::class, "index"])->name(
+        "formacoes.index",
+    );
+    Route::post("/formacoes/salvar", [FormacaoController::class, "store"])->name(
+        "formacoes.store",
+    );
+    Route::patch("/formacoes/{id}/estado", [
+        FormacaoController::class,
+        "alterarEstado",
+    ])->name("formacoes.alterarEstado");
 
+    // Utilizadores — visualizar (acessível a todos os perfis logados)
+    Route::get("/usuarios", [UsuarioController::class, "index"])->name(
+        "usuarios.index",
+    );
 
-// Rota de listagem de Formações
-Route::get("/formacoes", [FormacaoController::class, "index"])->name(
-    "formacoes.index",
-);
-// 🟢 Nova rota para processar o formulário
-Route::post("/formacoes/salvar", [FormacaoController::class, "store"])->name(
-    "formacoes.store",
-);
-// 🟢 Nova rota para atualizar o estado da formação
-Route::patch("/formacoes/{id}/estado", [
-    FormacaoController::class,
-    "alterarEstado",
-])->name("formacoes.alterarEstado");
+});
 
-
-
-// Rotas de Usuários
-Route::get("/usuarios", [UsuarioController::class, "index"])->name(
-    "usuarios.index",
-);
-Route::post("/usuarios", [UsuarioController::class, "store"])->name(
-    "usuarios.store",
-);
-Route::put("/usuarios/{id}", [UsuarioController::class, "update"])->name(
-    "usuarios.update",
-);
+// Utilizadores — criar/editar (apenas Responsável; CEO e Assistente bloqueados)
+Route::middleware(['readonly-ceo'])->group(function () {
+    Route::post("/usuarios", [UsuarioController::class, "store"])->name(
+        "usuarios.store",
+    );
+    Route::put("/usuarios/{id}", [UsuarioController::class, "update"])->name(
+        "usuarios.update",
+    );
+});
 
 // Rotas de Visitante (Login e Esqueci Senha)
 // --- Áreas Restritas (Apenas para Responsável usando o apelido configurado) ---
@@ -276,6 +273,11 @@ Route::middleware(["auth"])->group(function () {
     Route::delete("/contact-messages/{mensagem}", [ContactMessageController::class, "destroy"])->name(
         "contact-messages.destroy",
     );
+
+    // Rota de Atividade Recente
+    Route::get("/atividade", [ActivityLogController::class, "index"])->name(
+        "activity-logs.index",
+    );
 });
 
 // Rota para servir arquivos do storage (cross-platform)
@@ -291,13 +293,13 @@ Route::get('/storage-file/{path}', function ($path) {
 })->where('path', '.*')->name('storage.file');
 
 // Rotas CRUD para cada secção (Gestão CMS) — apenas a Responsável pode gerir o site público
-Route::middleware(['auth', 'responsavel'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('inicio', InicioController::class)->except(['show']); // Gestão da secção Início
-    Route::resource('estatisticas', HeroStatController::class)->except(['show']); // Estatísticas do Hero
-    Route::resource('boost', BoostMeController::class)->except(['show']); // Secção BOOST_ME
+Route::middleware(['auth', 'responsavel', 'readonly-ceo'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('inicio', InicioController::class)->except(['show']);
+    Route::resource('estatisticas', HeroStatController::class)->except(['show']);
+    Route::resource('boost', BoostMeController::class)->except(['show']);
     Route::resource('servicos', ServiceController::class)->except(['show']);
     Route::resource('recursos', ResourceController::class)->except(['show']);
     Route::resource('sobre', AboutController::class)->except(['show']);
     Route::resource('noticias', NewsController::class)->except(['show']);
-    Route::resource('contactos', ContactInfoController::class)->except(['show']); // Gestão dos contactos do site
+    Route::resource('contactos', ContactInfoController::class)->except(['show']);
 });

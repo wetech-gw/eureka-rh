@@ -68,6 +68,7 @@
                                             <button class="btn btn-sm btn-light border" data-bs-toggle="modal" data-bs-target="#modalVer{{ $m->id }}" title="Ver mensagem">
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                             </button>
+                                            @if(Auth::user()->role !== 'CEO')
                                             <form action="{{ route('contact-messages.destroy', $m) }}" method="POST" onsubmit="return confirm('Eliminar esta mensagem?');">
                                                 @csrf
                                                 @method('DELETE')
@@ -75,6 +76,7 @@
                                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                                                 </button>
                                             </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

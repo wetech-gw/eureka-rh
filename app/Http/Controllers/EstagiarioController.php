@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Traits\LogsActivity;
 
 class EstagiarioController extends Controller
 {
+    use LogsActivity;
     public function index(Request $request)
     {
         $query = DB::table('estagiarios')->orderBy('created_at', 'desc');
@@ -74,6 +76,8 @@ class EstagiarioController extends Controller
             'updated_at' => now(),
         ]);
 
+        $this->logActivity('create', 'Estagiário', null, 'Registou estagiário ' . $data['nome']);
+
         return redirect()->route('estagiarios.index')->with('success', 'Estagiário registado com sucesso!');
     }
 
@@ -124,6 +128,8 @@ class EstagiarioController extends Controller
                 'status' => $data['status'],
                 'updated_at' => now(),
             ]);
+
+        $this->logActivity('update', 'Estagiário', $id, 'Atualizou estagiário ' . $data['nome']);
 
         return redirect()->route('estagiarios.index')->with('success', 'Estagiário atualizado com sucesso!');
     }

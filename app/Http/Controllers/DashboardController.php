@@ -78,7 +78,27 @@ class DashboardController extends Controller
             ->whereDate("created_at", Carbon::today()->toDateString())
             ->count();
 
-        // 5. TABELA CENTRAL (Com cálculo de dias de contrato individual)
+        // 5. FUNCIONÁRIOS POR EMPRESA (para gráfico)
+        $funcionariosPorEmpresa = DB::table("funcionarios")
+            ->where("estado", "Activo")
+            ->select("empresa", DB::raw("count(*) as total"))
+            ->groupBy("empresa")
+            ->orderByDesc("total")
+            ->pluck("total", "empresa")
+            ->toArray();
+
+        // 5b. CANDIDATURAS ESPONTÂNEAS POR PROFISSÃO (para gráfico)
+        $candidaturasPorProfissao = DB::table("candidaturas_espontaneas")
+            ->whereNotNull("profissao")
+            ->where("profissao", "!=", "")
+            ->select("profissao", DB::raw("count(*) as total"))
+            ->groupBy("profissao")
+            ->orderByDesc("total")
+            ->limit(10)
+            ->pluck("total", "profissao")
+            ->toArray();
+
+        // 6. TABELA CENTRAL (Com cálculo de dias de contrato individual)
         $colaboradores = DB::table("funcionarios")
             ->get()
             ->map(function ($f) use ($hoje) {
@@ -160,6 +180,8 @@ class DashboardController extends Controller
                 "novosEsteMes",
                 "totalCandidatos",
                 "candidatosNovosHoje",
+                "funcionariosPorEmpresa",
+                "candidaturasPorProfissao",
                 "colaboradores",
                 "nomeMes",
                 "diasNoMes",

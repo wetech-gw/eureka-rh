@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\CandidaturaEspontanea;
+use App\Traits\LogsActivity;
 
 class CandidaturaEspontaneaController extends Controller
 {
+    use LogsActivity;
     public function index(Request $request)
     {
         $query = CandidaturaEspontanea::query();
@@ -55,13 +57,19 @@ class CandidaturaEspontaneaController extends Controller
             'updated_at' => now(),
         ]);
 
+        $registo = CandidaturaEspontanea::find($id);
+        $this->logActivity('status', 'Candidatura Espontânea', $id, 'Mudou estado de ' . ($registo->nome ?? '#'.$id) . ' para ' . $request->status);
+
         return redirect()->route('candidaturas-espontaneas.index')
             ->with('success', 'Estado atualizado com sucesso!');
     }
 
     public function destroy($id)
     {
+        $registo = CandidaturaEspontanea::find($id);
         CandidaturaEspontanea::where('id', $id)->delete();
+
+        $this->logActivity('delete', 'Candidatura Espontânea', $id, 'Eliminou candidatura espontânea de ' . ($registo->nome ?? '#'.$id));
 
         return redirect()->route('candidaturas-espontaneas.index')
             ->with('success', 'Registo eliminado com sucesso!');

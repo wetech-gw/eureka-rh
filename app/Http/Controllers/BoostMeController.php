@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\BoostMe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\LogsActivity;
 
 class BoostMeController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         $boosts = BoostMe::orderBy('id')->get();
@@ -40,6 +42,7 @@ class BoostMeController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         BoostMe::create($validated);
+        $this->logActivity('create', 'BOOST_ME', null, 'Criou registo BOOST_ME');
         return redirect()->route('admin.boost.index')->with('success', 'Registo BOOST_ME criado com sucesso!');
     }
 
@@ -71,6 +74,7 @@ class BoostMeController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         $boost->update($validated);
+        $this->logActivity('update', 'BOOST_ME', $boost->id, 'Atualizou registo BOOST_ME');
         return redirect()->route('admin.boost.index')->with('success', 'Registo BOOST_ME atualizado com sucesso!');
     }
 
@@ -80,6 +84,7 @@ class BoostMeController extends Controller
             Storage::disk('public')->delete($boost->image_path);
         }
         $boost->delete();
+        $this->logActivity('delete', 'BOOST_ME', $boost->id, 'Eliminou registo BOOST_ME');
         return redirect()->route('admin.boost.index')->with('success', 'Registo BOOST_ME eliminado!');
     }
 }

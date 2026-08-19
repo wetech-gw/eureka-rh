@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Resource; // Nota: Não usar o mesmo nome da classe Controller
+use App\Models\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\LogsActivity;
 
 class ResourceController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         $recursos = Resource::all();
@@ -32,6 +34,7 @@ class ResourceController extends Controller
         }
 
         Resource::create($validated);
+        $this->logActivity('create', 'Recurso', null, 'Adicionou recurso/instituição');
         return redirect()->route('admin.recursos.index')->with('success', 'Recurso adicionado com sucesso!');
     }
 
@@ -55,6 +58,7 @@ class ResourceController extends Controller
         }
 
         $recurso->update($validated);
+        $this->logActivity('update', 'Recurso', $recurso->id, 'Atualizou recurso/instituição');
         return redirect()->route('admin.recursos.index')->with('success', 'Recurso atualizado com sucesso!');
     }
 
@@ -64,6 +68,7 @@ class ResourceController extends Controller
             Storage::disk('public')->delete($recurso->logo_path);
         }
         $recurso->delete();
+        $this->logActivity('delete', 'Recurso', $recurso->id, 'Eliminou recurso/instituição');
         return redirect()->route('admin.recursos.index')->with('success', 'Recurso eliminado!');
     }
 }

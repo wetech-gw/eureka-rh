@@ -154,7 +154,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
             </a>
-            @if(in_array(Auth::user()->role, ['Responsável', 'CEO']))
+            @if(in_array(Auth::user()->role, ['Responsável', 'CEO', 'Assistente']))
             <div class="text-uppercase text-muted fw-bold mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.05em;">Site Público</div>
 
             <a href="{{ route('admin.inicio.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}">
@@ -255,10 +255,12 @@
                 </span>
                 <input type="text" class="form-control modern-search-input" id="searchUsuario" placeholder="Pesquisar por nome ou email...">
             </div>
+            @if(Auth::user()->role === 'Responsável')
             <button class="btn btn-accent px-3 py-2 small d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalCriarUsuario">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 Novo Utilizador
             </button>
+            @endif
         </div>
 
         <div class="card-custom p-4">
@@ -305,6 +307,7 @@
                                     @endif
                                 </td>
                                 <td class="text-end">
+                                    @if(Auth::user()->role === 'Responsável')
                                     <button class="btn btn-sm btn-light border p-1 rounded-3"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalEditarUsuario"
@@ -315,6 +318,7 @@
                                             data-status="{{ $user->status ?? 'Ativo' }}">
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
                                     </button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

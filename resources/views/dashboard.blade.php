@@ -21,6 +21,15 @@
                         @endif
                     </a>
 
+                    @if(Auth::user()->role === 'Responsável')
+                    <a href="{{ route('activity-logs.index') }}" class="btn btn-light bg-white px-3 py-2 text-secondary fw-medium rounded-3 position-relative" style="font-size: 13px; text-decoration: none; height: 38px; display: flex; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" title="Atividade Recente">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        @if(($atividadesNaoVistas ?? 0) > 0)
+                            <span class="badge rounded-pill text-white position-absolute" style="background-color: #dc3545; font-size: 10px; top: -8px; right: -8px; min-width: 20px;">{{ $atividadesNaoVistas }}</span>
+                        @endif
+                    </a>
+                    @endif
+
                     <button type="button" class="theme-toggle btn btn-light bg-white px-3 py-2 text-secondary fw-medium rounded-3" style="font-size: 13px; height: 38px; display: flex; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                         <svg class="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
                         <span class="theme-label">Escuro</span>
@@ -30,9 +39,11 @@
                         Registo de Documentos
                     </a>
 
+                    @if(Auth::user()->role !== 'CEO')
                     <a href="{{ route('funcionarios.index') }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none; height: 38px;">
                         + Novo Funcionario
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -143,69 +154,22 @@
 
         <div class="row g-4 mb-4">
             <div class="col-lg-8">
-                <div class="card-custom shadow-sm p-4 bg-white" style="height: 630px; display: flex; flex-direction: column;">
+                <div class="card-custom shadow-sm p-4 bg-white" style="height: 400px; display: flex; flex-direction: column;">
 
                     <div class="d-flex justify-content-between align-items-center mb-4" style="flex: 0 0 auto;">
-                        <h3 class="fs-5 fw-bold text-dark m-0">Funcionários</h3>
+                        <h3 class="fs-5 fw-bold text-dark m-0">Funcionários por Empresa</h3>
                         <a href="{{ route('funcionarios.index') }}" class="text-accent text-decoration-none small fw-medium">Ver todos →</a>
                     </div>
 
-                    <div class="table-responsive" style="flex: 1 1 auto; overflow-y: auto; max-height: 100%;">
-                        <table class="table table-borderless align-middle mb-0">
-                            <thead class="sticky-top bg-white" style="z-index: 1; top: 0;">
-                                <tr class="border-bottom text-muted small text-uppercase" style="font-size: 11px;">
-                                    <th class="pb-3 bg-white">Nome</th>
-                                    <th class="pb-3 text-center bg-white">Estado</th>
-                                    <th class="pb-3 bg-white">Contrato</th>
-                                    <th class="pb-3 bg-white"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($colaboradores as $colab)
-                                    <tr class="border-bottom">
-                                        <td class="py-3">
-                                            <div class="d-flex align-items-center gap-3">
-                                                <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-medium" style="width:36px; height:36px; background-color: #0d9488;">
-                                                    {{ $colab['iniciais'] ?? strtoupper(substr($colab['nome'], 0, 2)) }}
-                                                </div>
-                                                <div>
-                                                    <div class="fw-bold text-dark">{{ $colab['nome'] }}</div>
-                                                    <div class="text-muted small">{{ $colab['cargo'] }}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-center">
-                                            @if(!is_null($colab['dias_contrato']) && $colab['dias_contrato'] >= 0 && $colab['dias_contrato'] <= 30)
-                                                <span class="badge px-3 py-1.5 rounded-5 fw-medium text-warning" style="background-color: #fff8e1; color: #b78103 !important;">
-                                                    Contrato · {{ $colab['dias_contrato'] }}d
-                                                </span>
-                                            @elseif(!is_null($colab['dias_contrato']) && $colab['dias_contrato'] < 0)
-                                                <span class="badge px-3 py-1.5 rounded-5 fw-medium text-danger" style="background-color: #fde8e8; color: #9b1c1c !important;">
-                                                    Expirado
-                                                </span>
-                                            @elseif($colab['estado'] === 'Activo')
-                                                <span class="badge px-3 py-1.5 rounded-5 fw-medium text-success" style="background-color: #e6fdfa;">
-                                                    Activo
-                                                </span>
-                                            @else
-                                                <span class="badge px-3 py-1.5 rounded-5 fw-medium text-secondary" style="background-color: #f1f3f5; color: #495057;">
-                                                    {{ $colab['estado'] }}
-                                                </span>
-                                            @endif
-                                        </td>
-                                        <td><span class="text-secondary">{{ $colab['tipo_contrato'] ?? 'Não Especificado' }}</span></td>
-                                        <td class="text-muted text-end" style="cursor: pointer;">···</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" class="text-center text-muted py-4">
-                                            Nenhum funcionário ativo ou registado de momento.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                    @if(count($funcionariosPorEmpresa) > 0)
+                        <div style="flex: 1 1 auto; position: relative; min-height: 0;">
+                            <canvas id="chartFuncionariosEmpresa"></canvas>
+                        </div>
+                    @else
+                        <div class="d-flex align-items-center justify-content-center" style="flex: 1 1 auto;">
+                            <p class="text-muted mb-0">Nenhum funcionário ativo registado.</p>
+                        </div>
+                    @endif
 
                 </div>
             </div>
@@ -288,8 +252,159 @@
         </div>
         </div>
 
+        <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+                <div class="card-custom shadow-sm p-4 bg-white" style="height: 350px; display: flex; flex-direction: column;">
+                    <div class="d-flex justify-content-between align-items-center mb-4" style="flex: 0 0 auto;">
+                        <h3 class="fs-5 fw-bold text-dark m-0">Candidaturas Espontâneas — Profissão</h3>
+                        <a href="{{ route('candidaturas-espontaneas.index') }}" class="text-accent text-decoration-none small fw-medium">Ver todas →</a>
+                    </div>
+                    @if(count($candidaturasPorProfissao) > 0)
+                        <div style="flex: 1 1 auto; position: relative; min-height: 0;">
+                            <canvas id="chartProfissoes"></canvas>
+                        </div>
+                    @else
+                        <div class="d-flex align-items-center justify-content-center" style="flex: 1 1 auto;">
+                            <p class="text-muted mb-0">Nenhuma candidatura espontânea registada.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
 
     </main>
 </div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('chartFuncionariosEmpresa');
+    if (!ctx) return;
+
+    var labels = {!! json_encode(array_keys($funcionariosPorEmpresa)) !!};
+    var data = {!! json_encode(array_values($funcionariosPorEmpresa)) !!};
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Funcionários',
+                data: data,
+                backgroundColor: isDark ? 'rgba(45, 212, 191, 0.6)' : 'rgba(13, 148, 136, 0.6)',
+                borderColor: isDark ? '#2dd4bf' : '#0d9488',
+                borderWidth: 1,
+                borderRadius: 6,
+                barPercentage: 0.6,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: isDark ? '#171a21' : '#fff',
+                    titleColor: isDark ? '#ececea' : '#111',
+                    bodyColor: isDark ? '#a8a8a5' : '#666',
+                    borderColor: isDark ? '#262b34' : '#f1f1f0',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    padding: 10,
+                    callbacks: {
+                        label: function(ctx) {
+                            return ctx.parsed.y + ' funcionário' + (ctx.parsed.y !== 1 ? 's' : '');
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        color: isDark ? '#6f6f6c' : '#999',
+                        font: { size: 12 }
+                    },
+                    grid: { color: isDark ? '#262b34' : '#f1f1f0' }
+                },
+                x: {
+                    ticks: {
+                        color: isDark ? '#a8a8a5' : '#666',
+                        font: { size: 12 }
+                    },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    // Gráfico 2: Candidaturas Espontâneas por Profissão
+    var ctx2 = document.getElementById('chartProfissoes');
+    if (ctx2) {
+        var labels2 = {!! json_encode(array_keys($candidaturasPorProfissao)) !!};
+        var data2 = {!! json_encode(array_values($candidaturasPorProfissao)) !!};
+
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: labels2,
+                datasets: [{
+                    data: data2,
+                    backgroundColor: [
+                        isDark ? 'rgba(45,212,191,0.7)' : 'rgba(13,148,136,0.7)',
+                        isDark ? 'rgba(251,191,36,0.7)' : 'rgba(245,158,11,0.7)',
+                        isDark ? 'rgba(167,139,250,0.7)' : 'rgba(139,92,246,0.7)',
+                        isDark ? 'rgba(244,114,182,0.7)' : 'rgba(236,72,153,0.7)',
+                        isDark ? 'rgba(96,165,250,0.7)' : 'rgba(59,130,246,0.7)',
+                        isDark ? 'rgba(52,211,153,0.7)' : 'rgba(16,185,129,0.7)',
+                        isDark ? 'rgba(251,146,60,0.7)' : 'rgba(249,115,22,0.7)',
+                        isDark ? 'rgba(248,113,113,0.7)' : 'rgba(239,68,68,0.7)',
+                        isDark ? 'rgba(156,163,175,0.7)' : 'rgba(107,114,128,0.7)',
+                        isDark ? 'rgba(34,211,238,0.7)' : 'rgba(6,182,212,0.7)',
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '55%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: isDark ? '#a8a8a5' : '#666',
+                            font: { size: 12 },
+                            padding: 12,
+                            usePointStyle: true,
+                            pointStyleWidth: 10,
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: isDark ? '#171a21' : '#fff',
+                        titleColor: isDark ? '#ececea' : '#111',
+                        bodyColor: isDark ? '#a8a8a5' : '#666',
+                        borderColor: isDark ? '#262b34' : '#f1f1f0',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        padding: 10,
+                        callbacks: {
+                            label: function(ctx) {
+                                return ' ' + ctx.label + ': ' + ctx.parsed + ' candidatura' + (ctx.parsed !== 1 ? 's' : '');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+@endpush
 
 @endsection

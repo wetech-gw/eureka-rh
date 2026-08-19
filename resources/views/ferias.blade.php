@@ -167,7 +167,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
             </a>
-            @if(in_array(Auth::user()->role, ['Responsável', 'CEO']))
+            @if(in_array(Auth::user()->role, ['Responsável', 'CEO', 'Assistente']))
             <div class="text-uppercase text-muted fw-bold mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.05em;">Site Público</div>
 
             <a href="{{ route('admin.inicio.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}">
@@ -259,9 +259,11 @@
                     <input type="text" class="form-control modern-search-input" id="searchEmployee" placeholder="Pesquisar funcionário em férias ou licenças...">
                 </div>
 
+                @if(Auth::user()->role !== 'CEO')
                 <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent); height: 38px;" data-bs-toggle="modal" data-bs-target="#modalLancar">
                     + Registar Férias / Licença
                 </button>
+                @endif
             </div>
         </div>
 
@@ -376,9 +378,11 @@
                                         <button class="btn btn-light border" data-bs-toggle="modal" data-bs-target="#modalVerRegisto{{ $r->id }}">
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#495057" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                         </button>
+                                        @if(Auth::user()->role !== 'CEO')
                                         <button class="btn btn-light border text-primary" data-bs-toggle="modal" data-bs-target="#modalEditarRegisto{{ $r->id }}">
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                         </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

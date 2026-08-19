@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Traits\LogsActivity;
 
 class FormacaoController extends Controller
 {
+    use LogsActivity;
     // Finaliza automaticamente as formações cuja data_fim já passou
     private function finalizarFormacoes(): void
     {
@@ -63,6 +65,8 @@ class FormacaoController extends Controller
             'updated_at'    => Carbon::now(),
         ]);
 
+        $this->logActivity('create', 'Formação', null, 'Agendou formação: ' . $request->tema);
+
         return redirect()->back()->with('success', 'Nova formação agendada e guardada no sistema!');
     }
 
@@ -79,6 +83,9 @@ class FormacaoController extends Controller
                 'status' => $request->status,
                 'updated_at' => now()
             ]);
+
+        $form = DB::table('formacoes')->where('id', $id)->first();
+        $this->logActivity('status', 'Formação', $id, 'Mudou estado de ' . ($form->tema ?? '#'.$id) . ' para ' . $request->status);
 
         return redirect()->back()->with('success', 'Estado da formação atualizado com sucesso!');
     }

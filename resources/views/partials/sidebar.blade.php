@@ -107,7 +107,20 @@
             Utilizadores / Acessos
         </a>
 
-        @if(in_array(Auth::user()->role, ['Responsável', 'CEO']))
+        @if(Auth::user()->role === 'Responsável')
+        <a href="{{ route('activity-logs.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 d-flex align-items-center gap-2 {{ request()->routeIs('activity-logs*') ? 'active' : '' }}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Atividade Recente
+            @if(($atividadesNaoVistas ?? 0) > 0)
+                <span class="badge rounded-pill text-white ms-auto" style="background-color: #dc3545; font-size: 10px;">{{ $atividadesNaoVistas }}</span>
+            @endif
+        </a>
+        @endif
+
+        @if(in_array(Auth::user()->role, ['Responsável', 'CEO', 'Assistente']))
         <div class="text-uppercase text-muted fw-bold mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.05em;">Site Público</div>
 
         <a href="{{ route('admin.inicio.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">

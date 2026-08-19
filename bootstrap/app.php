@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CheckResponsavel;
+use App\Http\Middleware\ReadOnlyForCEO;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Mantém o apelido do seu middleware de permissões
         $middleware->alias([
             'responsavel' => CheckResponsavel::class,
+            'readonly-ceo' => ReadOnlyForCEO::class,
         ]);
 
     })

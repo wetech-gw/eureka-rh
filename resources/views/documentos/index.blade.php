@@ -157,7 +157,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
             </a>
-            @if(in_array(Auth::user()->role, ['Responsável', 'CEO']))
+            @if(in_array(Auth::user()->role, ['Responsável', 'CEO', 'Assistente']))
             <div class="text-uppercase text-muted fw-bold mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.05em;">Site Público</div>
 
             <a href="{{ route('admin.inicio.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}">
@@ -238,9 +238,11 @@
                 <h2 class="fw-bold m-0 text-dark">Arquivo de Documentos</h2>
                 <p class="text-accent">Gestão documental por categoria, tipo e número de referência</p>
             </div>
+            @if(Auth::user()->role !== 'CEO')
             <button type="button" class="btn text-white fw-medium shadow-sm px-3" style="background-color: #0d9488; font-size: 14px;" data-bs-toggle="modal" data-bs-target="#createDocumentoModal">
                 <i class="fa-solid fa-file-circle-plus me-1"></i> Registar Documento
             </button>
+            @endif
         </div>
 
         <form method="GET" action="{{ route('documentos.index') }}" class="card-custom p-3 mb-3">

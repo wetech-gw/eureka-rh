@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Traits\LogsActivity;
 
 class PresencaController extends Controller
 {
+    use LogsActivity;
     /**
      * Exibe a listagem de presenças e métricas.
      */
@@ -118,7 +120,9 @@ class PresencaController extends Controller
             "updated_at" => now(),
         ]);
 
-        // 4. Redirecionar com mensagem de sucesso
+        $func = DB::table('funcionarios')->where('id', $request->funcionario_id)->first();
+        $this->logActivity('create', 'Presença', null, 'Registou presença de ' . ($func->nome ?? 'desconhecido') . ' em ' . $request->data);
+
         return redirect()
             ->route("presencas.index")
             ->with("success", "Presença registada com sucesso!");
@@ -150,7 +154,8 @@ class PresencaController extends Controller
                 "updated_at" => now(),
             ]);
 
-        // 3. Redirecionar de volta para a tabela atualizada
+        $this->logActivity('update', 'Presença', $id, 'Atualizou registo de presença #' . $id);
+
         return redirect()
             ->route("presencas.index")
             ->with("success", "Registo de presença atualizado com sucesso!");

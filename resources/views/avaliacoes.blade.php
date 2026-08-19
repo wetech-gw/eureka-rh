@@ -166,7 +166,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
             </a>
-            @if(in_array(Auth::user()->role, ['Responsável', 'CEO']))
+            @if(in_array(Auth::user()->role, ['Responsável', 'CEO', 'Assistente']))
             <div class="text-uppercase text-muted fw-bold mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.05em;">Site Público</div>
 
             <a href="{{ route('admin.inicio.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}">
@@ -259,9 +259,11 @@
                     <input type="text" class="form-control modern-search-input" id="searchAvaliacao" placeholder="Pesquisar por colaborador ou cargo...">
                 </div>
 
+                @if(Auth::user()->role !== 'CEO')
                 <button class="btn text-white px-4 fw-medium rounded-3" style="background-color: var(--accent); height: 38px;" data-bs-toggle="modal" data-bs-target="#modalAgendar">
                     + Agendar Avaliação
                 </button>
+                @endif
             </div>
         </div>
 
@@ -339,9 +341,11 @@
                                         <button class="btn btn-light border" data-bs-toggle="modal" data-bs-target="#modalVer{{ $av->id }}">
                                             Exibir
                                         </button>
+                                        @if(Auth::user()->role !== 'CEO')
                                         <button class="btn btn-light border text-primary" data-bs-toggle="modal" data-bs-target="#modalLancarNota{{ $av->id }}">
                                             Lançar Nota / Editar
                                         </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

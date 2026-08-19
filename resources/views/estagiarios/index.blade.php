@@ -113,7 +113,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Utilizadores / Acessos
             </a>
-            @if(in_array(Auth::user()->role, ['Responsável', 'CEO']))
+            @if(in_array(Auth::user()->role, ['Responsável', 'CEO', 'Assistente']))
             <div class="text-uppercase text-muted fw-bold mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.05em;">Site Público</div>
 
             <a href="{{ route('admin.inicio.index') }}" class="nav-item-hr p-2.5 rounded-3 mb-1 {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}">
@@ -197,7 +197,9 @@
                 <h2 class="fw-bold m-0 text-dark">Gestão de Estagiários</h2>
                 <p class="text-accent mb-0">Acompanhamento académico, plano de atividades e certificação</p>
             </div>
+            @if(Auth::user()->role !== 'CEO')
             <button class="btn text-white" style="background-color: var(--accent);" data-bs-toggle="modal" data-bs-target="#modalEstagiario">+ Registar Estagiário</button>
+            @endif
         </div>
 
         <form method="GET" action="{{ route('estagiarios.index') }}" class="row g-2 mb-3">
@@ -284,7 +286,9 @@
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm">
                                         <button type="button" class="btn btn-light border" data-bs-toggle="modal" data-bs-target="#modalDetalhes{{ $e->id }}">Detalhes</button>
+                                        @if(Auth::user()->role !== 'CEO')
                                         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEditar{{ $e->id }}">Editar</button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

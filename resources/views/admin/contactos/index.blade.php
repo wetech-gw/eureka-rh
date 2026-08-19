@@ -6,14 +6,16 @@
         <h1 class="font-serif display-6 fw-normal mb-1">Contactos do Site</h1>
         <p class="text-accent fw-normal mb-0" style="font-size: 15px;">Gestão do endereço, telefones, email e horário da secção de contacto</p>
     </div>
-    @if($contact)
-        <a href="{{ route('admin.contactos.edit', $contact) }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none; height: 38px;">
-            Editar Contactos
-        </a>
-    @else
-        <a href="{{ route('admin.contactos.create') }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none; height: 38px;">
-            + Criar Contactos
-        </a>
+    @if(Auth::user()->role !== 'CEO')
+        @if($contact)
+            <a href="{{ route('admin.contactos.edit', $contact) }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none; height: 38px;">
+                Editar Contactos
+            </a>
+        @else
+            <a href="{{ route('admin.contactos.create') }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none; height: 38px;">
+                + Criar Contactos
+            </a>
+        @endif
     @endif
 </div>
 
@@ -59,6 +61,7 @@
             </tbody>
         </table>
     </div>
+    @if(Auth::user()->role !== 'CEO')
     <div class="d-flex gap-2 mt-4">
         <a href="{{ route('admin.contactos.edit', $contact) }}" class="btn text-white px-4 rounded-3" style="background-color: var(--accent);">Editar</a>
         <form action="{{ route('admin.contactos.destroy', $contact) }}" method="POST" onsubmit="return confirm('Eliminar os contactos? O site voltará aos valores de origem.');">
@@ -67,6 +70,7 @@
             <button type="submit" class="btn btn-outline-danger rounded-3">Eliminar</button>
         </form>
     </div>
+    @endif
 </div>
 @else
 <div class="card-custom shadow-sm bg-white p-5 text-center">

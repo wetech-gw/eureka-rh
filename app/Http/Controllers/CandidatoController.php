@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use ZipArchive;
 use App\Support\RequisitoVaga;
+use App\Traits\LogsActivity;
 
 class CandidatoController extends Controller
 {
+    use LogsActivity;
     public function index(Request $request)
     {
         $query = DB::table("candidaturas")
@@ -202,6 +204,8 @@ class CandidatoController extends Controller
                 ]);
         }
 
+        $this->logActivity('update', 'Candidato', $id, 'Editou candidatura de ' . $request->nome);
+
         return redirect()
             ->back()
             ->with("success", "Dados do candidato editados com sucesso!");
@@ -220,6 +224,8 @@ class CandidatoController extends Controller
                 "status" => $request->input("status"),
                 "updated_at" => now(),
             ]);
+
+        $this->logActivity('status', 'Candidato', $id, 'Mudou estado da candidatura para ' . $request->input("status"));
 
         return redirect()
             ->route("candidatos.index")

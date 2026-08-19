@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
 use Illuminate\Http\Request;
+use App\Traits\LogsActivity;
 
 class ContactMessageController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         $mensagens = ContactMessage::orderByDesc('created_at')->get();
@@ -29,6 +31,7 @@ class ContactMessageController extends Controller
 
     public function destroy(ContactMessage $mensagem)
     {
+        $this->logActivity('delete', 'Mensagem de Contacto', $mensagem->id, 'Eliminou mensagem de ' . ($mensagem->name ?? 'desconhecido'));
         $mensagem->delete();
 
         return redirect()->route('contact-messages.index')

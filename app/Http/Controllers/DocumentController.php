@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Traits\LogsActivity;
 
 class DocumentController extends Controller
 {
+    use LogsActivity;
     public function index(Request $request)
     {
         $query = DB::table("documentos")->orderBy("data_operacao", "desc");
@@ -75,6 +77,8 @@ class DocumentController extends Controller
             "created_at" => now(),
             "updated_at" => now(),
         ]);
+
+        $this->logActivity('create', 'Documento', null, 'Registou documento: ' . $request->nome . ' (' . $request->numero_referencia . ')');
 
         return redirect()
             ->route("documentos.index")

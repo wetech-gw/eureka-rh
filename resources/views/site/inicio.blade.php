@@ -890,7 +890,7 @@
       const txt = btn.innerHTML;
       btn.classList.add("loading"); btn.disabled = true;
       btn.innerHTML = `<span class="btn-spinner"></span> ${_("cand.sending")}`;
-      fetch("/candidatar", { method: "POST", body: new FormData(formCand), headers: { "Accept": "application/json" } })
+      fetch("/candidatar", { method: "POST", body: new FormData(formCand), headers: { "Accept": "application/json", "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content } })
         .then(r => r.json())
         .then(res => {
           if (res.success) {
@@ -924,7 +924,7 @@
       const txt = btn.innerHTML;
       btn.classList.add("loading"); btn.disabled = true;
       btn.innerHTML = `<span class="btn-spinner"></span> A enviar...`;
-      fetch("/candidatura-espontanea", { method: "POST", body: new FormData(formCE), headers: { "Accept": "application/json" } })
+      fetch("/candidatura-espontanea", { method: "POST", body: new FormData(formCE), headers: { "Accept": "application/json", "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content } })
         .then(r => r.json())
         .then(res => {
           if (res.success) {
@@ -971,7 +971,7 @@
       fetch("/contacto", {
         method: "POST",
         body: new FormData(form),
-        headers: { "Accept": "application/json" }
+        headers: { "Accept": "application/json", "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content }
       })
         .then(r => r.json())
         .then(res => {

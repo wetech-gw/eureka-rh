@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Traits\LogsActivity;
 
 class UsuarioController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         // Vai buscar todos os utilizadores da tabela 'users'
@@ -28,12 +30,14 @@ class UsuarioController extends Controller
         DB::table("users")->insert([
             "name" => $request->name,
             "email" => $request->email,
-            "role" => $request->role, // Coluna para diferenciar 'Responsável' de 'Assistente'
-            "status" => $request->status, // <- ADICIONADO AQUI PARA GUARDAR AO CRIAR
+            "role" => $request->role,
+            "status" => $request->status,
             "password" => Hash::make($request->password),
             "created_at" => now(),
             "updated_at" => now(),
         ]);
+
+        $this->logActivity('create', 'Utilizador', null, 'Criou utilizador: ' . $request->name . ' (' . $request->role . ')');
 
         return redirect()
             ->back()
@@ -63,6 +67,8 @@ class UsuarioController extends Controller
         }
 
         DB::table("users")->where("id", $id)->update($dados);
+
+        $this->logActivity('update', 'Utilizador', $id, 'Atualizou utilizador: ' . $request->name);
 
         return redirect()
             ->back()

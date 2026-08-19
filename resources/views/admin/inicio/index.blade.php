@@ -7,9 +7,11 @@
         <p class="text-accent fw-normal mb-0" style="font-size: 15px;">Eureka Consulting — gestão do conteúdo da página inicial</p>
     </div>
     <div class="d-flex gap-2 align-items-center">
+        @if(Auth::user()->role !== 'CEO')
         <a href="{{ route('admin.inicio.create') }}" class="btn text-white px-3 py-2 fw-medium rounded-3 d-flex align-items-center" style="background-color: var(--accent); font-size: 13px; text-decoration: none; height: 38px;">
             + Nova Secção
         </a>
+        @endif
     </div>
 </div>
 
@@ -41,6 +43,7 @@
                             @endif
                         </td>
                         <td class="py-3 text-end">
+                            @if(Auth::user()->role !== 'CEO')
                             <a href="{{ route('admin.inicio.edit', $inicio) }}" class="btn btn-sm btn-outline-secondary rounded-3">Editar</a>
                             <form action="{{ route('admin.inicio.destroy', $inicio) }}" method="POST" class="d-inline"
                                   onsubmit="return confirm('Eliminar esta secção?');">
@@ -48,6 +51,7 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded-3">Eliminar</button>
                             </form>
+                            @endif
                         </td>
                     </tr>
                 @empty

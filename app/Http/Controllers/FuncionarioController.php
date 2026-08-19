@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use App\Traits\LogsActivity;
 
 class FuncionarioController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         // Procura todos os funcionários registados na base de dados
@@ -57,6 +59,8 @@ class FuncionarioController extends Controller
             "created_at" => now(),
             "updated_at" => now(),
         ]);
+
+        $this->logActivity('create', 'Funcionário', null, 'Registou o funcionário ' . $request->nome);
 
         return redirect()
             ->route("funcionarios.index")
@@ -123,6 +127,8 @@ class FuncionarioController extends Controller
                 "salario_bruto" => $request->salario_bruto,
                 "updated_at" => now(),
             ]);
+
+        $this->logActivity('update', 'Funcionário', $funcionario, 'Atualizou o funcionário ' . $request->nome);
 
         return redirect()
             ->route("funcionarios.index")

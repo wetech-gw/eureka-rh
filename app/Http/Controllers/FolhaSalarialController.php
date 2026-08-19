@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Traits\LogsActivity;
 
 class FolhaSalarialController extends Controller
 {
+    use LogsActivity;
     public function index(Request $request)
     {
         $mesSelecionado = $request->get("mes", Carbon::now()->month);
@@ -295,6 +297,8 @@ class FolhaSalarialController extends Controller
                 ->with("error", "Folha salarial não encontrada.");
         }
         // 4. Retorna para a página anterior com a mensagem de sucesso
+        $this->logActivity('status', 'Folha Salarial', $id, 'Mudou estado da folha salarial #' . $id . ' para ' . $request->status);
+
         return redirect()
             ->back()
             ->with("success", "Status da folha atualizado com sucesso!");

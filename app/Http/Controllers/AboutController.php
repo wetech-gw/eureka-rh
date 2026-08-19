@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\About;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\LogsActivity;
 
 class AboutController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         $sobres = About::orderBy('id')->get();
@@ -35,6 +37,7 @@ class AboutController extends Controller
         }
 
         About::create($validated);
+        $this->logActivity('create', 'Conteúdo Sobre', null, 'Criou secção Sobre: ' . $request->title);
         return redirect()->route('admin.sobre.index')->with('success', 'Página Sobre criada com sucesso!');
     }
 
@@ -61,6 +64,7 @@ class AboutController extends Controller
         }
 
         $sobre->update($validated);
+        $this->logActivity('update', 'Conteúdo Sobre', $sobre->id, 'Atualizou secção Sobre: ' . $request->title);
         return redirect()->route('admin.sobre.index')->with('success', 'Página Sobre atualizada com sucesso!');
     }
 
@@ -70,6 +74,7 @@ class AboutController extends Controller
             Storage::disk('public')->delete($sobre->image_path);
         }
         $sobre->delete();
+        $this->logActivity('delete', 'Conteúdo Sobre', $sobre->id, 'Eliminou secção Sobre');
         return redirect()->route('admin.sobre.index')->with('success', 'Página Sobre eliminada!');
     }
 }

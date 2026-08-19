@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\HeroSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\LogsActivity;
 
 class InicioController extends Controller
 {
+    use LogsActivity;
     public function index()
     {
         $inicios = HeroSection::all();
@@ -33,6 +35,7 @@ class InicioController extends Controller
         }
 
         HeroSection::create($validated);
+        $this->logActivity('create', 'Secção Início', null, 'Criou secção Início: ' . $request->title);
         return redirect()->route('admin.inicio.index')->with('success', 'Secção Início criada com sucesso!');
     }
 
@@ -57,6 +60,7 @@ class InicioController extends Controller
         }
 
         $inicio->update($validated);
+        $this->logActivity('update', 'Secção Início', $inicio->id, 'Atualizou secção Início: ' . $request->title);
         return redirect()->route('admin.inicio.index')->with('success', 'Secção Início atualizada com sucesso!');
     }
 
@@ -66,6 +70,7 @@ class InicioController extends Controller
             Storage::disk('public')->delete($inicio->image_path);
         }
         $inicio->delete();
+        $this->logActivity('delete', 'Secção Início', $inicio->id, 'Eliminou secção Início');
         return redirect()->route('admin.inicio.index')->with('success', 'Secção Início eliminada!');
     }
 }

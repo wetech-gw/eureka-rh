@@ -214,48 +214,50 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1 flex-wrap">
-                                        @if($s !== 'aceito')
-                                            <form action="{{ route('candidaturas-espontaneas.status', $r->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('PUT')
-                                                <input type="hidden" name="status" value="Aceito">
-                                                <button type="submit" class="btn btn-sm btn-outline-success fw-medium" title="Aceitar">
-                                                    <i class="fa-solid fa-check"></i>
+                                        @if(Auth::user()->role !== 'CEO')
+                                            @if($s !== 'aceito')
+                                                <form action="{{ route('candidaturas-espontaneas.status', $r->id) }}" method="POST" class="d-inline">
+                                                    @csrf @method('PUT')
+                                                    <input type="hidden" name="status" value="Aceito">
+                                                    <button type="submit" class="btn btn-sm btn-outline-success fw-medium" title="Aceitar">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            @if($s !== 'rejeitado')
+                                                <form action="{{ route('candidaturas-espontaneas.status', $r->id) }}" method="POST" class="d-inline">
+                                                    @csrf @method('PUT')
+                                                    <input type="hidden" name="status" value="Rejeitado">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger fw-medium" title="Rejeitar">
+                                                        <i class="fa-solid fa-xmark"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            @if($s !== 'lista de espera')
+                                                <form action="{{ route('candidaturas-espontaneas.status', $r->id) }}" method="POST" class="d-inline">
+                                                    @csrf @method('PUT')
+                                                    <input type="hidden" name="status" value="Lista de Espera">
+                                                    <button type="submit" class="btn btn-sm btn-outline-secondary fw-medium" title="Lista de Espera">
+                                                        <i class="fa-solid fa-pause"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            @if($s !== 'em avaliação')
+                                                <form action="{{ route('candidaturas-espontaneas.status', $r->id) }}" method="POST" class="d-inline">
+                                                    @csrf @method('PUT')
+                                                    <input type="hidden" name="status" value="Em Avaliação">
+                                                    <button type="submit" class="btn btn-sm btn-outline-primary fw-medium" title="Em Avaliação">
+                                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            <form action="{{ route('candidaturas-espontaneas.destroy', $r->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja eliminar este registo?')">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-dark fw-medium" title="Eliminar">
+                                                    <i class="fa-solid fa-trash"></i>
                                                 </button>
                                             </form>
                                         @endif
-                                        @if($s !== 'rejeitado')
-                                            <form action="{{ route('candidaturas-espontaneas.status', $r->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('PUT')
-                                                <input type="hidden" name="status" value="Rejeitado">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger fw-medium" title="Rejeitar">
-                                                    <i class="fa-solid fa-xmark"></i>
-                                                </button>
-                                            </form>
-                                        @endif
-                                        @if($s !== 'lista de espera')
-                                            <form action="{{ route('candidaturas-espontaneas.status', $r->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('PUT')
-                                                <input type="hidden" name="status" value="Lista de Espera">
-                                                <button type="submit" class="btn btn-sm btn-outline-secondary fw-medium" title="Lista de Espera">
-                                                    <i class="fa-solid fa-pause"></i>
-                                                </button>
-                                            </form>
-                                        @endif
-                                        @if($s !== 'em avaliação')
-                                            <form action="{{ route('candidaturas-espontaneas.status', $r->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('PUT')
-                                                <input type="hidden" name="status" value="Em Avaliação">
-                                                <button type="submit" class="btn btn-sm btn-outline-primary fw-medium" title="Em Avaliação">
-                                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                                </button>
-                                            </form>
-                                        @endif
-                                        <form action="{{ route('candidaturas-espontaneas.destroy', $r->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja eliminar este registo?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-dark fw-medium" title="Eliminar">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </form>
                                     </div>
                                 </td>
                             </tr>

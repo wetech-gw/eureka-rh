@@ -6,9 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use App\Traits\LogsActivity;
 
 class FeriasController extends Controller
 {
+    use LogsActivity;
     private const MESES_MINIMOS_PARA_GOZO = 6;
 
     private const TIPO_FERIAS_ANUAIS = 'Férias anuais';
@@ -172,6 +174,9 @@ class FeriasController extends Controller
 
         DB::table('ausencias')->insert($payload);
 
+        $nomeFunc = $funcionario->nome ?? 'desconhecido';
+        $this->logActivity('create', 'Férias/Ausência', null, 'Registou férias de ' . $nomeFunc . ' (' . $data['tipo'] . ')');
+
         return redirect()->back()->with('success', 'Registo de ausência/férias gravado com sucesso!');
     }
 
@@ -247,6 +252,9 @@ class FeriasController extends Controller
         DB::table('ausencias')
             ->where('id', $id)
             ->update($payload);
+
+        $nomeFunc = $funcionario->nome ?? 'desconhecido';
+        $this->logActivity('update', 'Férias/Ausência', $id, 'Atualizou registo de férias de ' . $nomeFunc);
 
         return redirect()->back()->with('success', 'Registo atualizado com sucesso!');
     }
