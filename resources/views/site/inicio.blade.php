@@ -68,7 +68,7 @@
         @endif
         <div class="boost-cta">
           @if($boost->cta1)<a href="{{ route('site.boost') }}" class="btn btn-accent">{{ $boost->cta1 }}</a>@endif
-          @if($boost->cta2)<a href="#contacto" class="btn btn-line-light">{{ $boost->cta2 }}</a>@endif
+          @if($boost->cta2)<a href="/boost-me.html" class="btn btn-line-light">{{ $boost->cta2 }}</a>@endif
           @if($boost->cta3)<a href="#contacto" class="btn btn-line-light">{{ $boost->cta3 }}</a>@endif
         </div>
       @else
@@ -82,7 +82,7 @@
         </ul>
         <div class="boost-cta">
           <a href="{{ route('site.boost') }}" class="btn btn-accent" data-i18n="sec.boost.cta1">Conhecer o programa</a>
-          <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta2">Candidatar-se</a>
+          <a href="/boost-me.html" class="btn btn-line-light" data-i18n="sec.boost.cta2">Candidatar-se</a>
           <a href="#contacto" class="btn btn-line-light" data-i18n="sec.boost.cta3">Solicitar informações</a>
         </div>
       @endif

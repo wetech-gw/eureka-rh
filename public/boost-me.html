@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boost_Me - Incubadora e Acelerador</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/site.css">
+    <style>
+        :root {
+            --red-brand: #d90429;
+            --blue-dark: #002b49;
+            --blue-teal: #007a87;
+            --blue-light: #00a8cc;
+            --green-accent: #008a45;
+            --orange-accent: #f59e0b;
+            --bg-page: #e2e8f0;
+            --card-border: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            padding: 0;
+        }
+
+        /* Spacer between header and sections */
+        .page-spacer { height: 78px; }
+
+        /* Sections centered content area */
+        .sections-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            padding: 30px 10px;
+            width: 100%;
+        }
+
+        section.container {
+            width: 100%;
+            max-width: 900px;
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            padding: 35px;
+            border-radius: 6px;
+        }
+
+        .banner-hero {
+            background: linear-gradient(135deg, #0284c7 0%, #1e3a8a 50%, #0f172a 100%);
+            border-radius: 8px;
+            padding: 35px 20px;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .banner-hero h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .line-divider {
+            height: 2px;
+            background-color: var(--blue-dark);
+            margin: 20px 0;
+        }
+
+        .doc-title {
+            text-align: center;
+            font-size: 1.4rem;
+            color: var(--blue-dark);
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .doc-subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--blue-teal);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .doc-text {
+            color: #334155;
+            margin-bottom: 14px;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .questions-list {
+            margin: 15px 0 15px 25px;
+            color: var(--blue-teal);
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        .questions-list li {
+            margin-bottom: 4px;
+        }
+
+        .callout-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .callout-footer p {
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .callout-footer .highlight {
+            color: var(--blue-teal);
+        }
+
+        .flyer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .badge-chamada {
+            background-color: var(--red-brand);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-eureka {
+            text-align: center;
+        }
+
+        .logo-eureka .circles {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            margin-bottom: 2px;
+        }
+
+        .logo-eureka .circle {
+            width: 14px;
+            height: 14px;
+            background-color: var(--blue-teal);
+            border-radius: 50%;
+        }
+
+        .logo-eureka strong {
+            display: block;
+            font-size: 1rem;
+            color: var(--blue-dark);
+            line-height: 1;
+        }
+
+        .logo-eureka small {
+            font-size: 0.55rem;
+            color: #64748b;
+            letter-spacing: 1px;
+        }
+
+        .flyer-hero {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .hero-title-box h1 {
+            font-size: 2.3rem;
+            color: var(--blue-teal);
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-title-box h1 span {
+            color: var(--blue-dark);
+            display: block;
+        }
+
+        .hero-tag {
+            background-color: var(--blue-dark);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 4px 8px;
+            display: inline-block;
+            margin: 6px 0;
+        }
+
+        .hero-subtags {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--blue-teal);
+        }
+
+        .hero-desc {
+            font-size: 0.72rem;
+            color: #475569;
+            margin-top: 8px;
+            line-height: 1.35;
+        }
+
+        .mission-box {
+            background-color: var(--blue-teal);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mission-box h4 {
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .section-divider-title {
+            text-align: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--blue-dark);
+            text-transform: uppercase;
+            margin: 12px 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .section-divider-title::before,
+        .section-divider-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #cbd5e1;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .card-pillar {
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 8px;
+            background: #f8fafc;
+        }
+
+        .card-pillar .icon-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--blue-teal);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 6px auto;
+            font-size: 0.85rem;
+        }
+
+        .card-pillar h5 {
+            font-size: 0.65rem;
+            text-align: center;
+            color: var(--blue-dark);
+            margin-bottom: 6px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+        }
+
+        .card-pillar ul {
+            list-style: none;
+            font-size: 0.58rem;
+            color: #475569;
+        }
+
+        .card-pillar ul li {
+            margin-bottom: 3px;
+            position: relative;
+            padding-left: 8px;
+            line-height: 1.2;
+        }
+
+        .card-pillar ul li::before {
+            content: "\2022";
+            position: absolute;
+            left: 0;
+            color: var(--blue-teal);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .card-info {
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 0.6rem;
+        }
+
+        .card-info.blue {
+            background-color: #f0f9ff;
+            border-top: 3px solid var(--blue-teal);
+        }
+
+        .card-info.green {
+            background-color: #f0fdf4;
+            border-top: 3px solid var(--green-accent);
+        }
+
+        .card-info.orange {
+            background-color: #fffbe3;
+            border-top: 3px solid var(--orange-accent);
+        }
+
+        .card-info h5 {
+            font-size: 0.65rem;
+            color: var(--blue-dark);
+            margin-bottom: 6px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .card-info ul {
+            list-style: none;
+        }
+
+        .card-info ul li {
+            margin-bottom: 3px;
+            line-height: 1.2;
+            display: flex;
+            align-items: flex-start;
+            gap: 4px;
+        }
+
+        .card-info ul li span.check {
+            color: var(--green-accent);
+            font-weight: bold;
+        }
+
+        .flyer-footer-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr;
+            gap: 10px;
+            background: #f8fafc;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 10px;
+            align-items: center;
+        }
+
+        .ecosystem-title {
+            font-size: 0.62rem;
+            font-weight: 800;
+            color: var(--blue-dark);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            text-align: center;
+            background: #e2e8f0;
+            padding: 3px;
+        }
+
+        .ecosystem-icons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            font-size: 0.52rem;
+            text-align: center;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .download-box {
+            background: #ffffff;
+            border: 2px dashed var(--blue-teal);
+            border-radius: 6px;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        .download-box h5 {
+            font-size: 0.7rem;
+            color: var(--blue-dark);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-weight: 800;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-download {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background-color: var(--blue-teal);
+            color: white;
+            text-decoration: none;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+
+        .btn-download:hover {
+            background-color: var(--blue-dark);
+        }
+
+        .btn-download.secondary {
+            background-color: var(--red-brand);
+        }
+
+        .btn-download.secondary:hover {
+            background-color: #b91c1c;
+        }
+
+        .contact-bar {
+            margin-top: 10px;
+            background: linear-gradient(90deg, var(--red-brand) 0%, var(--blue-teal) 50%, var(--blue-dark) 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.58rem;
+            font-weight: 600;
+        }
+
+        .tagline-bottom {
+            text-align: right;
+            font-style: italic;
+            font-size: 0.55rem;
+            margin-top: 4px;
+            color: var(--blue-dark);
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 15px 5px; gap: 25px; }
+            section.container { padding: 20px; }
+            .banner-hero h1 { font-size: 1.4rem; }
+            .flyer-hero { grid-template-columns: 1fr; }
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: 1fr; }
+            .flyer-footer-grid { grid-template-columns: 1fr; }
+            .contact-bar { flex-direction: column; gap: 4px; text-align: center; }
+            .download-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== CABECALHO ===== -->
+<header class="site-header" id="topo">
+  <div class="container header-inner">
+    <a href="/" class="brand" aria-label="Eureka Consulting - inicio">
+      <img src="eureka.jpeg" class="brand-logo" alt="Eureka Consulting">
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Navegacao principal">
+      <a href="/" data-i18n="nav.top">Inicio</a>
+      <a href="/servicos" data-i18n="nav.servicos">Servicos</a>
+      <a href="/catalogo-formacao">Catalogo de Formacao</a>
+      <a href="/#recrutamento" data-i18n="nav.recrutamento">Vagas & Formacoes</a>
+      <a href="/recursos" data-i18n="nav.recursos">Recursos</a>
+      <a href="/sobre" data-i18n="nav.sobre">Sobre</a>
+      <a href="/noticias" data-i18n="nav.noticias">Noticias</a>
+      <a href="/#contacto" data-i18n="nav.contacto">Contacto</a>
+      <div class="nav-mobile-extra">
+          <button type="button" class="theme-toggle" data-theme-toggle aria-label="Modo escuro">
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </button>
+          <div class="lang-switch" role="group" aria-label="Idioma">
+              <button class="lang-btn is-active" data-lang="pt" aria-label="Português">
+                  <svg width="20" height="15" viewBox="0 0 640 480"><path fill="#006600" d="M0 0h640v480H0z"/><path fill="#ff0000" d="M0 0h256v480H0z"/></svg>
+              </button>
+              <button class="lang-btn" data-lang="fr" aria-label="Français">
+                  <svg width="20" height="15" viewBox="0 0 900 600"><path fill="#fff" d="M0 0h900v600H0z"/><path fill="#002654" d="M0 0h300v600H0z"/><path fill="#ce1126" d="M600 0h300v600H600z"/></svg>
+              </button>
+              <button class="lang-btn" data-lang="en" aria-label="English">
+                  <svg width="20" height="15" viewBox="0 0 640 480"><path fill="#012169" d="M0 0h640v480H0z"/><path fill="#fff" d="m75 0 244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 62V0h75z"/><path fill="#CC142B" d="m0 0 236 174L0 348V0zM640 0 404 174l236 174V0zM0 480l240-178L0 124v356zM640 480 400 302l240 178V480z"/><path fill="#fff" d="M0 192h640v96H0z"/><path fill="#CC142B" d="M0 216h640v48H0z"/><path fill="#fff" d="M256 0h128v480H256z"/><path fill="#CC142B" d="M280 0h80v480h-80z"/></svg>
+              </button>
+          </div>
+        <a href="/#contacto" class="btn btn-primary" data-i18n="nav.cta">Solicitar consultoria</a>
+      </div>
+    </nav>
+
+    <div class="header-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Modo escuro">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <div class="lang-switch" role="group" aria-label="Idioma">
+            <button class="lang-btn is-active" data-lang="pt" aria-label="Português">
+                <svg width="20" height="15" viewBox="0 0 640 480"><path fill="#006600" d="M0 0h640v480H0z"/><path fill="#ff0000" d="M0 0h256v480H0z"/></svg>
+            </button>
+            <button class="lang-btn" data-lang="fr" aria-label="Français">
+                <svg width="20" height="15" viewBox="0 0 900 600"><path fill="#fff" d="M0 0h900v600H0z"/><path fill="#002654" d="M0 0h300v600H0z"/><path fill="#ce1126" d="M600 0h300v600H600z"/></svg>
+            </button>
+            <button class="lang-btn" data-lang="en" aria-label="English">
+                <svg width="20" height="15" viewBox="0 0 640 480"><path fill="#012169" d="M0 0h640v480H0z"/><path fill="#fff" d="m75 0 244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 62V0h75z"/><path fill="#CC142B" d="m0 0 236 174L0 348V0zM640 0 404 174l236 174V0zM0 480l240-178L0 124v356zM640 480 400 302l240 178V480z"/><path fill="#fff" d="M0 192h640v96H0z"/><path fill="#CC142B" d="M0 216h640v48H0z"/><path fill="#fff" d="M256 0h128v480H256z"/><path fill="#CC142B" d="M280 0h80v480h-80z"/></svg>
+            </button>
+        </div>
+      <a href="/#contacto" class="btn btn-primary" data-i18n="nav.cta">Solicitar consultoria</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- spacer for fixed header -->
+<div class="page-spacer"></div>
+
+<div class="sections-wrap">
+
+<!-- ========================================== -->
+<!-- SECÇÃO 1: TEXTO CANDIDATURA ACELERADOR -->
+<!-- ========================================== -->
+<section class="container">
+    <div class="banner-hero">
+        <h1>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M13.13 22.19L11.5 18.36L13.07 16.79C13.56 16.3 13.56 15.5 13.07 15C12.58 14.53 11.79 14.53 11.3 15L9.73 16.58L5.9 14.95C5.41 14.74 5.2 14.15 5.41 13.66L11.25 2.13C11.45 1.72 11.94 1.5 12.35 1.71C12.5 1.79 12.62 1.91 12.7 2.06L18.54 13.59C18.75 14.08 18.54 14.67 18.05 14.88L14.22 16.5L15.8 18.08C16.29 18.57 16.29 19.36 15.8 19.85C15.31 20.34 14.5 20.34 14.03 19.85L12.45 18.27L13.13 22.19Z"/></svg>
+            BOOST_ME ACELERADOR
+        </h1>
+    </div>
+
+    <div class="line-divider"></div>
+
+    <div>
+        <h2 class="doc-title">Candidatura Programa BOOST_ME ACELERADOR</h2>
+        <p class="doc-subtitle">A SUA EMPRESA TEM POTENCIAL PARA CRESCER? ESTA NA HORA DE ACELERAR!</p>
+
+        <p class="doc-text">Muitas PME e start-ups da Guinea-Bissau possuem produtos e servicos de qualidade, mas enfrentam obstaculos relacionados com gestao, acesso ao financiamento, organizacao interna e expansao para novos mercados.</p>
+
+        <p class="doc-text">O <strong>BOOST_ME ACELERADOR</strong> foi concebido para ajudar empresas ja em funcionamento a ultrapassar estes desafios e alcancar uma nova dimensao.</p>
+
+        <p class="doc-text">Atraves de um acompanhamento intensivo, diagnostico empresarial, reforco da governacao, estruturacao financeira e ligacao a bancos e investidores, ajudamos a transformar empresas em negocios rentaveis, bancaveis e preparados para crescer.</p>
+
+        <ul class="questions-list">
+            <li>Quer aumentar as vendas?</li>
+            <li>Pretende obter financiamento?</li>
+            <li>Deseja profissionalizar a gestao da sua empresa?</li>
+            <li>Procura expandir para novos mercados?</li>
+        </ul>
+
+        <p class="doc-text">Chegou o momento de dar o proximo passo.</p>
+        <p class="doc-text">Candidate-se ao <strong>BOOST_ME ACELERADOR</strong> e transforme o potencial da sua empresa em resultados concretos.</p>
+        <p class="doc-text">Porque o crescimento nao acontece por acaso. Acontece com estrategia, estrutura e acesso as oportunidades certas.</p>
+        <p class="doc-text">Juntos, vamos construir PME mais fortes, competitivas e sustentaveis para a Guinea-Bissau.</p>
+
+        <div class="callout-footer">
+            <p>Vagas limitadas. Faca o download dos ficheiros de candidatura abaixo.</p>
+            <p class="highlight">O talento existe. Vamos criar as condicoes para que ele prospere.</p>
+        </div>
+    </div>
+
+    <div class="line-divider"></div>
+</section>
+
+
+<!-- ========================================== -->
+<!-- SECÇÃO 2: PANFLETO BOOST_ME ACELERADOR -->
+<!-- ========================================== -->
+<section class="container">
+    <div class="flyer-header">
+        <div class="badge-chamada">
+            <span>&#128227;</span>
+            <div>CHAMADA PARA<br>CANDIDATURAS</div>
+        </div>
+        <div class="logo-eureka">
+            <div class="circles">
+                <div class="circle"></div>
+                <div class="circle" style="opacity:0.7"></div>
+                <div class="circle" style="opacity:0.4"></div>
+            </div>
+            <strong>EUREKA</strong>
+            <small>CONSULTING</small>
+        </div>
+    </div>
+
+    <div class="flyer-hero">
+        <div class="hero-title-box">
+            <h1>BOOST_ME <span>ACELERADOR</span></h1>
+            <div class="hero-tag">ACELERADOR DE CRESCIMENTO &amp; FINANCIAMENTO DAS PME</div>
+            <div class="hero-subtags">CRESCIMENTO &bull; GOVERNANCA &bull; FINANCIAMENTO &bull; ESCALABILIDADE</div>
+            <p class="hero-desc">
+                <strong>TRANSFORME A SUA EMPRESA NUMA PME RENTAVEL, BANCAVEL E PRONTA PARA INVESTIR.</strong><br>
+                O BOOST_ME acompanha as PME e startups ja em operacao durante <strong>6 a 12 meses</strong> para acelerar o seu crescimento, reforcar a sua governacao e aceder aos financiamentos necessarios a sua expansao.
+            </p>
+        </div>
+        <div class="mission-box">
+            <h4>&#127919; A NOSSA MISSAO</h4>
+            <p>Transformar as PME e startups em empresas de alto desempenho, rentaveis, bancaveis e prontas para passar a proxima escala.</p>
+        </div>
+    </div>
+
+    <div class="section-divider-title">AS NOSSAS 4 ALAVANCAS DE TRANSFORMACAO</div>
+
+    <div class="grid-4">
+        <div class="card-pillar">
+            <div class="icon-circle">&#128200;</div>
+            <h5>1. ACELERACAO COMERCIAL</h5>
+            <ul>
+                <li>Desenvolvimento de clientes</li>
+                <li>Aquisicao de novos mercados</li>
+                <li>Expansao nacional e regional</li>
+                <li>Reforco da competitividade</li>
+            </ul>
+        </div>
+        <div class="card-pillar">
+            <div class="icon-circle">&#127963;&#65039;</div>
+            <h5>2. GOVERNANCA &amp; ESTRUTURACAO</h5>
+            <ul>
+                <li>Organizacao interna</li>
+                <li>Implementacao de processos e procedimentos</li>
+                <li>Ferramentas de pilotagem</li>
+                <li>Relatorios e controlo de gestao</li>
+            </ul>
+        </div>
+        <div class="card-pillar">
+            <div class="icon-circle">&#128176;</div>
+            <h5>3. ACESSO AO FINANCIAMENTO</h5>
+            <ul>
+                <li>Diagnostico pre-financeiro</li>
+                <li>Estruturacao dos dossiers</li>
+                <li>Preparacao para captacao de fundos</li>
+                <li>Relacao com bancos, IMF, investidores e financiadores</li>
+            </ul>
+        </div>
+        <div class="card-pillar">
+            <div class="icon-circle">&#128640;</div>
+            <h5>4. DIGITALIZACAO &amp; ESCALABILIDADE</h5>
+            <ul>
+                <li>Paineis de controlo e KPIs</li>
+                <li>Transformacao digital</li>
+                <li>Otimizacao das operacoes</li>
+                <li>Preparacao para a passagem a escala</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="grid-3">
+        <div class="card-info blue">
+            <h5>O QUE NOS DIFERENCIA</h5>
+            <ul>
+                <li><span class="check">&#10003;</span> Diagnostico pre-financeiro completo</li>
+                <li><span class="check">&#10003;</span> Estruturacao financeira e business modeling</li>
+                <li><span class="check">&#10003;</span> Preparacao para captacao de fundos</li>
+                <li><span class="check">&#10003;</span> Acesso a solucoes de financas islamicas</li>
+                <li><span class="check">&#10003;</span> Relacao com bancos e investidores</li>
+                <li><span class="check">&#10003;</span> Implementacao de paineis de pilotagem</li>
+            </ul>
+        </div>
+        <div class="card-info green">
+            <h5>PERFIL PROCURADO</h5>
+            <ul>
+                <li><span class="check">&#10003;</span> Empresa legalmente registada</li>
+                <li><span class="check">&#10003;</span> Produto ou servico ja operacional</li>
+                <li><span class="check">&#10003;</span> MVP validado ou atividade em curso</li>
+                <li><span class="check">&#10003;</span> Primeiros clientes ou volume de negocios existente</li>
+                <li><span class="check">&#10003;</span> Alto potencial de crescimento</li>
+                <li><span class="check">&#10003;</span> Necessidade de acompanhamento estrategico</li>
+            </ul>
+        </div>
+        <div class="card-info orange">
+            <h5>RESULTADOS ESPERADOS</h5>
+            <ul>
+                <li><span class="check">&#10003;</span> Crescimento do volume de negocios</li>
+                <li><span class="check">&#10003;</span> Otimizacao da rentabilidade</li>
+                <li><span class="check">&#10003;</span> Acesso ao credito e financiamentos</li>
+                <li><span class="check">&#10003;</span> Estruturacao financeira completa</li>
+                <li><span class="check">&#10003;</span> Governanca reforcada</li>
+                <li><span class="check">&#10003;</span> Plano estrategico validado para 3 a 5 anos</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="flyer-footer-grid">
+        <div>
+            <div class="ecosystem-title">ECOSSISTEMA DE FINANCIAMENTO</div>
+            <div class="ecosystem-icons">
+                <div>&#127963;&#65039; Bancos Comerciais</div>
+                <div>&#127769; Financas Islamicas</div>
+                <div>&#129309; Investidores Anjos</div>
+                <div>&#128200; Fundos de Investimento</div>
+                <div>&#127758; Bailleurs Desenvolvimento</div>
+                <div>&#9878;&#65039; Crowdfunding</div>
+            </div>
+        </div>
+
+        <div class="download-box">
+            <h5>DOCUMENTOS DE CANDIDATURA (ACELERADOR)</h5>
+            <div class="download-buttons">
+                <a href="Formulaire Candidature Accelerateur Boost_Me.xlsx" download class="btn-download">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Formulario em Frances
+                </a>
+                <a href="Formulario Candidatura Acelerador Boost_Me.xlsx" download class="btn-download secondary">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Formulario em Portugues
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-bar">
+        <span>&#128222; +245 96 616 45 55 / +245 95 696 50 50</span>
+        <span>&#9993;&#65039; boostme@eurekaconsultingbis.com</span>
+        <span>&#128205; BISSAU, Av. Dr. Koumba Yala, Antula</span>
+    </div>
+    <div class="tagline-bottom">Juntos, construimos empresas performantes e sustentaveis.</div>
+</section>
+
+
+<!-- ========================================== -->
+<!-- SECÇÃO 3: TEXTO CANDIDATURA INCUBADORA -->
+<!-- ========================================== -->
+<section class="container">
+    <div class="banner-hero">
+        <h1>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M13.13 22.19L11.5 18.36L13.07 16.79C13.56 16.3 13.56 15.5 13.07 15C12.58 14.53 11.79 14.53 11.3 15L9.73 16.58L5.9 14.95C5.41 14.74 5.2 14.15 5.41 13.66L11.25 2.13C11.45 1.72 11.94 1.5 12.35 1.71C12.5 1.79 12.62 1.91 12.7 2.06L18.54 13.59C18.75 14.08 18.54 14.67 18.05 14.88L14.22 16.5L15.8 18.08C16.29 18.57 16.29 19.36 15.8 19.85C15.31 20.34 14.5 20.34 14.03 19.85L12.45 18.27L13.13 22.19Z"/></svg>
+            BOOST_ME INCUBADORA
+        </h1>
+    </div>
+
+    <div class="line-divider"></div>
+
+    <div>
+        <h2 class="doc-title">Candidatura Programa BOOST_ME INCUBADORA</h2>
+        <p class="doc-subtitle">TEM UMA IDEIA DE NEGOCIO? NOS AJUDAMOS A TRANSFORMA-LA NUMA EMPRESA DE SUCESSO!</p>
+
+        <p class="doc-text">Na Guinea-Bissau, muitos jovens e empreendedores tem excelentes ideias, mas poucos tem acesso ao acompanhamento tecnico, a formacao e ao financiamento necessarios para as transformar em empresas sustentaveis.</p>
+
+        <p class="doc-text">A <strong>BOOST_ME INCUBADORA</strong> foi criada para mudar esta realidade.</p>
+
+        <p class="doc-text">Durante um percurso estruturado de incubacao, recebera mentoria especializada, apoio na elaboracao do seu plano de negocios, validacao da sua solucao, desenvolvimento do seu projeto e preparacao para o acesso ao financiamento.</p>
+
+        <ul class="questions-list">
+            <li>Tem uma ideia inovadora?</li>
+            <li>Quer criar a sua empresa?</li>
+            <li>Procura orientacao e apoio para crescer?</li>
+        </ul>
+
+        <p class="doc-text">Esta e a sua oportunidade.</p>
+        <p class="doc-text">Junte-se a nova geracao de empreendedores que esta a construir o futuro economico da Guinea-Bissau.</p>
+        <p class="doc-text">Da ideia a empresa viavel. Da ambição ao impacto.</p>
+
+        <div class="callout-footer">
+            <p>Vagas limitadas. Faca o download dos ficheiros de candidatura abaixo.</p>
+            <p class="highlight">O talento existe. Vamos criar as condicoes para que ele prospere.</p>
+        </div>
+    </div>
+
+    <div class="line-divider"></div>
+</section>
+
+
+<!-- ========================================== -->
+<!-- SECÇÃO 4: PANFLETO BOOST_ME INCUBADORA -->
+<!-- ========================================== -->
+<section class="container">
+    <div class="flyer-header">
+        <div class="badge-chamada">
+            <span>&#128227;</span>
+            <div>CHAMADA PARA<br>CANDIDATURAS</div>
+        </div>
+        <div class="logo-eureka">
+            <div class="circles">
+                <div class="circle"></div>
+                <div class="circle" style="opacity:0.7"></div>
+                <div class="circle" style="opacity:0.4"></div>
+            </div>
+            <strong>EUREKA</strong>
+            <small>CONSULTING</small>
+        </div>
+    </div>
+
+    <div class="flyer-hero">
+        <div class="hero-title-box">
+            <h1>BOOST_ME <span>INCUBADORA</span></h1>
+            <div class="hero-tag">INCUBADORA DE CRIACAO, ESTRUTURACAO E FINANCIAMENTO DE STARTUPS</div>
+            <div class="hero-subtags">INOVACAO &bull; ESTRUTURACAO &bull; FINANCIAMENTO &bull; VALIDACAO</div>
+            <p class="hero-desc">
+                <strong>TRANSFORME A SUA IDEIA NUMA EMPRESA VIAVEL, ESTRUTURADA E FINANCIAVEL.</strong><br>
+                A BOOST_ME acompanha os promotores de projetos, startups e jovens empreendedores durante <strong>12 a 24 meses</strong> para transformar as suas ideias em empresas formais, rentaveis e prontas para aceder ao financiamento.
+            </p>
+        </div>
+        <div class="mission-box">
+            <h4>&#127919; A NOSSA MISSAO</h4>
+            <p>Acompanhar os empreendedores na transformacao das suas ideias em empresas de alto desempenho atraves de um percurso estruturado de incubacao, mentoria e acesso ao financiamento.</p>
+        </div>
+    </div>
+
+    <div class="section-divider-title">AS NOSSAS 4 ALAVANCAS DE TRANSFORMACAO</div>
+
+    <div class="grid-4">
+        <div class="card-pillar">
+            <div class="icon-circle">&#128161;</div>
+            <h5>1. ESTRUTURACAO DO PROJETO</h5>
+            <ul>
+                <li>Clarificacao da visao empreendedora</li>
+                <li>Estudo de mercado e validacao da necessidade</li>
+                <li>Construcao do Modelo de Negocio</li>
+                <li>Elaboracao do Plano de Negocios</li>
+                <li>Definicao da estrategia de desenvolvimento</li>
+            </ul>
+        </div>
+        <div class="card-pillar">
+            <div class="icon-circle">&#127891;</div>
+            <h5>2. FORMACAO &amp; MENTORIA</h5>
+            <ul>
+                <li>Coaching individual</li>
+                <li>Desenvolvimento da lideranca</li>
+                <li>Reforco das competencias empreendedoras</li>
+                <li>Workshops praticos e masterclasses</li>
+                <li>Acompanhamento estrategico personalizado</li>
+            </ul>
+        </div>
+        <div class="card-pillar">
+            <div class="icon-circle">&#128640;</div>
+            <h5>3. PROTOTIPAGEM &amp; VALIDACAO</h5>
+            <ul>
+                <li>Desenvolvimento do MVP</li>
+                <li>Validacao tecnica da solucao</li>
+                <li>Testes com utilizadores</li>
+                <li>Aquisicao dos primeiros clientes</li>
+                <li>Ajuste do modelo economico</li>
+            </ul>
+        </div>
+        <div class="card-pillar">
+            <div class="icon-circle">&#128176;</div>
+            <h5>4. ACESSO AO FINANCIAMENTO</h5>
+            <ul>
+                <li>Diagnostico pre-financeiro</li>
+                <li>Preparacao dos dossiers bancarios</li>
+                <li>Estruturacao financeira</li>
+                <li>Relacao com FMI, bancos e investidores</li>
+                <li>Orientacao para financas islamicas e crowdfunding</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="grid-3">
+        <div class="card-info blue">
+            <h5>O QUE NOS DIFERENCIA</h5>
+            <ul>
+                <li><span class="check">&#10003;</span> Acompanhamento intensivo de 12 a 24 meses</li>
+                <li><span class="check">&#10003;</span> Coaching personalizado por especialistas</li>
+                <li><span class="check">&#10003;</span> Estruturacao completa do projeto</li>
+                <li><span class="check">&#10003;</span> Preparacao para bancabilidade</li>
+                <li><span class="check">&#10003;</span> Desenvolvimento do Plano de Negocios</li>
+                <li><span class="check">&#10003;</span> Rede de parceiros financeiros</li>
+                <li><span class="check">&#10003;</span> Acompanhamento rigoroso via paineis de bordo</li>
+                <li><span class="check">&#10003;</span> Passagem direta para o Acelerador BOOST_ME</li>
+            </ul>
+        </div>
+        <div class="card-info green">
+            <h5>PERFIL PROCURADO</h5>
+            <ul>
+                <li><span class="check">&#10003;</span> Promotor de projeto motivado</li>
+                <li><span class="check">&#10003;</span> Startup em fase de criacao</li>
+                <li><span class="check">&#10003;</span> Projeto inovador ou com alto potencial</li>
+                <li><span class="check">&#10003;</span> Disponibilidade para seguir o programa</li>
+                <li><span class="check">&#10003;</span> Vontade de aprender e evoluir</li>
+                <li><span class="check">&#10003;</span> Compromisso com o desenvolvimento do projeto</li>
+            </ul>
+        </div>
+        <div class="card-info orange">
+            <h5>RESULTADOS ESPERADOS</h5>
+            <p style="font-weight: bold; margin-bottom: 3px; font-size:0.58rem;">No final do programa:</p>
+            <ul>
+                <li><span class="check">&#10003;</span> Modelo de Negocio validado</li>
+                <li><span class="check">&#10003;</span> Plano de Negocios finalizado</li>
+                <li><span class="check">&#10003;</span> MVP ou prototipo desenvolvido</li>
+                <li><span class="check">&#10003;</span> Empresa legalmente registada</li>
+                <li><span class="check">&#10003;</span> Primeiros clientes adquiridos</li>
+                <li><span class="check">&#10003;</span> Governanca e organizacao estruturadas</li>
+                <li><span class="check">&#10003;</span> Financiamento identificado ou obtido</li>
+                <li><span class="check">&#10003;</span> Pronto para integrar o Acelerador BOOST_ME</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="flyer-footer-grid">
+        <div>
+            <div class="ecosystem-title">ECOSSISTEMA DE FINANCIAMENTO</div>
+            <div class="ecosystem-icons">
+                <div>&#127963;&#65039; Bancos Comerciais</div>
+                <div>&#127974; Microfinancas</div>
+                <div>&#129309; Business Angels</div>
+                <div>&#128200; Fundos Investimento</div>
+                <div>&#127758; Bailleurs Desenvol.</div>
+                <div>&#9878;&#65039; Crowdfunding</div>
+            </div>
+        </div>
+
+        <div class="download-box">
+            <h5>DOCUMENTOS DE CANDIDATURA (INCUBADORA)</h5>
+            <div class="download-buttons">
+                <a href="Formulaire Candidature Incubateur Boost_Me.xlsx" download class="btn-download">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Formulario em Frances
+                </a>
+                <a href="Formulario Candidatura Incubador Boost_Me.xlsx" download class="btn-download secondary">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Formulario em Portugues
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-bar">
+        <span>&#128222; +245 96 616 45 55 / +245 95 696 50 50</span>
+        <span>&#9993;&#65039; boostme@eurekaconsultingbis.com</span>
+        <span>&#128205; BISSAU, Av. Dr. Koumba Yala, Antula</span>
+    </div>
+    <div class="tagline-bottom">Da ideia a empresa viavel e financiavel.</div>
+</section>
+
+</div><!-- /.sections-wrap -->
+
+<!-- ===== RODAPE ===== -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <img src="eureka.jpeg" class="footer-logo" alt="Eureka Consulting">
+      <p data-i18n="footer.desc">Consultoria empresarial de referencia na Guinea-Bissau e na Africa Ocidental. Estrategia, financas e crescimento — ao seu lado.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.nav">Navegacao</h4>
+      <a href="/#recrutamento" data-i18n="nav.recrutamento">Vagas & Formacoes</a>
+      <a href="/servicos" data-i18n="nav.servicos">Servicos</a>
+      <a href="/recursos" data-i18n="nav.recursos">Recursos</a>
+      <a href="/sobre" data-i18n="nav.sobre">Sobre</a>
+      <a href="/#boost">BOOST_ME</a>
+      <a href="/noticias" data-i18n="nav.noticias">Noticias</a>
+      <a href="/#contacto" data-i18n="nav.contacto">Contacto</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.svc">Servicos</h4>
+      <a href="/servicos" data-i18n="svc.gestao.t">Gestao e Estrategia</a>
+      <a href="/servicos" data-i18n="svc.financas.t">Financas e Auditoria</a>
+      <a href="/servicos" data-i18n="svc.projetos.t">Gestao de Projetos</a>
+      <a href="/servicos" data-i18n="svc.microfin.t">Microfinancas</a>
+      <a href="/servicos" data-i18n="svc.formacoes.t">Formacoes</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.contact">Contacto</h4>
+      <p>Av. Dr. Koumba Yalá — Antula, Bissau</p>
+      <p>(+245) 955 920 035 / 966 164 555 / 956 965 050</p>
+      <p>recrut@eurekaconsultingbis.com</p>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <div class="container footer-bar-inner">
+      <p>&copy; <span id="year"></span> Eureka Consulting. <span data-i18n="footer.rights">Todos os direitos reservados.</span></p>
+      <nav class="footer-legal" aria-label="Avisos legais">
+        <a href="#" data-i18n="footer.privacy">Politica de privacidade</a>
+        <a href="#" data-i18n="footer.legal">Aviso legal</a>
+      </nav>
+      <a href="/login" class="btn btn-line-light footer-admin-btn">
+        <i class="fa-solid fa-lock" style="font-size:.78rem"></i> <span data-i18n="footer.admin">Admin</span>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
