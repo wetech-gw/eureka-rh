@@ -17,9 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-             $this->call([
+        $this->call([
             CoresEletivasSeeder::class,
             SiteContentSeeder::class,
+            ResponsavelSeeder::class,
         ]);
     }
 }

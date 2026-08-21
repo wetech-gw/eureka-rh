@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CheckResponsavel;
 use App\Http\Middleware\ReadOnlyForCEO;
+use App\Http\Middleware\SetLocale;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,7 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('estados:atualizar')->dailyAt('00:05');
     })
     ->withMiddleware(function (Middleware $middleware): void {
-        
+
+        $middleware->web(append: [
+            SetLocale::class,
+        ]);
+
         // 🟢 CORREÇÃO: Passamos o caminho diretamente sem o parâmetro 'guest:'
         $middleware->redirectGuestsTo(fn () => route('login'));
 
