@@ -26,7 +26,7 @@
     </div>
 
     <figure class="hero-media">
-      <img src="{{ $hero->image_path ? asset('storage/' . $hero->image_path) : asset('assets/hero.webp') }}" alt="Equipa da Eureka Consulting em reunião de trabalho"
+      <img src="{{ $hero?->image_path ? asset('storage/' . $hero->image_path) : asset('assets/hero.webp') }}" alt="Equipa da Eureka Consulting em reunião de trabalho"
            width="720" height="820" loading="eager"
            onerror="this.closest('.hero-media').classList.add('no-img')">
       <figcaption class="hero-media-fallback" aria-hidden="true">
@@ -148,14 +148,14 @@
     </div>
     <div class="tb-container reveal">
       <div class="tb-image-wrap">
-        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Equipa colaborando em atividade de Team Building">
+        <img src="https://images.unsplash.com/photo-1637856794303-d864ce316444?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Equipa colaborando em atividade de Team Building">
       </div>
       <div class="tb-quad-grid">
         <div class="tb-card">
           <div class="tb-card-icon"><i class="fa-solid fa-people-group"></i></div>
           <h3 data-i18n="sec.tb.c1">Construção da Equipa e Coesão da Equipa</h3>
         </div>
-        <div class="tb-card">
+	        <div class="tb-card">
           <div class="tb-card-icon"><i class="fa-solid fa-comments"></i></div>
           <h3 data-i18n="sec.tb.c2">Quebra-Gelo em Equipa</h3>
         </div>
@@ -535,7 +535,7 @@
     </div>
     <aside class="about-side">
       <figure class="about-photo">
-        <img src="{{ $about->image_path ? asset('storage/' . $about->image_path) : asset('assets/sobre.webp') }}" alt="Escritório da Eureka Consulting em Bissau"
+        <img src="{{ $about?->image_path ? asset('storage/' . $about->image_path) : asset('assets/sobre.webp') }}" alt="Escritório da Eureka Consulting em Bissau"
              width="480" height="300" loading="lazy"
              onerror="this.closest('.about-photo').classList.add('no-img')">
         <figcaption aria-hidden="true"><small>assets/sobre.webp</small></figcaption>

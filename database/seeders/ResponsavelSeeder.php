@@ -16,7 +16,8 @@ class ResponsavelSeeder extends Seeder
                 'name'     => 'Sidia Inquade',
                 'password' => Hash::make('sidia1992'),
                 'role'     => 'Responsável',
-                'status'   => 'ativo',
+		
+             
             ]
         );
     }
