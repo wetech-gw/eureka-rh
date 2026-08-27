@@ -148,7 +148,7 @@
     </div>
     <div class="tb-container reveal">
       <div class="tb-image-wrap">
-        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Equipa colaborando em atividade de Team Building">
+        <img src="assets/Team-building.jpg" alt="Equipa colaborando em atividade de Team Building">
       </div>
       <div class="tb-quad-grid">
         <div class="tb-card">
