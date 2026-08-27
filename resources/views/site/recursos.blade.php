@@ -23,7 +23,7 @@
       <article class="resource-card reveal">
         <div class="res-logo">
           @if($resource->logo_path)
-            <img src="{{ asset('storage/' . $resource->logo_path) }}" alt="Recurso" onerror="this.closest('.res-logo').innerHTML='<span>R</span>'">
+            <img src="{{ storage_url($resource->logo_path) }}" alt="Recurso" onerror="this.closest('.res-logo').innerHTML='<span>R</span>'">
           @else
             <span>R</span>
           @endif

@@ -25,7 +25,7 @@
             <label class="form-label fw-medium">Logótipo</label>
             @if($recurso->logo_path)
                 <div class="mb-2">
-                    <img src="{{ asset('storage/' . $recurso->logo_path) }}" alt="" style="max-height: 60px; border-radius: 8px;">
+                    <img src="{{ storage_url($recurso->logo_path) }}" alt="" style="max-height: 60px; border-radius: 8px;">
                 </div>
             @endif
             <input type="file" name="logo_path" class="form-control" accept="image/jpeg,image/png,image/svg+xml">

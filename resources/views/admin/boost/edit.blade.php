@@ -31,7 +31,7 @@
             <label class="form-label fw-medium">Imagem</label>
             @if($boost->image_path)
                 <div class="mb-2">
-                    <img src="{{ asset('storage/' . $boost->image_path) }}" alt="Imagem atual do BOOST_ME" style="max-height: 140px; border-radius: 10px; border: 1px solid #e9ecef;">
+                    <img src="{{ storage_url($boost->image_path) }}" alt="Imagem atual do BOOST_ME" style="max-height: 140px; border-radius: 10px; border: 1px solid #e9ecef;">
                 </div>
             @endif
             <input type="file" name="image_path" class="form-control" accept="image/png,image/jpeg,image/webp,image/avif">

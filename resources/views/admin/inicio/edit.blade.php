@@ -31,7 +31,7 @@
             <label class="form-label fw-medium">Imagem (hero)</label>
             @if($inicio->image_path)
                 <div class="mb-2">
-                    <img src="{{ asset('storage/' . $inicio->image_path) }}" alt="" style="max-width: 200px; border-radius: 8px;">
+                    <img src="{{ storage_url($inicio->image_path) }}" alt="" style="max-width: 200px; border-radius: 8px;">
                 </div>
             @endif
             <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png,image/svg+xml,image/webp,image/avif">

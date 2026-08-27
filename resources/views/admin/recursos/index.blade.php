@@ -30,7 +30,7 @@
                     <tr class="border-bottom">
                         <td class="py-3">
                             @if($recurso->logo_path)
-                                <img src="{{ asset('storage/' . $recurso->logo_path) }}" alt="" style="max-height: 40px; max-width: 120px; object-fit: contain;">
+                                <img src="{{ storage_url($recurso->logo_path) }}" alt="" style="max-height: 40px; max-width: 120px; object-fit: contain;">
                             @else
                                 <span class="text-muted small">—</span>
                             @endif

@@ -52,7 +52,7 @@
     </div>
     <aside class="about-side">
       <figure class="about-photo">
-        <img src="{{ $about && $about->image_path ? asset('storage/' . $about->image_path) : asset('assets/sobre.webp') }}" alt="Escritório da Eureka Consulting em Bissau"
+        <img src="{{ $about && $about->image_path ? storage_url($about->image_path) : asset('assets/sobre.webp') }}" alt="Escritório da Eureka Consulting em Bissau"
              width="480" height="300" loading="lazy"
              onerror="this.closest('.about-photo').classList.add('no-img')">
         <figcaption aria-hidden="true"><small>assets/sobre.webp</small></figcaption>

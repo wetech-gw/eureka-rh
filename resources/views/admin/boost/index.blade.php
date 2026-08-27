@@ -34,7 +34,7 @@
                         <td class="py-3 text-muted">#{{ $boost->id }}</td>
                         <td class="py-3">
                             @if($boost->image_path)
-                                <img src="{{ asset('storage/' . $boost->image_path) }}" alt="Imagem do BOOST_ME" style="width: 64px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid #e9ecef;">
+                                <img src="{{ storage_url($boost->image_path) }}" alt="Imagem do BOOST_ME" style="width: 64px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid #e9ecef;">
                             @else
                                 <span class="text-muted small">—</span>
                             @endif

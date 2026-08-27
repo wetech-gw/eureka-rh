@@ -23,7 +23,7 @@
       <article class="news-card reveal" id="noticia-{{ $new->id }}">
         <div class="news-thumb">
           <span class="news-cat">{{ $new->category }}</span>
-          <img src="{{ $new->image_path ? asset('storage/' . $new->image_path) : asset('assets/noticia-1.webp') }}" alt="{{ $new->title }}" loading="lazy"
+          <img src="{{ $new->image_path ? storage_url($new->image_path) : asset('assets/noticia-1.webp') }}" alt="{{ $new->title }}" loading="lazy"
                onerror="this.closest('.news-thumb').classList.add('no-img')">
           <span class="nt-fallback"><span class="discs"><i></i><i></i><i></i></span><small>{{ $new->category }}</small></span>
         </div>

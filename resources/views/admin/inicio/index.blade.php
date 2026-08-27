@@ -37,7 +37,7 @@
                         <td class="py-3 text-secondary">{{ Str::limit($inicio->subtitle, 50) }}</td>
                         <td class="py-3">
                             @if($inicio->image_path)
-                                <img src="{{ asset('storage/' . $inicio->image_path) }}" alt="" style="width: 60px; height: 36px; object-fit: cover; border-radius: 6px;">
+                                <img src="{{ storage_url($inicio->image_path) }}" alt="" style="width: 60px; height: 36px; object-fit: cover; border-radius: 6px;">
                             @else
                                 <span class="text-muted small">—</span>
                             @endif

@@ -32,7 +32,7 @@
                     <tr class="border-bottom">
                         <td class="py-3">
                             @if($noticia->image_path)
-                                <img src="{{ asset('storage/' . $noticia->image_path) }}" alt="" style="width: 60px; height: 40px; object-fit: cover; border-radius: 6px;">
+                                <img src="{{ storage_url($noticia->image_path) }}" alt="" style="width: 60px; height: 40px; object-fit: cover; border-radius: 6px;">
                             @else
                                 <span class="text-muted small">—</span>
                             @endif

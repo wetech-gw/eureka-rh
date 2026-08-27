@@ -186,14 +186,14 @@
                                 <td class="small text-muted">{{ date('d/m/Y', strtotime($r->created_at)) }}</td>
                                 <td class="text-center">
                                     @if($r->cv_arquivo)
-                                        <a href="{{ asset('storage/' . $r->cv_arquivo) }}" target="_blank" class="btn btn-sm btn-light border text-dark fw-medium">
+                                        <a href="{{ storage_url($r->cv_arquivo) }}" target="_blank" class="btn btn-sm btn-light border text-dark fw-medium">
                                             <i class="fa-solid fa-file-pdf text-danger me-1"></i> CV
                                         </a>
                                     @else
                                         <span class="text-muted small">Sem arquivo</span>
                                     @endif
                                     @if($r->carta_motivacao_arquivo)
-                                        <a href="{{ asset('storage/' . $r->carta_motivacao_arquivo) }}" target="_blank" class="btn btn-sm btn-light border text-dark fw-medium mt-1">
+                                        <a href="{{ storage_url($r->carta_motivacao_arquivo) }}" target="_blank" class="btn btn-sm btn-light border text-dark fw-medium mt-1">
                                             <i class="fa-solid fa-file-lines text-warning me-1"></i> Carta
                                         </a>
                                     @endif

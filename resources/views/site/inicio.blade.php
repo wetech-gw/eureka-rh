@@ -26,7 +26,7 @@
     </div>
 
     <figure class="hero-media">
-      <img src="{{ $hero->image_path ? asset('storage/' . $hero->image_path) : asset('assets/hero.webp') }}" alt="Equipa da Eureka Consulting em reunião de trabalho"
+      <img src="{{ $hero->image_path ? storage_url($hero->image_path) : asset('assets/hero.webp') }}" alt="Equipa da Eureka Consulting em reunião de trabalho"
            width="720" height="820" loading="eager"
            onerror="this.closest('.hero-media').classList.add('no-img')">
       <figcaption class="hero-media-fallback" aria-hidden="true">
@@ -89,7 +89,7 @@
     </div>
     @if($boost && $boost->image_path)
     <div class="boost-media reveal">
-      <img src="{{ asset('storage/' . $boost->image_path) }}" alt="BOOST_ME — Acelerador de Empresas" loading="lazy">
+      <img src="{{ storage_url($boost->image_path) }}" alt="BOOST_ME — Acelerador de Empresas" loading="lazy">
     </div>
     @endif
   </div>
@@ -477,7 +477,7 @@
       <article class="resource-card reveal">
         <div class="res-logo">
           @if($resource->logo_path)
-            <img src="{{ asset('storage/' . $resource->logo_path) }}" alt="Recurso" onerror="this.closest('.res-logo').innerHTML='<span>R</span>'">
+            <img src="{{ storage_url($resource->logo_path) }}" alt="Recurso" onerror="this.closest('.res-logo').innerHTML='<span>R</span>'">
           @else
             <span>R</span>
           @endif
@@ -535,7 +535,7 @@
     </div>
     <aside class="about-side">
       <figure class="about-photo">
-        <img src="{{ $about->image_path ? asset('storage/' . $about->image_path) : asset('assets/sobre.webp') }}" alt="Escritório da Eureka Consulting em Bissau"
+        <img src="{{ $about->image_path ? storage_url($about->image_path) : asset('assets/sobre.webp') }}" alt="Escritório da Eureka Consulting em Bissau"
              width="480" height="300" loading="lazy"
              onerror="this.closest('.about-photo').classList.add('no-img')">
         <figcaption aria-hidden="true"><small>assets/sobre.webp</small></figcaption>
@@ -604,7 +604,7 @@
       <article class="news-card reveal">
         <div class="news-thumb">
           <span class="news-cat">{{ $new->category }}</span>
-          <img src="{{ $new->image_path ? asset('storage/' . $new->image_path) : asset('assets/noticia-1.webp') }}" alt="{{ $new->title }}" loading="lazy"
+          <img src="{{ $new->image_path ? storage_url($new->image_path) : asset('assets/noticia-1.webp') }}" alt="{{ $new->title }}" loading="lazy"
                onerror="this.closest('.news-thumb').classList.add('no-img')">
           <span class="nt-fallback"><span class="discs"><i></i><i></i><i></i></span><small>{{ $new->category }}</small></span>
         </div>

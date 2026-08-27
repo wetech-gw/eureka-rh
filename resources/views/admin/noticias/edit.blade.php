@@ -41,7 +41,7 @@
                 <label class="form-label fw-medium">Imagem</label>
                 @if($noticia->image_path)
                     <div class="mb-2">
-                        <img src="{{ asset('storage/' . $noticia->image_path) }}" alt="" style="max-width: 160px; border-radius: 8px;">
+                        <img src="{{ storage_url($noticia->image_path) }}" alt="" style="max-width: 160px; border-radius: 8px;">
                     </div>
                 @endif
  <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png,image/webp,image/avif">

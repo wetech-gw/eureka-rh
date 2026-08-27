@@ -41,7 +41,7 @@
             <label class="form-label fw-medium">Imagem</label>
             @if($sobre->image_path)
                 <div class="mb-2">
-                    <img src="{{ asset('storage/' . $sobre->image_path) }}" alt="" style="max-width: 220px; border-radius: 8px;">
+                    <img src="{{ storage_url($sobre->image_path) }}" alt="" style="max-width: 220px; border-radius: 8px;">
                 </div>
             @endif
             <input type="file" name="image_path" class="form-control" accept="image/jpeg,image/png">
