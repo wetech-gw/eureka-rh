@@ -74,7 +74,7 @@ class FuncionarioController extends Controller
             "email" => [
                 "nullable",
                 "email",
-                "max:255"
+                "max:255",
                 Rule::unique("funcionarios", "email")->ignore($funcionario),
             ],
             "data_nascimento" => "nullable|date",
