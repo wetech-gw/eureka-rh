@@ -24,7 +24,7 @@ class FuncionarioController extends Controller
         // Validação dos campos obrigatórios do teu sistema
         $request->validate([
             "nome" => "required|string|max:255",
-            "email" => "required|email|unique:funcionarios,email",
+            "email" => "nullable|string",
             "cargo" => "required|string|max:100",
             // 'iniciais' => 'required|string|max:3',
             "data_inicio_contrato" => "required|date",
@@ -72,7 +72,8 @@ class FuncionarioController extends Controller
         $request->validate([
             "nome" => "required|string|max:255",
             "email" => [
-                "required",
+                "nullable",
+                
                 "email",
                 Rule::unique("funcionarios", "email")->ignore($funcionario),
             ],
