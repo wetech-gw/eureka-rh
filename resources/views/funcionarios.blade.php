@@ -357,7 +357,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-compact">Email Institucional *</label>
-                            <input type="email" name="email" class="form-control form-control-compact" required>
+                            <input type="email" name="email" class="form-control form-control-compact">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-compact">Contacto Telefónico</label>
@@ -526,7 +526,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label-compact">Email Institucional *</label>
-                                <input type="email" name="email" value="{{ $f->email }}" class="form-control form-control-compact" required>
+                                <input type="email" name="email" value="{{ $f->email }}" class="form-control form-control-compact" >
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label-compact">Contacto Telefónico</label>
