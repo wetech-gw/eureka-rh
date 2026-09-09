@@ -13,7 +13,7 @@ return new class extends Migration
     {
         //
         Schema::table('funcionarios', function (Blueprint $table) {
-            $table->string('email')->unique()->nullable();
+            $table->string('email')->nullable()->change();
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     {
         //
          Schema::table('funcionarios', function (Blueprint $table) {
-            $table->string('email')->unique()->nullable(false);
+            $table->string('email')->nullable(false)->change();
         });
     }
 };
