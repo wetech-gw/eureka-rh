@@ -32,7 +32,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // VERIFICAÇÃO DE SEGURANÇA: Bloqueia utilizadores Inativos ou Suspensos
-            if (($user->status ?? "Ativo") !== "Ativo") {
+            if (strtolower($user->status ?? "ativo") !== "ativo") {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();

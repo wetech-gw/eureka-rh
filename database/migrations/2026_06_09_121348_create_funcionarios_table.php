@@ -27,7 +27,7 @@ return new class extends Migration
             
             // 3. Informações de Contrato e Carreira
             $table->string('cargo'); 
-            $table->string('iniciais', 3);
+            $table->string('iniciais', 3)->nullable()->change();
             $table->enum('estado', ['Activo', 'Inactivo', 'Suspenso'])->default('Activo');
             $table->string('tipo_contrato')->default('Permanente'); 
             

@@ -10,7 +10,7 @@ class VerificarUsuarioAtivo
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->status !== "Ativo") {
+        if (Auth::check() && strtolower(Auth::user()->status ?? "ativo") !== "ativo") {
             Auth::logout();
 
             $request->session()->invalidate();
