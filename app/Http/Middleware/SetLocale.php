@@ -23,9 +23,19 @@ class SetLocale
 
         $response = $next($request);
 
-        return $response->withCookie(
-            Cookie::forever('eureka_locale', $locale, 60 * 24 * 365, '/', null, false, false)
+        // Compatible avec Response, BinaryFileResponse, StreamedResponse, etc.
+        $response->headers->setCookie(
+            Cookie::forever(
+                'eureka_locale',
+                $locale,
+                '/',
+                null,
+                false,
+                false
+            )
         );
+
+        return $response;
     }
 
     protected function resolveLocale(Request $request): string
@@ -33,6 +43,7 @@ class SetLocale
         if ($query = $request->query('lang')) {
             if (in_array($query, $this->supported, true)) {
                 $request->session()->put('eureka_locale', $query);
+
                 return $query;
             }
         }
@@ -46,6 +57,7 @@ class SetLocale
         if ($cookie = $request->cookie('eureka_locale')) {
             if (in_array($cookie, $this->supported, true)) {
                 $request->session()->put('eureka_locale', $cookie);
+
                 return $cookie;
             }
         }
