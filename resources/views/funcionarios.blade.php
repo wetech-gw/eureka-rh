@@ -69,6 +69,11 @@
         .modern-search-input { padding: 9px 16px 9px 40px; font-size: 13px; border-radius: 10px; border: 1px solid #e2e8f0; background-color: #f8fafc; transition: all 0.2s ease-in-out; height: 38px; width: 100%; }
         .modern-search-input:focus { background-color: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); outline: none; }
         .modern-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 4; }
+
+        /* Mensagens de validação por baixo de cada campo */
+        .invalid-feedback { display: block; font-size: 11px; margin-top: 2px; }
+        .form-control-compact.is-invalid, .form-select.form-control-compact.is-invalid { border-color: #dc3545; }
+        .form-control-compact.is-invalid:focus { border-color: #dc3545; box-shadow: 0 0 0 0.15rem rgba(220,53,69,.15); }
     </style>
 @include('partials.theme-head')
 </head>
@@ -275,13 +280,14 @@
             </div>
         @endif
 
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach
-                </ul>
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
+
+        {{-- NOTA: erros de validação aparecem por baixo de cada campo do formulário (sem bloco global aqui) --}}
 
         <div class="card-custom p-4">
             <div class="table-scrollable-container">
@@ -345,7 +351,7 @@
                 <h6 class="modal-title fw-bold m-0">Novo Cadastro de Funcionário</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="{{ route('funcionarios.store') }}" method="POST">
+            <form action="{{ route('funcionarios.store') }}" method="POST" novalidate>
                 @csrf
                 <div class="modal-body p-3">
 
@@ -353,23 +359,27 @@
                     <div class="row g-2 mb-3">
                         <div class="col-md-5">
                             <label class="form-label-compact">Nome Completo *</label>
-                            <input type="text" name="nome" class="form-control form-control-compact" required>
+                            <input type="text" name="nome" value="{{ old('nome') }}" class="form-control form-control-compact @if(session('modalCadastro')) @error('nome') is-invalid @enderror @endif" required>
+                            @if(session('modalCadastro')) @error('nome') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label-compact">Email Institucional *</label>
-                            <input type="email" name="email" class="form-control form-control-compact">
+                            <label class="form-label-compact">Email Institucional</label>
+                            <input type="email" name="email" value="{{ old('email') }}" class="form-control form-control-compact @if(session('modalCadastro')) @error('email') is-invalid @enderror @endif">
+                            @if(session('modalCadastro')) @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-compact">Contacto Telefónico</label>
-                            <input type="text" name="contacto" class="form-control form-control-compact">
+                            <input type="text" name="contacto" value="{{ old('contacto') }}" class="form-control form-control-compact @if(session('modalCadastro')) @error('contacto') is-invalid @enderror @endif">
+                            @if(session('modalCadastro')) @error('contacto') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-compact">Data de Nascimento</label>
-                            <input type="date" name="data_nascimento" class="form-control form-control-compact">
+                            <input type="date" name="data_nascimento" value="{{ old('data_nascimento') }}" class="form-control form-control-compact @if(session('modalCadastro')) @error('data_nascimento') is-invalid @enderror @endif">
+                            @if(session('modalCadastro')) @error('data_nascimento') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-8">
                             <label class="form-label-compact">Empresa</label>
-                            <input type="text" name="empresa" value="Eureka Consulting" class="form-control form-control-compact">
+                            <input type="text" name="empresa" value="{{ old('empresa', 'Eureka Consulting') }}" class="form-control form-control-compact">
                         </div>
                     </div>
 
@@ -377,19 +387,21 @@
                     <div class="row g-2 mb-3">
                         <div class="col-md-3">
                             <label class="form-label-compact">Nº de B.I.</label>
-                            <input type="text" name="bi" class="form-control form-control-compact">
+                            <input type="text" name="bi" value="{{ old('bi') }}" class="form-control form-control-compact @if(session('modalCadastro')) @error('bi') is-invalid @enderror @endif">
+                            @if(session('modalCadastro')) @error('bi') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-compact">NIF *</label>
-                            <input type="text" name="nif" class="form-control form-control-compact" required>
+                            <input type="text" name="nif" value="{{ old('nif') }}" class="form-control form-control-compact @if(session('modalCadastro')) @error('nif') is-invalid @enderror @endif" required>
+                            @if(session('modalCadastro')) @error('nif') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-compact">Nº Seg. Social (INSS)</label>
-                            <input type="text" name="num_seguranca_social" class="form-control form-control-compact">
+                            <input type="text" name="num_seguranca_social" value="{{ old('num_seguranca_social') }}" class="form-control form-control-compact">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-compact">Data Inscrição INSS</label>
-                            <input type="date" name="data_inscricao_inss" class="form-control form-control-compact">
+                            <input type="date" name="data_inscricao_inss" value="{{ old('data_inscricao_inss') }}" class="form-control form-control-compact">
                         </div>
                     </div>
 
@@ -397,37 +409,41 @@
                     <div class="row g-2 mb-3">
                         <div class="col-md-4">
                             <label class="form-label-compact">Função / Cargo *</label>
-                            <input type="text" name="cargo" class="form-control form-control-compact" placeholder="Ex: Contabilista" required>
+                            <input type="text" name="cargo" value="{{ old('cargo') }}" class="form-control form-control-compact @if(session('modalCadastro')) @error('cargo') is-invalid @enderror @endif" placeholder="Ex: Contabilista" required>
+                            @if(session('modalCadastro')) @error('cargo') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-compact">Tipo Trabalhador</label>
-                            <select name="tipo_trabalhador" class="form-select form-control-compact">
-                                <option value="Subordinado">Subordinado (Outrem)</option>
-                                <option value="Supervisor">Supervisor(a)</option>
+                            <select name="tipo_trabalhador" class="form-select form-control-compact @if(session('modalCadastro')) @error('tipo_trabalhador') is-invalid @enderror @endif">
+                                <option value="Subordinado" {{ old('tipo_trabalhador') == 'Subordinado' ? 'selected' : '' }}>Subordinado (Outrem)</option>
+                                <option value="Supervisor" {{ old('tipo_trabalhador') == 'Supervisor' ? 'selected' : '' }}>Supervisor(a)</option>
                             </select>
+                            @if(session('modalCadastro')) @error('tipo_trabalhador') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-compact">Tipo Contrato</label>
-                            <select name="tipo_contrato" class="form-select form-control-compact">
-                                <option value="Permanente">Permanente</option>
-                                <option value="Temporário">Temporário</option>
-                                <option value="Contrato a termo certo">Contrato a termo certo</option>
-                                <option value="Contrato a termo incerto">Contrato a termo incerto</option>
-                                <option value="Estágio Profissional">Estágio Profissional</option>
-                                <option value="Prestação de Serviços">Prestação de Serviços</option>
+                            <select name="tipo_contrato" class="form-select form-control-compact @if(session('modalCadastro')) @error('tipo_contrato') is-invalid @enderror @endif">
+                                <option value="Permanente" {{ old('tipo_contrato') == 'Permanente' ? 'selected' : '' }}>Permanente</option>
+                                <option value="Temporário" {{ old('tipo_contrato') == 'Temporário' ? 'selected' : '' }}>Temporário</option>
+                                <option value="Contrato a termo certo" {{ old('tipo_contrato') == 'Contrato a termo certo' ? 'selected' : '' }}>Contrato a termo certo</option>
+                                <option value="Contrato a termo incerto" {{ old('tipo_contrato') == 'Contrato a termo incerto' ? 'selected' : '' }}>Contrato a termo incerto</option>
+                                <option value="Estágio Profissional" {{ old('tipo_contrato') == 'Estágio Profissional' ? 'selected' : '' }}>Estágio Profissional</option>
+                                <option value="Prestação de Serviços" {{ old('tipo_contrato') == 'Prestação de Serviços' ? 'selected' : '' }}>Prestação de Serviços</option>
                             </select>
+                            @if(session('modalCadastro')) @error('tipo_contrato') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-compact">Início do Contrato *</label>
-                            <input type="date" name="data_inicio_contrato" class="form-control form-control-compact" required>
+                            <input type="date" name="data_inicio_contrato" value="{{ old('data_inicio_contrato') }}" class="form-control form-control-compact @if(session('modalCadastro')) @error('data_inicio_contrato') is-invalid @enderror @endif" required>
+                            @if(session('modalCadastro')) @error('data_inicio_contrato') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-compact">Fim período de experiencia</label>
-                            <input type="date" name="data_fim_periodo_experiencia" class="form-control form-control-compact">
+                            <input type="date" name="data_fim_periodo_experiencia" value="{{ old('data_fim_periodo_experiencia') }}" class="form-control form-control-compact">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-compact">Fim do Contrato</label>
-                            <input type="date" name="data_fim_contrato" class="form-control form-control-compact">
+                            <input type="date" name="data_fim_contrato" value="{{ old('data_fim_contrato') }}" class="form-control form-control-compact">
                         </div>
                     </div>
 
@@ -435,22 +451,23 @@
                     <div class="row g-2">
                         <div class="col-md-4">
                             <label class="form-label-compact">Salário Bruto (XOF) *</label>
-                            <input type="number" name="salario_bruto" class="form-control form-control-compact text-primary fw-bold" placeholder="0" min="0" required>
+                            <input type="number" name="salario_bruto" value="{{ old('salario_bruto') }}" class="form-control form-control-compact text-primary fw-bold @if(session('modalCadastro')) @error('salario_bruto') is-invalid @enderror @endif" placeholder="0" min="0" required>
+                            @if(session('modalCadastro')) @error('salario_bruto') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-compact">Banco</label>
-                            <input type="text" name="banco" class="form-control form-control-compact" placeholder="Ex: BGFI, BAO">
+                            <input type="text" name="banco" value="{{ old('banco') }}" class="form-control form-control-compact" placeholder="Ex: BGFI, BAO">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-compact">Nº Conta Bancária</label>
-                            <input type="text" name="num_conta_bancaria" class="form-control form-control-compact">
+                            <input type="text" name="num_conta_bancaria" value="{{ old('num_conta_bancaria') }}" class="form-control form-control-compact">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label-compact">Estado Inicial</label>
                             <select name="estado" class="form-select form-control-compact">
-                                <option value="Activo">Activo</option>
-                                <option value="Inactivo">Inactivo</option>
-                                <option value="Suspenso">Suspenso</option>
+                                <option value="Activo" {{ old('estado') == 'Activo' ? 'selected' : '' }}>Activo</option>
+                                <option value="Inactivo" {{ old('estado') == 'Inactivo' ? 'selected' : '' }}>Inactivo</option>
+                                <option value="Suspenso" {{ old('estado') == 'Suspenso' ? 'selected' : '' }}>Suspenso</option>
                             </select>
                         </div>
                     </div>
@@ -514,31 +531,34 @@
                     <h6 class="modal-title fw-bold m-0">Editar Funcionário — {{ $f->nome }}</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <form action="{{ route('funcionarios.update', $f->id) }}" method="POST">
+                <form action="{{ route('funcionarios.update', $f->id) }}" method="POST" novalidate>
                     @csrf
                     @method('PUT')
+                    @php $isEditError = session('editId') == $f->id; @endphp
                     <div class="modal-body p-3">
                         <div class="modal-section-title">1. Informações Pessoais & Contactos</div>
                         <div class="row g-2 mb-3">
                             <div class="col-md-5">
                                 <label class="form-label-compact">Nome Completo *</label>
-                                <input type="text" name="nome" value="{{ $f->nome }}" class="form-control form-control-compact" required>
+                                <input type="text" name="nome" value="{{ $isEditError ? old('nome', $f->nome) : $f->nome }}" class="form-control form-control-compact @if($isEditError) @error('nome') is-invalid @enderror @endif" required>
+                                @if($isEditError) @error('nome') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label-compact">Email Institucional *</label>
-                                <input type="email" name="email" value="{{ $f->email }}" class="form-control form-control-compact" >
+                                <label class="form-label-compact">Email Institucional</label>
+                                <input type="email" name="email" value="{{ $isEditError ? old('email', $f->email) : $f->email }}" class="form-control form-control-compact @if($isEditError) @error('email') is-invalid @enderror @endif" >
+                                @if($isEditError) @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label-compact">Contacto Telefónico</label>
-                                <input type="text" name="contacto" value="{{ $f->contacto }}" class="form-control form-control-compact">
+                                <input type="text" name="contacto" value="{{ $isEditError ? old('contacto', $f->contacto) : $f->contacto }}" class="form-control form-control-compact">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label-compact">Data de Nascimento</label>
-                                <input type="date" name="data_nascimento" value="{{ $f->data_nascimento }}" class="form-control form-control-compact">
+                                <input type="date" name="data_nascimento" value="{{ $isEditError ? old('data_nascimento', $f->data_nascimento) : $f->data_nascimento }}" class="form-control form-control-compact">
                             </div>
                             <div class="col-md-8">
                                 <label class="form-label-compact">Empresa</label>
-                                <input type="text" name="empresa" value="{{ $f->empresa }}" class="form-control form-control-compact">
+                                <input type="text" name="empresa" value="{{ $isEditError ? old('empresa', $f->empresa) : $f->empresa }}" class="form-control form-control-compact">
                             </div>
                         </div>
 
@@ -546,19 +566,21 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-3">
                                 <label class="form-label-compact">Nº de B.I.</label>
-                                <input type="text" name="bi" value="{{ $f->bi }}" class="form-control form-control-compact">
+                                <input type="text" name="bi" value="{{ $isEditError ? old('bi', $f->bi) : $f->bi }}" class="form-control form-control-compact @if($isEditError) @error('bi') is-invalid @enderror @endif">
+                                @if($isEditError) @error('bi') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label-compact">NIF *</label>
-                                <input type="text" name="nif" value="{{ $f->nif }}" class="form-control form-control-compact" required>
+                                <input type="text" name="nif" value="{{ $isEditError ? old('nif', $f->nif) : $f->nif }}" class="form-control form-control-compact @if($isEditError) @error('nif') is-invalid @enderror @endif" required>
+                                @if($isEditError) @error('nif') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label-compact">Nº Seg. Social (INSS)</label>
-                                <input type="text" name="num_seguranca_social" value="{{ $f->num_seguranca_social }}" class="form-control form-control-compact">
+                                <input type="text" name="num_seguranca_social" value="{{ $isEditError ? old('num_seguranca_social', $f->num_seguranca_social) : $f->num_seguranca_social }}" class="form-control form-control-compact">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label-compact">Data Inscrição INSS</label>
-                                <input type="date" name="data_inscricao_inss" value="{{ $f->data_inscricao_inss }}" class="form-control form-control-compact">
+                                <input type="date" name="data_inscricao_inss" value="{{ $isEditError ? old('data_inscricao_inss', $f->data_inscricao_inss) : $f->data_inscricao_inss }}" class="form-control form-control-compact">
                             </div>
                         </div>
 
@@ -566,37 +588,41 @@
                         <div class="row g-2 mb-3">
                             <div class="col-md-4">
                                 <label class="form-label-compact">Função / Cargo *</label>
-                                <input type="text" name="cargo" value="{{ $f->cargo }}" class="form-control form-control-compact" required>
+                                <input type="text" name="cargo" value="{{ $isEditError ? old('cargo', $f->cargo) : $f->cargo }}" class="form-control form-control-compact @if($isEditError) @error('cargo') is-invalid @enderror @endif" required>
+                                @if($isEditError) @error('cargo') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label-compact">Tipo Trabalhador</label>
+                                @php $tt = $isEditError ? old('tipo_trabalhador', $f->tipo_trabalhador) : $f->tipo_trabalhador; @endphp
                                 <select name="tipo_trabalhador" class="form-select form-control-compact">
-                                    <option value="Subordinado" {{ $f->tipo_trabalhador == 'Subordinado' ? 'selected' : '' }}>Subordinado (Outrem)</option>
-                                    <option value="Supervisor" {{ $f->tipo_trabalhador == 'Supervisor' ? 'selected' : '' }}>Supervisor(a)</option>
+                                    <option value="Subordinado" {{ $tt == 'Subordinado' ? 'selected' : '' }}>Subordinado (Outrem)</option>
+                                    <option value="Supervisor" {{ $tt == 'Supervisor' ? 'selected' : '' }}>Supervisor(a)</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label-compact">Tipo Contrato</label>
+                                @php $tc = $isEditError ? old('tipo_contrato', $f->tipo_contrato) : $f->tipo_contrato; @endphp
                                 <select name="tipo_contrato" class="form-select form-control-compact">
-                                    <option value="Permanente" {{ $f->tipo_contrato == 'Permanente' ? 'selected' : '' }}>Permanente</option>
-                                    <option value="Temporário" {{ $f->tipo_contrato == 'Temporário' ? 'selected' : '' }}>Temporário</option>
-                                    <option value="Contrato a termo certo" {{ $f->tipo_contrato == 'Contrato a termo certo' ? 'selected' : '' }}>Contrato a termo certo</option>
-                                    <option value="Contrato a termo incerto" {{ $f->tipo_contrato == 'Contrato a termo incerto' ? 'selected' : '' }}>Contrato a termo incerto</option>
-                                    <option value="Estágio Profissional" {{ $f->tipo_contrato == 'Estágio Profissional' ? 'selected' : '' }}>Estágio Profissional</option>
-                                    <option value="Prestação de Serviços" {{ $f->tipo_contrato == 'Prestação de Serviços' ? 'selected' : '' }}>Prestação de Serviços</option>
+                                    <option value="Permanente" {{ $tc == 'Permanente' ? 'selected' : '' }}>Permanente</option>
+                                    <option value="Temporário" {{ $tc == 'Temporário' ? 'selected' : '' }}>Temporário</option>
+                                    <option value="Contrato a termo certo" {{ $tc == 'Contrato a termo certo' ? 'selected' : '' }}>Contrato a termo certo</option>
+                                    <option value="Contrato a termo incerto" {{ $tc == 'Contrato a termo incerto' ? 'selected' : '' }}>Contrato a termo incerto</option>
+                                    <option value="Estágio Profissional" {{ $tc == 'Estágio Profissional' ? 'selected' : '' }}>Estágio Profissional</option>
+                                    <option value="Prestação de Serviços" {{ $tc == 'Prestação de Serviços' ? 'selected' : '' }}>Prestação de Serviços</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label-compact">Início do Contrato *</label>
-                                <input type="date" name="data_inicio_contrato" value="{{ $f->data_inicio_contrato }}" class="form-control form-control-compact" required>
+                                <input type="date" name="data_inicio_contrato" value="{{ $isEditError ? old('data_inicio_contrato', $f->data_inicio_contrato) : $f->data_inicio_contrato }}" class="form-control form-control-compact @if($isEditError) @error('data_inicio_contrato') is-invalid @enderror @endif" required>
+                                @if($isEditError) @error('data_inicio_contrato') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label-compact">Fim periodo de experiencia</label>
-                                <input type="date" name="data_fim_periodo_experiencia" value="{{ $f->data_fim_periodo_experiencia }}" class="form-control form-control-compact">
+                                <input type="date" name="data_fim_periodo_experiencia" value="{{ $isEditError ? old('data_fim_periodo_experiencia', $f->data_fim_periodo_experiencia) : $f->data_fim_periodo_experiencia }}" class="form-control form-control-compact">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label-compact">Fim do Contrato</label>
-                                <input type="date" name="data_fim_contrato" value="{{ $f->data_fim_contrato }}" class="form-control form-control-compact">
+                                <input type="date" name="data_fim_contrato" value="{{ $isEditError ? old('data_fim_contrato', $f->data_fim_contrato) : $f->data_fim_contrato }}" class="form-control form-control-compact">
                             </div>
                         </div>
 
@@ -604,22 +630,24 @@
                         <div class="row g-2">
                             <div class="col-md-4">
                                 <label class="form-label-compact">Salário Bruto (XOF) *</label>
-                                <input type="number" name="salario_bruto" value="{{ $f->salario_bruto }}" class="form-control form-control-compact text-primary fw-bold" required>
+                                <input type="number" name="salario_bruto" value="{{ $isEditError ? old('salario_bruto', $f->salario_bruto) : $f->salario_bruto }}" class="form-control form-control-compact text-primary fw-bold @if($isEditError) @error('salario_bruto') is-invalid @enderror @endif" required>
+                                @if($isEditError) @error('salario_bruto') <div class="invalid-feedback">{{ $message }}</div> @enderror @endif
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label-compact">Banco</label>
-                                <input type="text" name="banco" value="{{ $f->banco }}" class="form-control form-control-compact">
+                                <input type="text" name="banco" value="{{ $isEditError ? old('banco', $f->banco) : $f->banco }}" class="form-control form-control-compact">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label-compact">Nº Conta Bancária</label>
-                                <input type="text" name="num_conta_bancaria" value="{{ $f->num_conta_bancaria }}" class="form-control form-control-compact">
+                                <input type="text" name="num_conta_bancaria" value="{{ $isEditError ? old('num_conta_bancaria', $f->num_conta_bancaria) : $f->num_conta_bancaria }}" class="form-control form-control-compact">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label-compact">Estado</label>
+                                @php $es = $isEditError ? old('estado', $f->estado) : $f->estado; @endphp
                                 <select name="estado" class="form-select form-control-compact">
-                                    <option value="Activo" {{ $f->estado == 'Activo' ? 'selected' : '' }}>Activo</option>
-                                    <option value="Inactivo" {{ $f->estado == 'Inactivo' ? 'selected' : '' }}>Inactivo</option>
-                                    <option value="Suspenso" {{ $f->estado == 'Suspenso' ? 'selected' : '' }}>Suspenso</option>
+                                    <option value="Activo" {{ $es == 'Activo' ? 'selected' : '' }}>Activo</option>
+                                    <option value="Inactivo" {{ $es == 'Inactivo' ? 'selected' : '' }}>Inactivo</option>
+                                    <option value="Suspenso" {{ $es == 'Suspenso' ? 'selected' : '' }}>Suspenso</option>
                                 </select>
                             </div>
                         </div>
@@ -668,6 +696,21 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+
+    // Reabre automaticamente o modal correto quando há erros de validação (mensagens por baixo do campo)
+    @if(session('modalCadastro'))
+        var modalCadastroEl = document.getElementById('modalCadastro');
+        if (modalCadastroEl) {
+            var modalCadastro = new bootstrap.Modal(modalCadastroEl);
+            modalCadastro.show();
+        }
+    @elseif(session('editId'))
+        var modalEditarEl = document.getElementById('modalEditar{{ session('editId') }}');
+        if (modalEditarEl) {
+            var modalEditar = new bootstrap.Modal(modalEditarEl);
+            modalEditar.show();
+        }
+    @endif
 });
 </script>
 @include('partials.theme-script')
