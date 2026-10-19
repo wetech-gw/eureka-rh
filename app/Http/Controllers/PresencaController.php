@@ -98,11 +98,16 @@ class PresencaController extends Controller
         // 1. Validação dos dados enviados pelo formulário do Modal
         $request->validate([
             "funcionario_id" => "required",
-            "data" => "required|date",
+            "data" => "required|date|after_or_equal:today|before_or_equal:today",
             "hora_entrada" => "nullable",
             "hora_saida" => "nullable",
             "estado" => "required|string",
             "observacoes" => "nullable|string",
+        ], [
+            "data.after_or_equal" =>
+                "Não é possível registar presenças ou faltas em dias passados.",
+            "data.before_or_equal" =>
+                "Não é possível registar presenças ou faltas em dias futuros. Selecione a data de hoje.",
         ]);
 
         // 2. Define o valor baseado no estado capturado do formulário
@@ -141,6 +146,24 @@ class PresencaController extends Controller
             "estado" => "required",
             "observacoes" => "nullable",
         ]);
+
+        $registo = DB::table("presencas")->where("id", $id)->first();
+        $hoje = Carbon::today();
+        $dataNova = Carbon::parse($request->data)->startOfDay();
+        $dataOriginal = $registo
+            ? Carbon::parse($registo->data)->startOfDay()
+            : null;
+
+        if (!$dataNova->equalTo($dataOriginal) && !$dataNova->equalTo($hoje)) {
+            $mensagem = $dataNova->isBefore($hoje)
+                ? "Não é possível alterar um registo para um dia passado."
+                : "Não é possível alterar um registo para um dia futuro. Selecione a data de hoje.";
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(["data" => $mensagem]);
+        }
 
         // 2. Atualizar o registo específico usando o ID passado na rota
         DB::table("presencas")

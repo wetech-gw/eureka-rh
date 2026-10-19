@@ -332,6 +332,24 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         <div class="card-custom p-4">
             <div class="table-scrollable-container border rounded-3">
                         <table class="table table-hover align-middle mb-0">
@@ -419,7 +437,7 @@
                         </div>
                         <div class="col-md-12">
                             <label class="form-label-compact">Data *</label>
-                            <input type="date" name="data" value="{{ date('Y-m-d') }}" class="form-control form-control-compact" required>
+                            <input type="date" name="data" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" class="form-control form-control-compact" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label-compact">Hora de Entrada</label>
