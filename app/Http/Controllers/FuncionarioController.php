@@ -87,10 +87,11 @@ class FuncionarioController extends Controller
             }
 
             // Erro devolvido por campo para aparecer por baixo do input (em vez do alerta fora do formulário)
+            $nomeRegistado = $duplicado->nome ?? "outro funcionário";
             return redirect()
                 ->back()
                 ->withInput()
-                ->withErrors([$campoInput => "O {$campo} indicado já está registado. Enviámos um SMS a informar."])
+                ->withErrors([$campoInput => "O {$campo} indicado já está registado em nome de {$nomeRegistado}. Enviámos um SMS a informar."])
                 ->with("modalCadastro", true);
         }
 
