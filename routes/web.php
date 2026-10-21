@@ -253,6 +253,9 @@ Route::middleware(["auth"])->group(function () {
     Route::post("/documentos-colaboradores", [DocumentoColaboradorController::class, "store"])->name(
         "documentos.colaboradores.store",
     );
+    Route::put("/documentos-colaboradores/{id}", [DocumentoColaboradorController::class, "update"])->name(
+        "documentos.colaboradores.update",
+    );
 
     Route::get("/estagiarios", [EstagiarioController::class, "index"])->name(
         "estagiarios.index",

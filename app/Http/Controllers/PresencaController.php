@@ -110,8 +110,20 @@ class PresencaController extends Controller
                 "Não é possível registar presenças ou faltas em dias futuros. Selecione a data de hoje.",
         ]);
 
-        // 2. Define o valor baseado no estado capturado do formulário
-        $statusBanco = $request->estado === "Falta" ? "Falta" : "Presente";
+        // 2. Normaliza o estado para um valor aceite pela base de dados
+        $estadosValidos = [
+            "Presente",
+            "Atraso",
+            "Ausente",
+            "Falta Justificada",
+            "Falta Injustificada",
+        ];
+        $statusBanco = $request->estado === "Falta"
+            ? "Falta Injustificada"
+            : $request->estado;
+        if (!in_array($statusBanco, $estadosValidos, true)) {
+            $statusBanco = "Presente";
+        }
 
         // 3. Gravar na tabela "presencas"
         DB::table("presencas")->insert([
@@ -165,14 +177,19 @@ class PresencaController extends Controller
                 ->withErrors(["data" => $mensagem]);
         }
 
-        // 2. Atualizar o registo específico usando o ID passado na rota
+        // 2. Normaliza o estado para um valor aceite pela base de dados
+        $estado = $request->estado === "Falta"
+            ? "Falta Injustificada"
+            : $request->estado;
+
+        // 3. Atualizar o registo específico usando o ID passado na rota
         DB::table("presencas")
             ->where("id", $id)
             ->update([
                 "data" => $request->data,
                 "entrada" => $request->hora_entrada,
                 "saida" => $request->hora_saida,
-                "status_hoje" => $request->estado,
+                "status_hoje" => $estado,
                 "observacoes" => $request->observacoes,
                 "updated_at" => now(),
             ]);
