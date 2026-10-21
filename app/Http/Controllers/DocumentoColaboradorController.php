@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Traits\LogsActivity;
 
 class DocumentoColaboradorController extends Controller
@@ -54,22 +55,29 @@ class DocumentoColaboradorController extends Controller
     {
         $data = $request->validate([
             'funcionario_id' => 'required|exists:funcionarios,id',
-            'contrato_trabalho_pdf' => 'required|file|mimes:pdf|max:5120',
-            'cv_pdf' => 'required|file|mimes:pdf|max:5120',
-            'copia_bi_pdf' => 'required|file|mimes:pdf|max:5120',
-            'copia_nif_pdf' => 'required|file|mimes:pdf|max:5120',
-            'comprovativo_bancario_pdf' => 'required|file|mimes:pdf|max:5120',
-            'certificado_pdf' => 'required|file|mimes:pdf|max:5120',
+            'contrato_trabalho_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'cv_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'copia_bi_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'copia_nif_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'comprovativo_bancario_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'certificado_pdf' => 'nullable|file|mimes:pdf|max:5120',
         ]);
 
-        $paths = [
-            'contrato_trabalho_pdf' => $request->file('contrato_trabalho_pdf')->store('documentos-colaboradores', 'public'),
-            'cv_pdf' => $request->file('cv_pdf')->store('documentos-colaboradores', 'public'),
-            'copia_bi_pdf' => $request->file('copia_bi_pdf')->store('documentos-colaboradores', 'public'),
-            'copia_nif_pdf' => $request->file('copia_nif_pdf')->store('documentos-colaboradores', 'public'),
-            'comprovativo_bancario_pdf' => $request->file('comprovativo_bancario_pdf')->store('documentos-colaboradores', 'public'),
-            'certificado_pdf' => $request->file('certificado_pdf')->store('documentos-colaboradores', 'public'),
+        $camposPdf = [
+            'contrato_trabalho_pdf',
+            'cv_pdf',
+            'copia_bi_pdf',
+            'copia_nif_pdf',
+            'comprovativo_bancario_pdf',
+            'certificado_pdf',
         ];
+
+        $paths = [];
+        foreach ($camposPdf as $campo) {
+            if ($request->hasFile($campo)) {
+                $paths[$campo] = $request->file($campo)->store('documentos-colaboradores', 'public');
+            }
+        }
 
         $existing = DB::table('documentos_colaboradores')
             ->where('funcionario_id', $data['funcionario_id'])
@@ -93,5 +101,60 @@ class DocumentoColaboradorController extends Controller
         return redirect()
             ->route('documentos.colaboradores.index')
             ->with('success', 'Dossiê documental do colaborador registado com sucesso!');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $registro = DB::table('documentos_colaboradores')->where('id', $id)->first();
+
+        if (!$registro) {
+            return redirect()
+                ->route('documentos.colaboradores.index')
+                ->with('error', 'Dossiê documental não encontrado.');
+        }
+
+        $request->validate([
+            'contrato_trabalho_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'cv_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'copia_bi_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'copia_nif_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'comprovativo_bancario_pdf' => 'nullable|file|mimes:pdf|max:5120',
+            'certificado_pdf' => 'nullable|file|mimes:pdf|max:5120',
+        ]);
+
+        $camposPdf = [
+            'contrato_trabalho_pdf',
+            'cv_pdf',
+            'copia_bi_pdf',
+            'copia_nif_pdf',
+            'comprovativo_bancario_pdf',
+            'certificado_pdf',
+        ];
+
+        $paths = [];
+        foreach ($camposPdf as $campo) {
+            if ($request->hasFile($campo)) {
+                $paths[$campo] = $request->file($campo)->store('documentos-colaboradores', 'public');
+
+                if (!empty($registro->{$campo})) {
+                    Storage::disk('public')->delete($registro->{$campo});
+                }
+            }
+        }
+
+        if (!empty($paths)) {
+            $paths['updated_at'] = now();
+
+            DB::table('documentos_colaboradores')
+                ->where('id', $id)
+                ->update($paths);
+        }
+
+        $func = DB::table('funcionarios')->where('id', $registro->funcionario_id)->first();
+        $this->logActivity('update', 'Dossiê Colaborador', $id, 'Atualizou dossiê documental de ' . ($func->nome ?? 'desconhecido'));
+
+        return redirect()
+            ->route('documentos.colaboradores.index')
+            ->with('success', 'Dossiê documental do colaborador atualizado com sucesso!');
     }
 }

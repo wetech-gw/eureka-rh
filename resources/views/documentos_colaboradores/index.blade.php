@@ -220,6 +220,12 @@
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+        @if($errors->any())
+            <div class="alert alert-danger">{{ $errors->first() }}</div>
+        @endif
 
         <div class="row g-2 mb-3">
             <div class="col-md-4"><div class="card-custom p-3"><small>Dossiês registados</small><h4 class="m-0">{{ $totalDocumentos }}</h4></div></div>
@@ -239,21 +245,32 @@
                         <th>Cópia NIF</th>
                         <th>Comprovativo Bancário</th>
                         <th>Certificado</th>
+                        <th class="text-center">Ações</th>
                     </tr>
                     </thead>
                     <tbody>
                     @forelse($documentos as $doc)
                         <tr>
                             <td><strong>{{ $doc->funcionario_nome }}</strong><br><small class="text-muted">{{ $doc->funcionario_cargo }}</small></td>
-                            <td><a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->contrato_trabalho_pdf]) }}" target="_blank">PDF</a></td>
-                            <td><a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->cv_pdf]) }}" target="_blank">PDF</a></td>
-                            <td><a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->copia_bi_pdf]) }}" target="_blank">PDF</a></td>
-                            <td><a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->copia_nif_pdf]) }}" target="_blank">PDF</a></td>
-                            <td><a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->comprovativo_bancario_pdf]) }}" target="_blank">PDF</a></td>
-                            <td><a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->certificado_pdf]) }}" target="_blank">PDF</a></td>
+                            <td>@if($doc->contrato_trabalho_pdf)<a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->contrato_trabalho_pdf]) }}" target="_blank">PDF</a>@else<span class="text-muted">-</span>@endif</td>
+                            <td>@if($doc->cv_pdf)<a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->cv_pdf]) }}" target="_blank">PDF</a>@else<span class="text-muted">-</span>@endif</td>
+                            <td>@if($doc->copia_bi_pdf)<a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->copia_bi_pdf]) }}" target="_blank">PDF</a>@else<span class="text-muted">-</span>@endif</td>
+                            <td>@if($doc->copia_nif_pdf)<a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->copia_nif_pdf]) }}" target="_blank">PDF</a>@else<span class="text-muted">-</span>@endif</td>
+                            <td>@if($doc->comprovativo_bancario_pdf)<a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->comprovativo_bancario_pdf]) }}" target="_blank">PDF</a>@else<span class="text-muted">-</span>@endif</td>
+                            <td>@if($doc->certificado_pdf)<a class="btn btn-sm btn-light border" href="{{ route('storage.file', ['path' => $doc->certificado_pdf]) }}" target="_blank">PDF</a>@else<span class="text-muted">-</span>@endif</td>
+                            <td class="text-center">
+                                @if(Auth::user()->role !== 'CEO')
+                                    <button type="button" class="btn btn-sm btn-outline-secondary btn-editar-documento"
+                                        data-bs-toggle="modal" data-bs-target="#modalEditarDocumento"
+                                        data-action="{{ route('documentos.colaboradores.update', $doc->id) }}"
+                                        data-colaborador="{{ $doc->funcionario_nome }} ({{ $doc->funcionario_cargo }})">
+                                        Editar
+                                    </button>
+                                @endif
+                            </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center text-muted">Sem dossiês registados.</td></tr>
+                        <tr><td colspan="8" class="text-center text-muted">Sem dossiês registados.</td></tr>
                     @endforelse
                     </tbody>
                 </table>
@@ -283,12 +300,12 @@
                             </select>
                         </div>
 
-                        <div class="col-md-6"><label class="form-label">Contrato de Trabalho (PDF) *</label><input type="file" name="contrato_trabalho_pdf" accept="application/pdf" class="form-control" required></div>
-                        <div class="col-md-6"><label class="form-label">CV (PDF) *</label><input type="file" name="cv_pdf" accept="application/pdf" class="form-control" required></div>
-                        <div class="col-md-6"><label class="form-label">Cópia do BI (PDF) *</label><input type="file" name="copia_bi_pdf" accept="application/pdf" class="form-control" required></div>
-                        <div class="col-md-6"><label class="form-label">Cópia do NIF (PDF) *</label><input type="file" name="copia_nif_pdf" accept="application/pdf" class="form-control" required></div>
-                        <div class="col-md-6"><label class="form-label">Comprovativo Bancário (PDF) *</label><input type="file" name="comprovativo_bancario_pdf" accept="application/pdf" class="form-control" required></div>
-                        <div class="col-md-6"><label class="form-label">Certificado (PDF) *</label><input type="file" name="certificado_pdf" accept="application/pdf" class="form-control" required></div>
+                        <div class="col-md-6"><label class="form-label">Contrato de Trabalho (PDF)</label><input type="file" name="contrato_trabalho_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">CV (PDF)</label><input type="file" name="cv_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Cópia do BI (PDF)</label><input type="file" name="copia_bi_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Cópia do NIF (PDF)</label><input type="file" name="copia_nif_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Comprovativo Bancário (PDF)</label><input type="file" name="comprovativo_bancario_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Certificado (PDF)</label><input type="file" name="certificado_pdf" accept="application/pdf" class="form-control"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -300,7 +317,50 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalEditarDocumento" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-white" style="background-color: var(--accent);">
+                <h6 class="modal-title">Editar Dossiê do Colaborador</h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formEditarDocumento" action="" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <span class="text-muted small">Colaborador:</span>
+                        <strong id="editColaborador"></strong>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-6"><label class="form-label">Contrato de Trabalho (PDF)</label><input type="file" name="contrato_trabalho_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">CV (PDF)</label><input type="file" name="cv_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Cópia do BI (PDF)</label><input type="file" name="copia_bi_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Cópia do NIF (PDF)</label><input type="file" name="copia_nif_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Comprovativo Bancário (PDF)</label><input type="file" name="comprovativo_bancario_pdf" accept="application/pdf" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Certificado (PDF)</label><input type="file" name="certificado_pdf" accept="application/pdf" class="form-control"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn text-white" style="background-color: var(--accent);">Guardar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('modalEditarDocumento').addEventListener('show.bs.modal', function (event) {
+        const botao = event.relatedTarget;
+        const form = document.getElementById('formEditarDocumento');
+
+        form.reset();
+        form.action = botao.dataset.action;
+        document.getElementById('editColaborador').textContent = botao.dataset.colaborador;
+    });
+</script>
 @include('partials.theme-script')
 </body>
 </html>
