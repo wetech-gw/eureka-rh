@@ -294,9 +294,11 @@
                             <label class="form-label">Colaborador *</label>
                             <select name="funcionario_id" class="form-select" required>
                                 <option value="">Selecionar...</option>
-                                @foreach($funcionarios as $f)
+                                @forelse($funcionarios as $f)
                                     <option value="{{ $f->id }}">{{ $f->nome }} ({{ $f->cargo }})</option>
-                                @endforeach
+                                @empty
+                                    <option value="" disabled>Todos os colaboradores já têm dossiê registado</option>
+                                @endforelse
                             </select>
                         </div>
 

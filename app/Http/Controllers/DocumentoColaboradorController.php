@@ -29,6 +29,9 @@ class DocumentoColaboradorController extends Controller
 
         $funcionarios = DB::table('funcionarios')
             ->where('estado', 'Activo')
+            ->whereNotIn('id', function ($sub) {
+                $sub->select('funcionario_id')->from('documentos_colaboradores');
+            })
             ->orderBy('nome')
             ->get(['id', 'nome', 'cargo']);
 
