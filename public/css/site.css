@@ -343,6 +343,11 @@ h3{font-size:1.2rem;letter-spacing:-.01em}
 .vaga-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .vaga-tag{font-family:var(--f-display);font-weight:600;font-size:.76rem;letter-spacing:.03em;padding:5px 12px;border-radius:6px;background:var(--teal-050);color:var(--teal-text)}
 .vaga-desc{color:var(--muted);font-size:.93rem;margin-bottom:16px;flex:1}
+.vaga-requisitos{background:var(--teal-050);border-radius:8px;padding:10px 12px;margin-bottom:14px}
+.vaga-requisitos strong{display:block;font-family:var(--f-display);font-size:.76rem;letter-spacing:.03em;text-transform:uppercase;color:var(--teal-text);margin-bottom:3px}
+.vaga-requisitos p{color:var(--muted);font-size:.85rem;margin:0}
+.btn-termo{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--r-sm);border:1.5px solid var(--teal-text);color:var(--teal-text);font-family:var(--f-display);font-weight:600;font-size:.82rem;text-decoration:none;transition:background .2s,color .2s}
+.btn-termo:hover{background:var(--teal-text);color:#fff}
 .vaga-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
 .vaga-prazo{font-family:var(--f-display);font-weight:600;font-size:.82rem;color:var(--clay);display:inline-flex;align-items:center;gap:6px}
 .btn-candidatar{background:var(--clay);color:#fff;border:none;padding:9px 22px;border-radius:var(--r-sm);font-family:var(--f-display);font-weight:600;font-size:.88rem;cursor:pointer;transition:background .2s,transform .15s;display:inline-flex;align-items:center;gap:6px}

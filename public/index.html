@@ -355,6 +355,11 @@ html[data-theme="dark"] .theme-toggle .icon-sun{display:block}
 .vaga-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .vaga-tag{font-family:var(--f-display);font-weight:600;font-size:.76rem;letter-spacing:.03em;padding:5px 12px;border-radius:6px;background:var(--teal-050);color:var(--teal-text)}
 .vaga-desc{color:var(--muted);font-size:.93rem;margin-bottom:16px;flex:1}
+.vaga-requisitos{background:var(--teal-050);border-radius:8px;padding:10px 12px;margin-bottom:14px}
+.vaga-requisitos strong{display:block;font-family:var(--f-display);font-size:.76rem;letter-spacing:.03em;text-transform:uppercase;color:var(--teal-text);margin-bottom:3px}
+.vaga-requisitos p{color:var(--muted);font-size:.85rem;margin:0}
+.btn-termo{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--r-sm);border:1.5px solid var(--teal-text);color:var(--teal-text);font-family:var(--f-display);font-weight:600;font-size:.82rem;text-decoration:none;transition:background .2s,color .2s}
+.btn-termo:hover{background:var(--teal-text);color:#fff}
 .vaga-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
 .vaga-prazo{font-family:var(--f-display);font-weight:600;font-size:.82rem;color:var(--clay);display:inline-flex;align-items:center;gap:6px}
 .btn-candidatar{background:var(--clay);color:#fff;border:none;padding:9px 22px;border-radius:var(--r-sm);font-family:var(--f-display);font-weight:600;font-size:.88rem;cursor:pointer;transition:background .2s,transform .15s;display:inline-flex;align-items:center;gap:6px}
@@ -1340,7 +1345,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       "cand.cv":'Currículo (PDF ou DOCX) <span>*</span>',"cand.cvHint":"Tamanho máximo: 2MB",
       "cand.cancel":"Cancelar","cand.submit":"Enviar Candidatura","cand.sending":"A enviar...",
       "cand.errVaga":"Selecione uma vaga para se candidatar.","cand.errSend":"Não foi possível registar a candidatura.","cand.errGeneric":"Ocorreu um erro ao enviar a candidatura.",
-      "vg.empty":"Não há processos de recrutamento abertos no momento.","vg.geral":"Geral","vg.bissau":"Bissau","vg.recrutamento":"Recrutamento","vg.prazo":"Prazo:","vg.cand":"Candidatar-se",
+      "vg.empty":"Não há processos de recrutamento abertos no momento.","vg.geral":"Geral","vg.bissau":"Bissau","vg.recrutamento":"Recrutamento","vg.prazo":"Prazo:","vg.cand":"Candidatar-se","vg.requisitos":"Requisitos Minimos","vg.termo":"Termo de Referencia","vg.vagas":"vaga(s)",
       "frm.empty":"Não há formações agendadas no momento.","frm.horario":"Horário","frm.entidade":"Entidade Formadora","frm.inicio":"Início","frm.fim":"Fim","frm.carga":"Carga Horária","frm.inscrever":"Inscrever-se","frm.inscricao":"Inscrição em formação: ",
       "vg.errVagas":"Não foi possível carregar as vagas.","frm.errFormacoes":"Não foi possível carregar as formações.",
       "sec.diff.eyebrow":"Porquê a Eureka","sec.diff.title":"Conhecemos o terreno onde a sua empresa cresce","sec.diff.desc":"Rigor técnico com proximidade real ao mercado africano. Trabalhamos lado a lado com cada cliente, do diagnóstico aos resultados.","sec.diff.cta":"Falar com um consultor",
@@ -1427,7 +1432,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       "cand.cv":'CV (PDF ou DOCX) <span>*</span>',"cand.cvHint":"Taille maximale : 2 Mo",
       "cand.cancel":"Annuler","cand.submit":"Envoyer la candidature","cand.sending":"Envoi en cours...",
       "cand.errVaga":"Sélectionnez une offre pour postuler.","cand.errSend":"Impossible d'enregistrer la candidature.","cand.errGeneric":"Une erreur est survenue lors de l'envoi de la candidature.",
-      "vg.empty":"Aucun processus de recrutement ouvert actuellement.","vg.geral":"Général","vg.bissau":"Bissau","vg.recrutamento":"Recrutement","vg.prazo":"Date limite :","vg.cand":"Postuler",
+      "vg.empty":"Aucun processus de recrutement ouvert actuellement.","vg.geral":"Général","vg.bissau":"Bissau","vg.recrutamento":"Recrutement","vg.prazo":"Date limite :","vg.cand":"Postuler","vg.requisitos":"Exigences minimales","vg.termo":"Lire le terme de référence","vg.vagas":"poste(s)",
       "frm.empty":"Aucune formation planifiée pour le moment.","frm.horario":"Horaire","frm.entidade":"Organisme de formation","frm.inicio":"Début","frm.fim":"Fin","frm.carga":"Volume horaire","frm.inscrever":"S'inscrire","frm.inscricao":"Inscription à la formation : ",
       "vg.errVagas":"Impossible de charger les offres.","frm.errFormacoes":"Impossible de charger les formations.",
       "sec.diff.eyebrow":"Pourquoi la Eureka","sec.diff.title":"Nous connaissons le terrain où votre entreprise grandit","sec.diff.desc":"Rigueur technique et proximité réelle avec le marché africain. Nous travaillons main dans la main avec chaque client, du diagnostic aux résultats.","sec.diff.cta":"Parler à un consultant",
@@ -1514,7 +1519,7 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
       "cand.cv":'CV (PDF or DOCX) <span>*</span>',"cand.cvHint":"Maximum size: 2MB",
       "cand.cancel":"Cancel","cand.submit":"Submit Application","cand.sending":"Sending...",
       "cand.errVaga":"Select a job to apply.","cand.errSend":"Unable to register the application.","cand.errGeneric":"An error occurred while sending the application.",
-      "vg.empty":"No open recruitment processes at the moment.","vg.geral":"General","vg.bissau":"Bissau","vg.recrutamento":"Recruitment","vg.prazo":"Deadline:","vg.cand":"Apply",
+      "vg.empty":"No open recruitment processes at the moment.","vg.geral":"General","vg.bissau":"Bissau","vg.recrutamento":"Recruitment","vg.prazo":"Deadline:","vg.cand":"Apply","vg.requisitos":"Minimum requirements","vg.termo":"Read Reference Terms","vg.vagas":"position(s)",
       "frm.empty":"No training scheduled at the moment.","frm.horario":"Schedule","frm.entidade":"Training Provider","frm.inicio":"Start","frm.fim":"End","frm.carga":"Workload","frm.inscrever":"Enrol","frm.inscricao":"Enrolment in training: ",
       "vg.errVagas":"Unable to load the job listings.","frm.errFormacoes":"Unable to load the training.",
       "sec.diff.eyebrow":"Why Eureka","sec.diff.title":"We know the ground where your business grows","sec.diff.desc":"Technical rigour with real proximity to the African market. We work side by side with every client, from diagnosis to results.","sec.diff.cta":"Talk to a consultant",
@@ -1864,13 +1869,18 @@ html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
             <span class="vaga-tag">${esc(v.departamento || _("vg.geral"))}</span>
             <span class="vaga-tag">${esc(v.localizacao || _("vg.bissau"))}</span>
             <span class="vaga-tag">${esc(v.tipo_contrato || _("vg.recrutamento"))}</span>
+            ${v.vagas_disponiveis ? `<span class="vaga-tag"><i class="fa-solid fa-users"></i> ${esc(v.vagas_disponiveis)} ${_("vg.vagas")}</span>` : ""}
           </div>
           <p class="vaga-desc">${resumir(v.descricao_vaga, 140)}</p>
+          ${v.requisitos ? `<div class="vaga-requisitos"><strong>${_("vg.requisitos")}</strong><p>${esc(resumir(v.requisitos, 180))}</p></div>` : ""}
           <div class="vaga-footer">
             <span class="vaga-prazo"><i class="fa-regular fa-calendar"></i>${_("vg.prazo")} ${fmtData(v.data_limite)}</span>
-            <button type="button" class="btn-candidatar" data-vaga-id="${v.id}" data-vaga-titulo="${esc(v.titulo_vaga)}">
-              ${_("vg.cand")} <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              ${v.termo_referencia ? `<a class="btn-termo" href="/storage/${esc(v.termo_referencia)}" target="_blank" rel="noopener"><i class="fa-solid fa-file-pdf"></i>${_("vg.termo")}</a>` : ""}
+              <button type="button" class="btn-candidatar" data-vaga-id="${v.id}" data-vaga-titulo="${esc(v.titulo_vaga)}">
+                ${_("vg.cand")} <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
           </div>
         </div>
       </article>`).join("");

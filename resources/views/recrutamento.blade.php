@@ -295,6 +295,20 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span class="small fw-medium">{{ session('error') }}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span class="small fw-medium">{{ $errors->first() }}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-md-12">
                 <div class="card-custom p-4 shadow-sm">
@@ -308,8 +322,8 @@
                                     <th>Vaga Aberta</th>
                                     <th>Departamento</th>
                                     <th>Contrato</th>
-                                    <th>Descrição</th>
                                     <th>Requisitos</th>
+                                    <th>Termo</th>
                                     <th>Data Limite</th>
                                     <th class="text-center">Estado</th>
                                     <th class="text-center">Ação</th>
@@ -329,14 +343,18 @@
                                         </td>
                                         <td class="fw-medium text-secondary">{{ $vaga->tipo_contrato }}</td>
                                         <td class="small text-muted" style="max-width: 220px;">
-                                            <span class="d-inline-block text-truncate" style="max-width: 220px;" title="{{ $vaga->descricao_vaga }}">
-                                                {{ \Illuminate\Support\Str::limit($vaga->descricao_vaga, 80) }}
-                                            </span>
-                                        </td>
-                                        <td class="small text-muted" style="max-width: 220px;">
                                             <span class="d-inline-block text-truncate" style="max-width: 220px;" title="{{ $vaga->requisitos }}">
                                                 {{ \Illuminate\Support\Str::limit($vaga->requisitos, 80) }}
                                             </span>
+                                        </td>
+                                        <td class="text-center">
+                                            @if($vaga->termo_referencia)
+                                                <a href="{{ asset('storage/' . $vaga->termo_referencia) }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-danger fw-medium px-2 py-1" style="font-size: 11px;" title="Termo de Referencia">
+                                                    <i class="fa-solid fa-file-pdf me-1"></i> PDF
+                                                </a>
+                                            @else
+                                                <span class="text-muted small">—</span>
+                                            @endif
                                         </td>
                                         <td class="text-danger fw-bold small">{{ date('d/m/Y', strtotime($vaga->data_limite)) }}</td>
 
@@ -353,32 +371,51 @@
                                         </td>
 
                                         <td class="text-center">
-                                            @if(($vaga->status ?? 'Ativo') == 'Ativo')
-                                                <div class="d-flex gap-1 justify-content-center">
+                                            <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                                @if(($vaga->status ?? 'Ativo') == 'Ativo')
                                                     @if(Auth::user()->role !== 'CEO')
-                                                    <button type="button" class="btn btn-sm text-white fw-medium px-2 py-1" style="background-color: var(--accent); font-size: 11px;" data-bs-toggle="modal" data-bs-target="#modalCandidatar" data-vaga-id="{{ $vaga->id }}" data-vaga-titulo="{{ $vaga->titulo_vaga }}">
-                                                        <i class="fa-solid fa-paper-plane me-1"></i> Candidatar
-                                                    </button>
                                                     <form action="{{ route('recrutamento.alterarEstado', $vaga->id) }}" method="POST" class="d-inline">
                                                         @csrf
                                                         @method('PUT')
                                                         <input type="hidden" name="status" value="Expirado">
-                                                        <button type="submit" class="btn btn-sm btn-outline-warning fw-medium px-2 py-1" onclick="return confirm('Tens a certeza que queres fechar esta vaga?')">
+                                                        <button type="submit" class="btn btn-sm btn-outline-warning fw-medium px-2 py-1" style="font-size: 11px;" onclick="return confirm('Tens a certeza que queres fechar esta vaga?')">
                                                             <i class="fa-solid fa-folder-minus me-1"></i> Fechar
                                                         </button>
                                                     </form>
                                                     @endif
-                                                </div>
-                                            @else
-                                                <form action="{{ route('recrutamento.alterarEstado', $vaga->id) }}" method="POST" class="d-inline">
+                                                @else
+                                                    <form action="{{ route('recrutamento.alterarEstado', $vaga->id) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="status" value="Ativo">
+                                                        <button type="submit" class="btn btn-sm btn-outline-success fw-medium px-2 py-1" style="font-size: 11px;">
+                                                            <i class="fa-solid fa-folder-plus me-1"></i> Reativar
+                                                        </button>
+                                                    </form>
+                                                @endif
+
+                                                <button type="button" class="btn btn-sm btn-outline-primary fw-medium px-2 py-1" style="font-size: 11px;"
+                                                    data-bs-toggle="modal" data-bs-target="#modalEditarRecruta"
+                                                    data-action="{{ route('recrutamento.update', $vaga->id) }}"
+                                                    data-titulo="{{ $vaga->titulo_vaga }}"
+                                                    data-departamento="{{ $vaga->departamento }}"
+                                                    data-tipo-contrato="{{ $vaga->tipo_contrato }}"
+                                                    data-vagas="{{ $vaga->vagas_disponiveis }}"
+                                                    data-data-limite="{{ $vaga->data_limite }}"
+                                                    data-requisitos="{{ $vaga->requisitos }}"
+                                                    data-termo="{{ $vaga->termo_referencia ? asset('storage/' . $vaga->termo_referencia) : '' }}"
+                                                    data-termo-nome="{{ $vaga->termo_referencia ? basename($vaga->termo_referencia) : '' }}">
+                                                    <i class="fa-solid fa-pen me-1"></i> Editar
+                                                </button>
+
+                                                <form action="{{ route('recrutamento.destroy', $vaga->id) }}" method="POST" class="d-inline">
                                                     @csrf
-                                                    @method('PUT')
-                                                    <input type="hidden" name="status" value="Ativo">
-                                                    <button type="submit" class="btn btn-sm btn-outline-success fw-medium px-2 py-1">
-                                                        <i class="fa-solid fa-folder-plus me-1"></i> Reativar
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger fw-medium px-2 py-1" style="font-size: 11px;" onclick="return confirm('Tens a certeza que queres apagar esta vaga? Esta ação é irreversível.')">
+                                                        <i class="fa-solid fa-trash me-1"></i> Apagar
                                                     </button>
                                                 </form>
-                                            @endif
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty
@@ -402,7 +439,7 @@
                 <h5 class="modal-title fw-bold m-0" id="modalNovaRecrutaLabel">Lançar Nova Recruta</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('recrutamento.store') }}" method="POST">
+            <form action="{{ route('recrutamento.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body px-4 py-3">
                     <div class="mb-2">
@@ -433,19 +470,80 @@
                     </div>
 
                     <div class="mb-2">
-                        <label class="form-label-compact">Descrição da Vaga *</label>
-                        <textarea name="descricao_vaga" class="form-control form-control-compact" rows="3" placeholder="Funções e responsabilidades..." required></textarea>
+                        <label class="form-label-compact">Requisitos Minimos *</label>
+                        <textarea name="requisitos" class="form-control form-control-compact" rows="3" placeholder="Formação acadêmica, ferramentas técnicas..." required></textarea>
                     </div>
 
                     <div class="mb-2">
-                        <label class="form-label-compact">Requisitos Mínimos *</label>
-                        <textarea name="requisitos" class="form-control form-control-compact" rows="3" placeholder="Formação acadêmica, ferramentas técnicas..." required></textarea>
+                        <label class="form-label-compact">Termo de Referencia (PDF)</label>
+                        <input type="file" name="termo_referencia" class="form-control form-control-compact" accept="application/pdf">
+                        <small class="text-muted" style="font-size: 10px;">Documento que os candidatos poderão consultar no site público.</small>
                     </div>
                 </div>
                 <div class="modal-footer border-top px-4 py-3">
                     <button type="button" class="btn btn-light btn-sm px-3 py-2 rounded-3 fw-medium" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn text-white fw-medium btn-sm px-3 py-2 rounded-3" style="background-color: var(--accent);">
                         Publicar Recruta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarRecruta" tabindex="-1" aria-labelledby="modalEditarRecrutaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 12px;">
+            <div class="modal-header text-white" style="background-color: #0d9488;">
+                <h5 class="modal-title fw-bold m-0" id="modalEditarRecrutaLabel">Editar Recruta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formEditarRecruta" action="#" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-body px-4 py-3">
+                    <div class="mb-2">
+                        <label class="form-label-compact">Título da Vaga *</label>
+                        <input type="text" name="titulo_vaga" id="edit_titulo_vaga" class="form-control form-control-compact" required>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label-compact">Departamento *</label>
+                            <input type="text" name="departamento" id="edit_departamento" class="form-control form-control-compact" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label-compact">Tipo de Contrato *</label>
+                            <input type="text" name="tipo_contrato" id="edit_tipo_contrato" class="form-control form-control-compact" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label-compact">Nº de Vagas *</label>
+                            <input type="number" name="vagas_disponiveis" id="edit_vagas_disponiveis" class="form-control form-control-compact" min="1" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label-compact">Data Limite *</label>
+                            <input type="date" name="data_limite" id="edit_data_limite" class="form-control form-control-compact" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label-compact">Requisitos Minimos *</label>
+                        <textarea name="requisitos" id="edit_requisitos" class="form-control form-control-compact" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label-compact">Termo de Referencia (PDF)</label>
+                        <input type="file" name="termo_referencia" class="form-control form-control-compact" accept="application/pdf">
+                        <small id="edit_termo_atual" class="text-muted" style="font-size: 10px;"></small>
+                    </div>
+                </div>
+                <div class="modal-footer border-top px-4 py-3">
+                    <button type="button" class="btn btn-light btn-sm px-3 py-2 rounded-3 fw-medium" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn text-white fw-medium btn-sm px-3 py-2 rounded-3" style="background-color: var(--accent);">
+                        Guardar Alterações
                     </button>
                 </div>
             </form>
@@ -480,6 +578,30 @@
                 }
             });
         });
+
+        const modalEditar = document.getElementById('modalEditarRecruta');
+        if (modalEditar) {
+            modalEditar.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                if (!button) return;
+
+                const form = document.getElementById('formEditarRecruta');
+                form.action = button.dataset.action;
+                document.getElementById('edit_titulo_vaga').value = button.dataset.titulo || '';
+                document.getElementById('edit_departamento').value = button.dataset.departamento || '';
+                document.getElementById('edit_tipo_contrato').value = button.dataset.tipoContrato || '';
+                document.getElementById('edit_vagas_disponiveis').value = button.dataset.vagas || 1;
+                document.getElementById('edit_data_limite').value = button.dataset.dataLimite || '';
+                document.getElementById('edit_requisitos').value = button.dataset.requisitos || '';
+
+                const termoAtual = document.getElementById('edit_termo_atual');
+                if (button.dataset.termo) {
+                    termoAtual.innerHTML = 'Termo atual: <a href="' + button.dataset.termo + '" target="_blank" rel="noopener">' + (button.dataset.termoNome || 'Ver PDF') + '</a>';
+                } else {
+                    termoAtual.textContent = 'Nenhum termo de referencia anexado.';
+                }
+            });
+        }
     });
 </script>
 @include('partials.theme-script')
