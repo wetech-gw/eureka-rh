@@ -783,13 +783,18 @@
             <span class="vaga-tag">${esc(v.departamento || _("vg.geral"))}</span>
             <span class="vaga-tag">${esc(v.localizacao || _("vg.bissau"))}</span>
             <span class="vaga-tag">${esc(v.tipo_contrato || _("vg.recrutamento"))}</span>
+            ${v.vagas_disponiveis ? `<span class="vaga-tag"><i class="fa-solid fa-users"></i> ${esc(v.vagas_disponiveis)} ${_("vg.vagas")}</span>` : ""}
           </div>
           <p class="vaga-desc">${esc(String(v.descricao_vaga || "").slice(0, 140))}</p>
+          ${v.requisitos ? `<div class="vaga-requisitos"><strong>${_("vg.requisitos")}</strong><p>${esc(String(v.requisitos || "").slice(0, 180))}</p></div>` : ""}
           <div class="vaga-footer">
             <span class="vaga-prazo"><i class="fa-regular fa-calendar"></i>${_("vg.prazo")} ${fmtData(v.data_limite)}</span>
-            <button type="button" class="btn-candidatar" data-vaga-id="${v.id}" data-vaga-titulo="${esc(v.titulo_vaga)}">
-              ${_("vg.cand")} <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              ${v.termo_referencia ? `<a class="btn-termo" href="/storage/${esc(v.termo_referencia)}" target="_blank" rel="noopener"><i class="fa-solid fa-file-pdf"></i>${_("vg.termo")}</a>` : ""}
+              <button type="button" class="btn-candidatar" data-vaga-id="${v.id}" data-vaga-titulo="${esc(v.titulo_vaga)}">
+                ${_("vg.cand")} <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
           </div>
         </div>
       </article>`).join("");

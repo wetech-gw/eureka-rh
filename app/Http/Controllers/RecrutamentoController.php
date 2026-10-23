@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Support\RequisitoVaga;
 use App\Services\SmsService;
@@ -57,18 +58,24 @@ class RecrutamentoController extends Controller
             'departamento' => 'required|string',
             'tipo_contrato' => 'required|string',
             'vagas_disponiveis' => 'required|integer|min:1',
-            'descricao_vaga' => 'required|string',
             'requisitos' => 'required|string',
             'data_limite' => 'required|date',
+            'termo_referencia' => 'nullable|file|mimes:pdf|max:10240',
         ]);
+
+        $caminhoTermo = null;
+        if ($request->hasFile('termo_referencia')) {
+            $caminhoTermo = $request->file('termo_referencia')->store('termos-referencia', 'public');
+        }
 
         DB::table('recrutamentos')->insert([
             'titulo_vaga' => $request->titulo_vaga,
             'departamento' => $request->departamento,
             'tipo_contrato' => $request->tipo_contrato,
             'vagas_disponiveis' => $request->vagas_disponiveis,
-            'descricao_vaga' => $request->descricao_vaga,
+            'descricao_vaga' => '',
             'requisitos' => $request->requisitos,
+            'termo_referencia' => $caminhoTermo,
             'data_limite' => $request->data_limite,
             'status' => 'Ativo',
             'created_at' => Carbon::now(),
@@ -78,6 +85,67 @@ class RecrutamentoController extends Controller
         $this->logActivity('create', 'Recrutamento', null, 'Criou vaga: ' . $request->titulo_vaga);
 
         return redirect()->back()->with('success', 'Vaga de recrutamento publicada com sucesso!');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $vaga = DB::table('recrutamentos')->where('id', $id)->first();
+
+        if (!$vaga) {
+            return redirect()->back()->with('error', 'Vaga de recrutamento não encontrada.');
+        }
+
+        $request->validate([
+            'titulo_vaga' => 'required|string|max:255',
+            'departamento' => 'required|string',
+            'tipo_contrato' => 'required|string',
+            'vagas_disponiveis' => 'required|integer|min:1',
+            'requisitos' => 'required|string',
+            'data_limite' => 'required|date',
+            'termo_referencia' => 'nullable|file|mimes:pdf|max:10240',
+        ]);
+
+        $caminhoTermo = $vaga->termo_referencia;
+        if ($request->hasFile('termo_referencia')) {
+            if ($caminhoTermo) {
+                Storage::disk('public')->delete($caminhoTermo);
+            }
+            $caminhoTermo = $request->file('termo_referencia')->store('termos-referencia', 'public');
+        }
+
+        DB::table('recrutamentos')->where('id', $id)->update([
+            'titulo_vaga' => $request->titulo_vaga,
+            'departamento' => $request->departamento,
+            'tipo_contrato' => $request->tipo_contrato,
+            'vagas_disponiveis' => $request->vagas_disponiveis,
+            'requisitos' => $request->requisitos,
+            'termo_referencia' => $caminhoTermo,
+            'data_limite' => $request->data_limite,
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $this->logActivity('update', 'Recrutamento', $id, 'Atualizou a vaga: ' . $request->titulo_vaga);
+
+        return redirect()->back()->with('success', 'Vaga de recrutamento atualizada com sucesso!');
+    }
+
+    public function destroy($id)
+    {
+        $vaga = DB::table('recrutamentos')->where('id', $id)->first();
+
+        if (!$vaga) {
+            return redirect()->back()->with('error', 'Vaga de recrutamento não encontrada.');
+        }
+
+        if ($vaga->termo_referencia) {
+            Storage::disk('public')->delete($vaga->termo_referencia);
+        }
+
+        DB::table('recrutamentos')->where('id', $id)->delete();
+
+        $this->logActivity('delete', 'Recrutamento', $id, 'Apagou a vaga: ' . $vaga->titulo_vaga);
+
+        return redirect()->back()->with('success', 'Vaga de recrutamento apagada com sucesso!');
     }
 
     public function candidatar(Request $request)

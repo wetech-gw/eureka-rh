@@ -152,6 +152,14 @@ Route::group([], function () {
         RecrutamentoController::class,
         "alterarEstado",
     ])->name("recrutamento.alterarEstado");
+    Route::put("/recrutamento/{id}", [
+        RecrutamentoController::class,
+        "update",
+    ])->name("recrutamento.update");
+    Route::delete("/recrutamento/{id}", [
+        RecrutamentoController::class,
+        "destroy",
+    ])->name("recrutamento.destroy");
 
     // Rotas do Candidato
     Route::get("/candidatos", [CandidatoController::class, "index"])->name(
