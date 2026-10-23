@@ -63,6 +63,29 @@ Route::get("/catalogo-formacao", [SiteController::class, "catalogoFormacao"])->n
 Route::get("/boost-me", [SiteController::class, "boostMe"])->name("site.boost");
 Route::post("/contacto", [ContactController::class, "store"])->name("site.contacto");
 
+// Assets do site servidos pela aplicação (evita cópias antigas no document root)
+Route::get("/site-assets/{path}", function (string $path) {
+    $allowed = [
+        "css/site.css" => "text/css; charset=utf-8",
+        "js/site.js" => "application/javascript; charset=utf-8",
+    ];
+
+    abort_unless(isset($allowed[$path]), 404);
+
+    $file = public_path($path);
+
+    abort_unless(is_file($file), 404);
+
+    return response()
+        ->make(file_get_contents($file), 200, [
+            "Content-Type" => $allowed[$path],
+            "Cache-Control" => "public, max-age=3600",
+            "X-Content-Type-Options" => "nosniff",
+        ]);
+})
+    ->where("path", ".*")
+    ->name("site.asset");
+
 // 🆕 ROTA PÚBLICA PRINCIPAL (Vagas + Formações + Candidatura)
 Route::get("/vagas-formacoes", [PublicController::class, "vagasFormacoes"])->name("public.vagasFormacoes");
 Route::post("/candidatar", [PublicController::class, "candidatar"])->name("public.candidatar");

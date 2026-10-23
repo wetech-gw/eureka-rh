@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="{{ asset('css/site.css') }}?v={{ filemtime(public_path('css/site.css')) }}">
+  <link rel="stylesheet" href="/site-assets/css/site.css?v={{ filemtime(public_path('css/site.css')) }}">
 @stack('head')
 </head>
 <body>
@@ -107,7 +107,7 @@
   </div>
 </footer>
 
-  <script src="{{ asset('js/site.js') }}?v={{ filemtime(public_path('js/site.js')) }}"></script>
+  <script src="/site-assets/js/site.js?v={{ filemtime(public_path('js/site.js')) }}"></script>
 @stack('scripts')
 </body>
 </html>
